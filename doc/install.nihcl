@@ -1,0 +1,571 @@
+\begindata{text,1080728}
+\textdsversion{12}
+\define{italic
+menu:[Font,Italic]
+attr:[FontFace Italic Int Set]}
+\define{bold
+menu:[Font,Bold]
+attr:[FontFace Bold Int Set]}
+\define{chapter
+menu:[Title,Chapter]
+attr:[Justification LeftJustified Point 0]
+attr:[FontFace Bold Int Set]
+attr:[FontSize PreviousFontSize Point 4]}
+\define{section
+menu:[Title,Section]
+attr:[Justification LeftJustified Point 0]
+attr:[FontFace Bold Int Set]
+attr:[FontSize PreviousFontSize Point 2]}
+\define{subsection
+menu:[Title,Subsection]
+attr:[Justification LeftJustified Point 0]
+attr:[FontFace Bold Int Set]}
+\define{paragraph
+menu:[Title,Paragraph]
+attr:[Justification LeftJustified Point 0]
+attr:[FontFace Italic Int Set]}
+\define{bigger
+menu:[Font,Bigger]
+attr:[FontSize PreviousFontSize Point 2]}
+\define{indent
+menu:[Region,Indent]
+attr:[LeftMargin LeftMargin Inch 32768]
+attr:[RightMargin RightMargin Inch 32768]}
+\define{typewriter
+menu:[Font,Typewriter]
+attr:[FontFace FixedFace Int Set]
+attr:[FontFamily AndyType Int 0]}
+\define{display
+menu:[Region,Display]
+attr:[LeftMargin LeftMargin Inch 32768]
+attr:[RightMargin RightMargin Inch 32768]
+attr:[Justification LeftJustified Point 0]}
+\define{example
+menu:[Region,Example]
+attr:[LeftMargin LeftMargin Inch 32768]
+attr:[Justification LeftJustified Point 0]
+attr:[FontFace FixedFace Int Set]
+attr:[FontFamily AndyType Int 0]}
+\define{description
+menu:[Region,Description]
+attr:[LeftMargin LeftMargin Cm 171084]
+attr:[Indent LeftMargin Cm -106350]}
+\define{quotation
+menu:[Region,Quotation]
+attr:[LeftMargin LeftMargin Inch 32768]
+attr:[RightMargin RightMargin Inch 32768]
+attr:[FontFace Italic Int Set]}
+\define{subscript
+menu:[Font,Subscript]
+attr:[Script PreviousScriptMovement Point 2]
+attr:[FontSize PreviousFontSize Point -2]}
+\define{superscript
+menu:[Font,Superscript]
+attr:[Script PreviousScriptMovement Point -6]
+attr:[FontSize PreviousFontSize Point -2]}
+\define{smaller
+menu:[Font,Smaller]
+attr:[FontSize PreviousFontSize Point -2]}
+\define{heading
+menu:[Title,Heading]
+attr:[LeftMargin LeftMargin Inch -13107]
+attr:[Justification LeftJustified Point 0]
+attr:[FontFace Bold Int Set]}
+\define{majorheading
+menu:[Title,MajorHeading]
+attr:[Justification Centered Point 0]
+attr:[FontSize PreviousFontSize Point 4]}
+\define{formatnote
+menu:[Region,FormatNote]
+attr:[Flags PassThru Int Set]}
+\define{subheading
+menu:[Title,Subheading]
+attr:[Justification LeftJustified Point 0]
+attr:[FontFace Bold Int Set]}
+\define{center
+menu:[Justify,Center]
+attr:[Justification Centered Point 0]}
+\define{flushleft
+menu:[Justify,FlushLeft]
+attr:[Justification LeftJustified Point 0]}
+\define{flushright
+menu:[Justify,FlushRight]
+attr:[Justification RightJustified Point 0]}
+\define{leftindent
+menu:[Region,LeftIndent]
+attr:[LeftMargin LeftMargin Inch 32768]}
+\define{code
+menu:[Region,Code]
+attr:[FontFace FixedFace Int Set]
+attr:[FontFamily AndyType Int 0]}
+\formatnote{.ds Cl Installation
+
+.so nihclmac.tr}
+
+\section{INTRODUCTION}
+
+\begindata{lookz, 1097376}
+hidden
+\enddata{lookz, 1097376}
+\view{lookzview,1097376,0,0,0}
+
+This is the Installation Guide for the NIH Class Library (previously known as 
+the "OOPS" Class Library) Revision 3.0.
+
+
+The NIH Class Library is intended to be portable to a UNIX system compatible 
+with either System V or 4.2/4.3BSD and which supports the AT&T C++ translator 
+Release 2.00, Release 2.1, or other compatible C++ compiler.  We have ported 
+and tested this library on the following systems:
+
+\indent{
+Sun-3 with SunOS 3.5
+
+Sun-3 with SunOS 4.0
+
+Sun-4 with SunOS 4.0
+
+}
+Send comments to:
+
+
+\indent{Keith Gorlen
+
+Building 12A, Room 2033
+
+Computer Systems Laboratory
+
+Division of Computer Research and Technology
+
+National Institutes of Health
+
+Bethesda, MD 20892
+
+
+phone: (301) 496-1111
+
+Internet\indent{: kgorlen@alw.nih.gov}
+
+uucp: uunet!nih-csl!kgorlen
+
+}
+
+\section{GUIDE TO THIS DISTRIBUTION KIT}
+
+
+The NIH Class Library distribution kit consists of a main directory and the 
+following subdirectories:
+
+
+\indent{\code{errfac     }Error Message Facility source files
+
+\code{lib        }Source files for the basic library classes
+
+\code{test       }Test suite for the basic library classes
+
+\code{vector     }Source files for the Vector classes
+
+\code{vectest    }Test suite for the Vector classes
+
+\code{ex         }Example programs for the book
+
+}
+The main directory is refered to as \code{NIHCL} in the following discussion, 
+but may be placed anywhere.
+
+
+Most subdirectories have files named \code{MAKEFILE} and \code{Makefile}.  The 
+\code{MAKEFILE} is used by the installation procedure, and should work with 
+both the System V and BSD version of the \code{make} utility.  The fancier 
+\code{Makefile} is used for development, and may not work under BSD.
+
+
+
+\section{SUMMARY OF STEPS IN INSTALLING THE NIH CLASS LIBRARY}
+
+
+\description{1.	Update C++ system library and include files
+
+2.	Edit \code{NIHCL/Makefile}
+
+3.	Edit \code{NIHCL/lib/nihclconfig.h}
+
+4.	Build and install error message facility*
+
+5.	Build NIHCL basic classes, Vector classes, and test suite
+
+6.	Test basic classes and Vector classes
+
+7.	Build NIHCL basic classes, Vector classes, and test suite with multiple 
+inheritance support
+
+8.	Test basic classes and Vector classes with multiple inheritance support
+
+9.	Install class libraries*
+
+10.	Build example programs
+
+11.	Test example programs
+
+}
+* root permission may be required
+
+
+
+
+\section{INSTALLING THE NIH CLASS LIBRARY
+
+}\subheading{
+}\subsection{1. Update C++ system library and include files}
+
+
+No updates to R2.00 of the AT&T C++ Translator are required.  However, if you 
+are using R2.1, be sure to make the changes documented in the section 
+\italic{COMPILING UNDER AT&T C++ TRANSLATOR RELEASE 2.1} in the \italic{NIH 
+Class Library Release Notes}.
+
+
+\subsection{2. Edit NIHCL/Makefile}
+
+
+Edit \code{NIHCL/Makefile} to change make variables as needed for your 
+environment.  Here are the settings shipped with the distribution kit:
+
+
+\example{\smaller{# C++ compiler
+
+CC = CC
+
+
+# C++ debug switch
+
+CCDEBUG =
+
+#CCDEBUG = -g
+
+
+# C++ flags
+
+# NOTE: Disable +p option when compiling with AT&T R2.1 
+
+#CCFLAGS = +p
+
+#CCFLAGS =
+
+
+# C++ include files
+
+I = /usr/include/CC
+
+
+# If using BSD
+
+SYS = BSD
+
+# If using System V
+
+#SYS = SYSV
+
+
+# Compile with nested types
+
+# (works with AT&T R2.1 and GNU C++)
+
+NESTED_TYPES =
+
+#NESTED_TYPES = -DNESTED_TYPES
+
+
+# Disable AT&T R2.0/R2.1 bug work-around code
+
+BUGDEFS =
+
+#BUGDEFS = -DBUG_bC2728 -DBUG_38 -DBUG_39 -DBUG_OPTYPECONST
+
+# Defining BUG_TOOBIG disables code that 
+
+# prevents C compiler "yacc stack overflows" error
+
+#BUGDEFS = -DBUG_bC2728 -DBUG_38 -DBUG_39 -DBUG_OPTYPECONST -DBUG_TOOBIG
+
+
+# Enable debug code
+
+DEBUGDEFS =
+
+#DEBUGDEFS = -DDEBUG_OBJIO -DDEBUG_PROCESS
+
+
+# Flags for ln
+
+#LNFLAGS =
+
+LNFLAGS = -s
+
+
+# If using "patch"
+
+MAIN = _main.c_p
+
+# If using "munch"
+
+#MAIN = _main.c_m
+
+
+# Target library for installation of Error Facility
+
+LIB_ID = libC
+
+
+# Target Directories for Installation
+
+
+# directory for libnihcl.a
+
+NIHCLLIBDIR = /usr/local/lib
+
+# directory for NIHCL include files
+
+NIHCLINCDIR = /usr/include/nihcl
+
+# directory where $\{LIB_ID\}.a resides
+
+CLIBDIR = /usr/local/lib/C++R2.0
+
+# directory for errgen utility
+
+ERRGENDIR = /usr/local/bin
+
+# directory for errgen table file
+
+ERRTABDIR = /usr/local/lib
+
+# directory for errlib.h and errors.h
+
+ERRINCDIR = $I}
+
+}
+
+\subsection{3. Edit NIHCL/lib files}
+
+
+\paragraph{3.1 Edit \code{nihclconfig.h}}
+
+
+The NIH Class Library source is configured for your system by setting flags in 
+\code{NIHCL/lib/nihclconfig.h} which specify the machine model and operating 
+system (UNIX variant).
+
+
+To configure the NIH Class Library for one of the not yet implemented options, 
+at least all of the parameters appearing in \code{nihclconfig.h} will have to 
+be defined for that option.
+
+
+The NIH Class Library should configure itself automatically for the following 
+machines:
+
+
+\indent{sun/mc68000
+
+sun/sparc
+
+}
+Classes \code{Process}, \code{HeapProc}, \code{StackProc}, \code{Scheduler}, 
+\code{Semaphore}, and \code{SharedQueue} have some machine-specific 
+dependencies and will not work unless the \code{SETJMP()/LONGJMP()} functions 
+are properly defined.  See the \italic{NIH Class Library Release Notes} for 
+directions on porting the \code{Process} classes.
+
+
+\paragraph{3.2 Edit \code{Object.h}}
+
+
+The file \code{Object.h} defines three versions of a preprocessor macro named 
+\code{STRINGIZE}, which forms some symbol names by concatenating the class 
+name argument with other strings.  Each version does this a different way. 
+ The version for use with ANSI C preprocessors, conditionalized on the symbol 
+\code{__STDC__}, uses \code{##} for concatenation.  If you are not using an 
+ANSI C preprocessor, defining the symbol \code{BS_NL} in \code{Object.h} 
+selects the version that uses the sequence \code{\\}<newline> as the 
+concatenation separator, which seems to work with most System V UNIX systems. 
+ If you do not define \code{BS_NL}, you get the version of DEFINE_CLASS that 
+uses an empty comment sequence (\code{/**/}), which works with most Berkeley 
+UNIX systems.
+
+
+\code{Object.h} should require no editing on most systems.
+
+
+\subsection{4. Install error message facility
+
+
+}(Skip this step for MASSCOMP/RTU)
+
+
+\example{su 	(if installing in protected directory)
+
+make errorfacility}
+
+
+This builds an error message registery facility and error processing library 
+similar to \code{errcom} and the 3E library routines on the MASSCOMP.
+
+
+The \code{errgen} program reads a \code{.err} file to determine a facility 
+name, and then reads the file \code{$\{ERRTABDIR\}/errgen_tab} to lookup the 
+number assigned to that facility.  The facility number determines the 
+high-order bits of the error numbers which \code{errgen} assigns, assuring 
+that error numbers used by different libraries do not coincide.  Errgen 
+produces a \code{.h} file containing error symbols and their assigned numbers, 
+and a \code{.c} file containing a table of error messages and formatting 
+information.
+
+
+This step creates a module containing the error handling library routines 
+named \code{errors.o} and adds it to \code{$\{CLIBDIR\}/$\{LIB_ID\}.a}, and it 
+copies the files \code{errlib.h} and \code{errors.h} into the directory 
+\code{$\{ERRINCDIR\}.}
+
+
+The test program testerr on \code{NIHCL/errfac} verifies that the error 
+facilities have been built correctly.  It returns the first and last error 
+defined in the file \code{testerrs.err}.
+
+
+
+\subsection{5. Build the NIH Class Library, Vector classes, and test suite
+
+}
+\example{make}
+
+
+
+\subsection{6. Test the NIH Class Library
+
+}
+\example{make verify}
+
+
+This runs the test suite and compares the output of each test program with the 
+contents of a \code{.v} file containing the correct output.  If the program 
+runs correctly, you'll see the message "No differences encountered".  Some 
+tests such as \code{date}, \code{identdict}, \code{process}, \code{random}, 
+\code{stack}, and \code{tim} produce output to the terminal.  \code{date} 
+outputs yesterday's, today's, and tomorrow's date.  \code{identdict} dumps an 
+identity dictionary.  \code{random} prints out a list of random numbers. 
+ \code{stack} prints out a \code{CLTNEMPTY} error message to test error 
+reporting, and \code{tim} prints out the current date and time.
+
+
+The \code{error} test program frequently fails to compare because its output 
+depends upon memory addresses that change from implementation to 
+implementation.  \code{error} should differ only in the object address printed 
+in the \code{CLTNEMPTY} error message.
+
+
+The output of \code{fdset} depends upon the maximum number of allowable file 
+descriptors on your system.  The test output was generated under SunOS 4.0, 
+which has a limit of 64 file descriptors.
+
+
+Several tests that print floating point numbers may fail to compare due to 
+formatting differences.
+
+
+The byte size of the object printed by ex8-1 may vary for different systems. 
+ The test output was produced by a Sun-3.
+
+
+
+\subsection{7. Build the NIH Class Library, Vector classes, and test suite 
+with multiple inheritance support
+
+}
+\example{make cleantest
+
+make mi
+
+}
+
+\subsection{8. Test the NIH Class Library, Vector classes, and test suite with 
+multiple inheritance support
+
+}
+\example{make verify
+
+}
+This runs the same tests as in Step 6, with similar results.
+
+
+
+\subsection{9. Install the NIH Class Libraries
+
+}
+\example{su 	(if installing in protected directory)
+
+make install}
+
+
+The NIH Class Library archives \code{libnihcl.a}, \code{libnihclmi.a}, 
+\code{libnihclvec.a}, and \code{libnihclvecmi.a} are copied to 
+\code{$\{NIHCLLIBDIR\}} and \code{ranlib} is executed on the libraries.  All 
+header files for basic classes are copied to directory 
+\code{$\{NIHCLINCDIR\}}.
+
+
+
+\subsection{10. Build example programs
+
+}
+\example{make examples}
+
+
+
+\subsection{11. Test example programs}
+
+
+\example{make exverify}
+
+
+
+\section{TROUBLE SHOOTING}
+
+
+\subsection{YACC stack overflows}
+
+
+Some test programs may fail to compile because they are too complicated for 
+your C compiler and get a "yacc stack overflow".  Either increase the table 
+space in your C compiler or simplify the program by breaking it up into 
+separate functions.  The inline copy constructors that Release 2.0 
+automatically generates are frequently the source of this error.  Explicitly 
+defining non-inline copy constructors solves the problem.  See the 
+\italic{Release Notes} for further details.
+
+
+\subsection{Problems with class Exception}
+
+
+Test programs error and except test class \code{Exception}, the the NIH Class 
+Library exception handler. If these programs fail to perform correctly 
+suspicion can be directed to the performance of system functions 
+\code{setjmp()} and \code{longjmp()}.
+
+
+\subsection{Problems with Process classes}
+
+
+Progams \code{process} and \code{stackproc} test the NIH Class Library 
+co-routine mechanism (classes \code{Process}, \code{HeapProc}, 
+\code{StackProc}, and \code{Scheduler}), the object queue (class 
+\code{SharedQueue}) and semaphore (class \code{Semaphore}).  These are 
+machine-dependent and rely on the presence of \code{alloca()}, which all 
+systems do not provide, and on \code{setjmp()}/\code{longjmp()} being 
+implemented by saving/restoring all machine registers, which is not always the 
+case for all systems either.  If the \code{process} or \code{stackproc} tests 
+fail to compile, link, or run, check your system's implementations of 
+\code{alloca()} \code{setjmp()}, and \code{longjmp()} -- you may need to 
+implement your own versions.
+
+\enddata{text,1080728}

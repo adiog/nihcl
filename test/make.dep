@@ -1,0 +1,140 @@
+# DO NOT DELETE THIS LINE -- make depend depends on it.
+
+array.o: ${NIHCLINC}/Point.h ${NIHCLINC}/Object.h
+array.o: ${NIHCLINC}/ArrayOb.h ${NIHCLINC}/Collection.h ${NIHCLINC}/Iterator.h
+arraychar.o: ${NIHCLINC}/Arraychar.h ${NIHCLINC}/Collection.h ${NIHCLINC}/Object.h
+arraychar.o: ${NIHCLINC}/Iterator.h
+bag.o: ${NIHCLINC}/Point.h ${NIHCLINC}/Object.h
+bag.o: ${NIHCLINC}/Bag.h ${NIHCLINC}/Collection.h ${NIHCLINC}/Iterator.h ${NIHCLINC}/Dictionary.h
+bag.o: ${NIHCLINC}/Set.h ${NIHCLINC}/ArrayOb.h
+bitboard.o: ${NIHCLINC}/BitBoard.h ${NIHCLINC}/Object.h
+bitset.o: ${NIHCLINC}/Bitset.h ${NIHCLINC}/Object.h
+class.o: ${NIHCLINC}/Dictionary.h ${NIHCLINC}/Set.h ${NIHCLINC}/Collection.h ${NIHCLINC}/Object.h
+class.o: ${NIHCLINC}/Iterator.h ${NIHCLINC}/ArrayOb.h
+class.o: ${NIHCLINC}/SortedCltn.h ${NIHCLINC}/OrderedCltn.h ${NIHCLINC}/SeqCltn.h
+class.o: ${NIHCLINC}/Range.h
+date.o: ${NIHCLINC}/Date.h ${NIHCLINC}/Object.h
+date.o: ${NIHCLINC}/SortedCltn.h ${NIHCLINC}/OrderedCltn.h ${NIHCLINC}/SeqCltn.h
+date.o: ${NIHCLINC}/Collection.h ${NIHCLINC}/Iterator.h ${NIHCLINC}/ArrayOb.h ${NIHCLINC}/Range.h
+dep.o: ${NIHCLINC}/Point.h ${NIHCLINC}/Object.h
+dep.o: ${NIHCLINC}/OrderedCltn.h ${NIHCLINC}/SeqCltn.h ${NIHCLINC}/Collection.h
+dep.o: ${NIHCLINC}/Iterator.h ${NIHCLINC}/ArrayOb.h
+dict.o: ${NIHCLINC}/Point.h ${NIHCLINC}/Object.h
+dict.o: ${NIHCLINC}/Dictionary.h ${NIHCLINC}/Set.h ${NIHCLINC}/Collection.h
+dict.o: ${NIHCLINC}/Iterator.h ${NIHCLINC}/ArrayOb.h ${NIHCLINC}/Assoc.h ${NIHCLINC}/LookupKey.h
+dict.o: ${NIHCLINC}/Bag.h ${NIHCLINC}/OrderedCltn.h ${NIHCLINC}/SeqCltn.h
+error.o: ${NIHCLINC}/Stack.h ${NIHCLINC}/OrderedCltn.h ${NIHCLINC}/SeqCltn.h
+error.o: ${NIHCLINC}/Collection.h ${NIHCLINC}/Object.h
+error.o: ${NIHCLINC}/Iterator.h ${NIHCLINC}/ArrayOb.h ${NIHCLINC}/Exception.h
+error.o: ${NIHCLINC}/nihclIO.h ${NIHCLINC}/OIO.h ${NIHCLINC}/OIOfd.h
+error.o: ${NIHCLINC}/nihclerrs.h
+except.o: ${NIHCLINC}/Exception.h ${NIHCLINC}/Object.h
+fc.o: ${NIHCLINC}/Fraction.h ${NIHCLINC}/Object.h
+fdset.o: ${NIHCLINC}/FDSet.h ${NIHCLINC}/Object.h
+fraction.o: ${NIHCLINC}/Fraction.h ${NIHCLINC}/Object.h
+heap.o: ${NIHCLINC}/Heap.h ${NIHCLINC}/Collection.h ${NIHCLINC}/Object.h
+heap.o: ${NIHCLINC}/Iterator.h ${NIHCLINC}/OrderedCltn.h
+heap.o: ${NIHCLINC}/SeqCltn.h ${NIHCLINC}/ArrayOb.h ${NIHCLINC}/Integer.h ${NIHCLINC}/Set.h
+heap.o: ${NIHCLINC}/Point.h
+iddictio.o: ${NIHCLINC}/Assoc.h ${NIHCLINC}/LookupKey.h ${NIHCLINC}/Object.h
+iddictio.o: ${NIHCLINC}/Bitset.h ${NIHCLINC}/IdentDict.h
+iddictio.o: ${NIHCLINC}/Dictionary.h ${NIHCLINC}/Set.h ${NIHCLINC}/Collection.h
+iddictio.o: ${NIHCLINC}/Iterator.h ${NIHCLINC}/ArrayOb.h ${NIHCLINC}/OrderedCltn.h
+iddictio.o: ${NIHCLINC}/SeqCltn.h ${NIHCLINC}/Point.h
+iddictio.o: ${NIHCLINC}/Rectangle.h
+iddictio.o: ${NIHCLINC}/SortedCltn.h ${NIHCLINC}/Range.h ${NIHCLINC}/Stack.h ${NIHCLINC}/String.h
+iddictio.o: ${NIHCLINC}/OIOnih.h ${NIHCLINC}/OIOstream.h ${NIHCLINC}/OIO.h
+identdict.o: ${NIHCLINC}/Point.h ${NIHCLINC}/Object.h
+identdict.o: ${NIHCLINC}/IdentDict.h
+identdict.o: ${NIHCLINC}/Dictionary.h ${NIHCLINC}/Set.h ${NIHCLINC}/Collection.h
+identdict.o: ${NIHCLINC}/Iterator.h ${NIHCLINC}/ArrayOb.h ${NIHCLINC}/Assoc.h
+identdict.o: ${NIHCLINC}/LookupKey.h ${NIHCLINC}/AssocInt.h ${NIHCLINC}/Integer.h
+identdict.o: ${NIHCLINC}/SortedCltn.h ${NIHCLINC}/OrderedCltn.h ${NIHCLINC}/SeqCltn.h
+identdict.o: ${NIHCLINC}/Range.h
+identset.o: ${NIHCLINC}/Point.h ${NIHCLINC}/Object.h
+identset.o: ${NIHCLINC}/IdentSet.h ${NIHCLINC}/Set.h
+identset.o: ${NIHCLINC}/Collection.h ${NIHCLINC}/Iterator.h ${NIHCLINC}/ArrayOb.h
+iterator.o: ${NIHCLINC}/Iterator.h ${NIHCLINC}/Object.h
+iterator.o: ${NIHCLINC}/LinkedList.h ${NIHCLINC}/SeqCltn.h ${NIHCLINC}/Collection.h
+iterator.o: ${NIHCLINC}/Link.h ${NIHCLINC}/OrderedCltn.h ${NIHCLINC}/ArrayOb.h ${NIHCLINC}/Set.h
+iterator.o: ${NIHCLINC}/Heap.h ${NIHCLINC}/Point.h
+iterator.o: ${NIHCLINC}/LinkOb.h ${NIHCLINC}/OIOnih.h
+iterator.o: ${NIHCLINC}/OIOstream.h ${NIHCLINC}/OIO.h
+keysortcltn.o: ${NIHCLINC}/KeySortCltn.h ${NIHCLINC}/SortedCltn.h ${NIHCLINC}/OrderedCltn.h
+keysortcltn.o: ${NIHCLINC}/SeqCltn.h ${NIHCLINC}/Collection.h ${NIHCLINC}/Object.h
+keysortcltn.o: ${NIHCLINC}/Iterator.h ${NIHCLINC}/ArrayOb.h
+keysortcltn.o: ${NIHCLINC}/Range.h ${NIHCLINC}/LookupKey.h ${NIHCLINC}/String.h
+keysortcltn.o: ${NIHCLINC}/Date.h ${NIHCLINC}/Float.h ${NIHCLINC}/Time.h ${NIHCLINC}/Integer.h
+linkedlist.o: ${NIHCLINC}/Point.h ${NIHCLINC}/Object.h
+linkedlist.o: ${NIHCLINC}/LinkedList.h
+linkedlist.o: ${NIHCLINC}/SeqCltn.h ${NIHCLINC}/Collection.h ${NIHCLINC}/Iterator.h
+linkedlist.o: ${NIHCLINC}/Link.h ${NIHCLINC}/LinkOb.h ${NIHCLINC}/Set.h ${NIHCLINC}/ArrayOb.h
+object.o: ${NIHCLINC}/Point.h ${NIHCLINC}/Object.h
+object.o: ${NIHCLINC}/Rectangle.h
+oio.o: ${NIHCLINC}/nihclconfig.h
+oio.o: ${NIHCLINC}/ArrayOb.h ${NIHCLINC}/Collection.h
+oio.o: ${NIHCLINC}/Object.h
+oio.o: ${NIHCLINC}/Iterator.h ${NIHCLINC}/Arraychar.h
+oio.o: ${NIHCLINC}/Assoc.h
+oio.o: ${NIHCLINC}/LookupKey.h ${NIHCLINC}/Bag.h ${NIHCLINC}/Dictionary.h ${NIHCLINC}/Set.h
+oio.o: ${NIHCLINC}/Bitset.h ${NIHCLINC}/Date.h ${NIHCLINC}/FDSet.h
+oio.o: ${NIHCLINC}/Float.h
+oio.o: ${NIHCLINC}/Fraction.h ${NIHCLINC}/Heap.h ${NIHCLINC}/OrderedCltn.h ${NIHCLINC}/SeqCltn.h
+oio.o: ${NIHCLINC}/LinkedList.h ${NIHCLINC}/Link.h ${NIHCLINC}/LinkOb.h ${NIHCLINC}/Point.h
+oio.o: ${NIHCLINC}/Range.h ${NIHCLINC}/Rectangle.h ${NIHCLINC}/SortedCltn.h ${NIHCLINC}/Stack.h
+oio.o: ${NIHCLINC}/String.h
+oio.o: ${NIHCLINC}/Time.h ${NIHCLINC}/OIOnih.h ${NIHCLINC}/OIOstream.h ${NIHCLINC}/OIO.h
+oio.o: ${NIHCLINC}/OIOfd.h
+orderedcltn.o: ${NIHCLINC}/Point.h ${NIHCLINC}/Object.h
+orderedcltn.o: ${NIHCLINC}/OrderedCltn.h
+orderedcltn.o: ${NIHCLINC}/SeqCltn.h ${NIHCLINC}/Collection.h ${NIHCLINC}/Iterator.h
+orderedcltn.o: ${NIHCLINC}/ArrayOb.h ${NIHCLINC}/Set.h
+point.o: ${NIHCLINC}/Point.h ${NIHCLINC}/Object.h
+process.o: ${NIHCLINC}/StackProc.h
+process.o: ${NIHCLINC}/Process.h ${NIHCLINC}/Link.h
+process.o: ${NIHCLINC}/Object.h
+process.o: ${NIHCLINC}/String.h
+process.o: ${NIHCLINC}/nihclconfig.h
+process.o: ${NIHCLINC}/HeapProc.h ${NIHCLINC}/SharedQueue.h ${NIHCLINC}/ArrayOb.h
+process.o: ${NIHCLINC}/Collection.h ${NIHCLINC}/Iterator.h ${NIHCLINC}/Semaphore.h
+process.o: ${NIHCLINC}/LinkedList.h ${NIHCLINC}/SeqCltn.h ${NIHCLINC}/Scheduler.h
+random.o: ${NIHCLINC}/Random.h ${NIHCLINC}/Object.h
+range.o: ${NIHCLINC}/Range.h ${NIHCLINC}/Object.h
+rectangle.o: ${NIHCLINC}/Point.h ${NIHCLINC}/Object.h
+rectangle.o: ${NIHCLINC}/Rectangle.h
+rectangle.o: ${NIHCLINC}/OrderedCltn.h ${NIHCLINC}/SeqCltn.h ${NIHCLINC}/Collection.h
+rectangle.o: ${NIHCLINC}/Iterator.h ${NIHCLINC}/ArrayOb.h
+regex.o: ${NIHCLINC}/Regex.h ${NIHCLINC}/String.h ${NIHCLINC}/Object.h
+regex.o: ${NIHCLINC}/Range.h ${NIHCLINC}/regex.h
+regex.o: ${NIHCLINC}/OIOnih.h ${NIHCLINC}/OIOstream.h ${NIHCLINC}/OIO.h
+seqcltn.o: ${NIHCLINC}/Point.h ${NIHCLINC}/Object.h
+seqcltn.o: ${NIHCLINC}/OrderedCltn.h ${NIHCLINC}/SeqCltn.h ${NIHCLINC}/Collection.h
+seqcltn.o: ${NIHCLINC}/Iterator.h ${NIHCLINC}/ArrayOb.h ${NIHCLINC}/Set.h
+sets.o: ${NIHCLINC}/Point.h ${NIHCLINC}/Object.h
+sets.o: ${NIHCLINC}/Set.h ${NIHCLINC}/Collection.h ${NIHCLINC}/Iterator.h ${NIHCLINC}/ArrayOb.h
+sets.o: ${NIHCLINC}/OrderedCltn.h ${NIHCLINC}/SeqCltn.h
+sortedcltn.o: ${NIHCLINC}/Point.h ${NIHCLINC}/Object.h
+sortedcltn.o: ${NIHCLINC}/SortedCltn.h
+sortedcltn.o: ${NIHCLINC}/OrderedCltn.h ${NIHCLINC}/SeqCltn.h ${NIHCLINC}/Collection.h
+sortedcltn.o: ${NIHCLINC}/Iterator.h ${NIHCLINC}/ArrayOb.h ${NIHCLINC}/Range.h ${NIHCLINC}/Set.h
+stack.o: ${NIHCLINC}/Point.h ${NIHCLINC}/Object.h
+stack.o: ${NIHCLINC}/Rectangle.h ${NIHCLINC}/Stack.h ${NIHCLINC}/OrderedCltn.h
+stack.o: ${NIHCLINC}/SeqCltn.h ${NIHCLINC}/Collection.h ${NIHCLINC}/Iterator.h
+stack.o: ${NIHCLINC}/ArrayOb.h
+stackproc.o: ${NIHCLINC}/StackProc.h
+stackproc.o: ${NIHCLINC}/Process.h ${NIHCLINC}/Link.h
+stackproc.o: ${NIHCLINC}/Object.h
+stackproc.o: ${NIHCLINC}/String.h
+stackproc.o: ${NIHCLINC}/nihclconfig.h
+stackproc.o: ${NIHCLINC}/SharedQueue.h
+stackproc.o: ${NIHCLINC}/ArrayOb.h ${NIHCLINC}/Collection.h ${NIHCLINC}/Iterator.h
+stackproc.o: ${NIHCLINC}/Semaphore.h ${NIHCLINC}/LinkedList.h ${NIHCLINC}/SeqCltn.h
+stackproc.o: ${NIHCLINC}/Scheduler.h
+string.o: ${NIHCLINC}/nihclconfig.h
+string.o: ${NIHCLINC}/Range.h ${NIHCLINC}/Object.h
+string.o: ${NIHCLINC}/String.h
+substring.o: ${NIHCLINC}/String.h ${NIHCLINC}/Object.h
+tim.o: ${NIHCLINC}/Date.h ${NIHCLINC}/Object.h
+tim.o: ${NIHCLINC}/Time.h
+tim.o: ${NIHCLINC}/SortedCltn.h ${NIHCLINC}/OrderedCltn.h ${NIHCLINC}/SeqCltn.h
+tim.o: ${NIHCLINC}/Collection.h ${NIHCLINC}/Iterator.h ${NIHCLINC}/ArrayOb.h ${NIHCLINC}/Range.h

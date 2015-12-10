@@ -1,0 +1,1 @@
+OBJECTS = ErrFac.o dofile.o errgen.o errors.o errtst.o gettok.o testerrs.o

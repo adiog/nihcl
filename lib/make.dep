@@ -1,0 +1,172 @@
+# DO NOT DELETE THIS LINE -- make depend depends on it.
+
+${NIHCLLIB}(ArrayOb.o): ArrayOb.h
+${NIHCLLIB}(ArrayOb.o): Collection.h Object.h
+${NIHCLLIB}(ArrayOb.o): Iterator.h nihclIO.h OIO.h OIOfd.h
+${NIHCLLIB}(Arraychar.o): Arraychar.h Collection.h Object.h
+${NIHCLLIB}(Arraychar.o): Iterator.h
+${NIHCLLIB}(Arraychar.o): nihclconfig.h
+${NIHCLLIB}(Arraychar.o): nihclIO.h
+${NIHCLLIB}(Arraychar.o): OIO.h OIOfd.h
+${NIHCLLIB}(Assoc.o): Assoc.h LookupKey.h Object.h
+${NIHCLLIB}(Assoc.o): nihclIO.h OIO.h
+${NIHCLLIB}(Assoc.o): OIOfd.h
+${NIHCLLIB}(AssocInt.o): AssocInt.h LookupKey.h Object.h
+${NIHCLLIB}(AssocInt.o): Integer.h
+${NIHCLLIB}(AssocInt.o): nihclIO.h OIO.h OIOfd.h
+${NIHCLLIB}(Bag.o): Bag.h Collection.h Object.h
+${NIHCLLIB}(Bag.o): Iterator.h
+${NIHCLLIB}(Bag.o): Dictionary.h Set.h ArrayOb.h AssocInt.h LookupKey.h Integer.h
+${NIHCLLIB}(Bag.o): nihclIO.h OIO.h OIOfd.h
+${NIHCLLIB}(BitBoard.o): BitBoard.h Object.h
+${NIHCLLIB}(BitBoard.o): nihclIO.h
+${NIHCLLIB}(BitBoard.o): OIO.h OIOfd.h
+${NIHCLLIB}(Bitset.o): Bitset.h Object.h
+${NIHCLLIB}(Bitset.o): nihclIO.h OIO.h OIOfd.h
+${NIHCLLIB}(Class.o): Object.h
+${NIHCLLIB}(Class.o): String.h
+${NIHCLLIB}(Class.o): Dictionary.h
+${NIHCLLIB}(Class.o): Set.h Collection.h Iterator.h ArrayOb.h Assoc.h LookupKey.h
+${NIHCLLIB}(Class.o): OrderedCltn.h SeqCltn.h IdentSet.h nihclIO.h OIO.h OIOfd.h
+${NIHCLLIB}(Class.o): OIOTbl.h IdentDict.h
+${NIHCLLIB}(Collection.o): Collection.h Object.h
+${NIHCLLIB}(Collection.o): Iterator.h
+${NIHCLLIB}(Collection.o): ArrayOb.h nihclIO.h OIO.h OIOfd.h
+${NIHCLLIB}(Date.o): Date.h Object.h
+${NIHCLLIB}(Date.o): String.h
+${NIHCLLIB}(Date.o): nihclIO.h OIO.h OIOfd.h
+${NIHCLLIB}(Dictionary.o): Dictionary.h Set.h Collection.h Object.h
+${NIHCLLIB}(Dictionary.o): Iterator.h ArrayOb.h LookupKey.h
+${NIHCLLIB}(Dictionary.o): Assoc.h
+${NIHCLLIB}(Exception.o): ExceptAct.h Exception.h Object.h
+${NIHCLLIB}(Exception.o): nihclerrs.h
+${NIHCLLIB}(Exception.o): nihclconfig.h
+${NIHCLLIB}(Exception.o): nihclerrsx.h
+${NIHCLLIB}(FDSet.o): FDSet.h Object.h
+${NIHCLLIB}(FDSet.o): nihclIO.h OIO.h OIOfd.h
+${NIHCLLIB}(FDSet.o): nihclconfig.h
+${NIHCLLIB}(Float.o): Float.h Object.h
+${NIHCLLIB}(Float.o): nihclIO.h OIO.h OIOfd.h
+${NIHCLLIB}(Fraction.o): Fraction.h Object.h
+${NIHCLLIB}(Fraction.o): nihclIO.h OIO.h OIOfd.h
+${NIHCLLIB}(Heap.o): Heap.h Collection.h
+${NIHCLLIB}(Heap.o): Object.h
+${NIHCLLIB}(Heap.o): Iterator.h OrderedCltn.h SeqCltn.h ArrayOb.h
+${NIHCLLIB}(Heap.o): nihclIO.h OIO.h OIOfd.h
+${NIHCLLIB}(HeapProc.o): HeapProc.h Process.h Link.h Object.h
+${NIHCLLIB}(HeapProc.o): String.h
+${NIHCLLIB}(HeapProc.o): nihclconfig.h
+${NIHCLLIB}(HeapProc.o): Scheduler.h LinkedList.h SeqCltn.h
+${NIHCLLIB}(HeapProc.o): Collection.h Iterator.h StackProc.h nihclIO.h OIO.h OIOfd.h
+${NIHCLLIB}(IdentDict.o): IdentDict.h Dictionary.h Set.h Collection.h Object.h
+${NIHCLLIB}(IdentDict.o): Iterator.h ArrayOb.h LookupKey.h
+${NIHCLLIB}(IdentSet.o): IdentSet.h Set.h Collection.h Object.h
+${NIHCLLIB}(IdentSet.o): Iterator.h
+${NIHCLLIB}(IdentSet.o): ArrayOb.h
+${NIHCLLIB}(Integer.o): Integer.h Object.h
+${NIHCLLIB}(Integer.o): nihclIO.h
+${NIHCLLIB}(Integer.o): OIO.h OIOfd.h
+${NIHCLLIB}(Iterator.o): Iterator.h Object.h
+${NIHCLLIB}(Iterator.o): Collection.h
+${NIHCLLIB}(Iterator.o): SeqCltn.h nihclIO.h OIO.h OIOfd.h
+${NIHCLLIB}(KeySortCltn.o): nihclIO.h OIO.h Object.h
+${NIHCLLIB}(KeySortCltn.o): OIOfd.h
+${NIHCLLIB}(KeySortCltn.o): Assoc.h LookupKey.h KeySortCltn.h SortedCltn.h OrderedCltn.h
+${NIHCLLIB}(KeySortCltn.o): SeqCltn.h Collection.h Iterator.h ArrayOb.h Range.h
+${NIHCLLIB}(Link.o): Link.h Object.h
+${NIHCLLIB}(Link.o): LinkOb.h
+${NIHCLLIB}(LinkOb.o): LinkOb.h Link.h Object.h
+${NIHCLLIB}(LinkOb.o): nihclIO.h
+${NIHCLLIB}(LinkOb.o): OIO.h OIOfd.h
+${NIHCLLIB}(LinkedList.o): LinkedList.h SeqCltn.h Collection.h Object.h
+${NIHCLLIB}(LinkedList.o): Iterator.h Link.h nihclIO.h OIO.h
+${NIHCLLIB}(LinkedList.o): OIOfd.h
+${NIHCLLIB}(LookupKey.o): LookupKey.h Object.h
+${NIHCLLIB}(LookupKey.o): nihclIO.h
+${NIHCLLIB}(LookupKey.o): OIO.h OIOfd.h
+${NIHCLLIB}(Nil.o): Object.h
+${NIHCLLIB}(OIOTbl.o): OIOTbl.h IdentDict.h Dictionary.h Set.h Collection.h Object.h
+${NIHCLLIB}(OIOTbl.o): Iterator.h ArrayOb.h OrderedCltn.h
+${NIHCLLIB}(OIOTbl.o): SeqCltn.h AssocInt.h LookupKey.h Integer.h
+${NIHCLLIB}(OIOfd.o): OIOfd.h Object.h
+${NIHCLLIB}(OIOfd.o): OIOTbl.h IdentDict.h Dictionary.h
+${NIHCLLIB}(OIOfd.o): Set.h Collection.h Iterator.h ArrayOb.h OrderedCltn.h SeqCltn.h
+${NIHCLLIB}(OIOnih.o): OIOnih.h OIOstream.h OIO.h Object.h
+${NIHCLLIB}(OIOnih.o): OIOTbl.h
+${NIHCLLIB}(OIOnih.o): IdentDict.h Dictionary.h Set.h Collection.h Iterator.h ArrayOb.h
+${NIHCLLIB}(OIOnih.o): OrderedCltn.h SeqCltn.h
+${NIHCLLIB}(OIOstream.o): OIOstream.h
+${NIHCLLIB}(OIOstream.o): OIO.h Object.h
+${NIHCLLIB}(OIOstream.o): OIOTbl.h IdentDict.h Dictionary.h Set.h
+${NIHCLLIB}(OIOstream.o): Collection.h Iterator.h ArrayOb.h OrderedCltn.h SeqCltn.h
+${NIHCLLIB}(Object.o): nihclconfig.h
+${NIHCLLIB}(Object.o): nihclIO.h
+${NIHCLLIB}(Object.o): OIO.h Object.h
+${NIHCLLIB}(Object.o): OIOfd.h
+${NIHCLLIB}(Object.o): OIOTbl.h IdentDict.h Dictionary.h
+${NIHCLLIB}(Object.o): Set.h Collection.h Iterator.h ArrayOb.h OrderedCltn.h SeqCltn.h
+${NIHCLLIB}(Object.o): LookupKey.h IdentSet.h String.h
+${NIHCLLIB}(Object.o): Assoc.h AssocInt.h Integer.h
+${NIHCLLIB}(OrderedCltn.o): OrderedCltn.h SeqCltn.h Collection.h
+${NIHCLLIB}(OrderedCltn.o): Object.h
+${NIHCLLIB}(OrderedCltn.o): Iterator.h ArrayOb.h nihclIO.h OIO.h
+${NIHCLLIB}(OrderedCltn.o): OIOfd.h
+${NIHCLLIB}(Point.o): Point.h Object.h
+${NIHCLLIB}(Point.o): nihclIO.h OIO.h OIOfd.h
+${NIHCLLIB}(Process.o): Process.h Link.h Object.h
+${NIHCLLIB}(Process.o): String.h
+${NIHCLLIB}(Process.o): nihclconfig.h
+${NIHCLLIB}(Process.o): Scheduler.h
+${NIHCLLIB}(Process.o): LinkedList.h SeqCltn.h Collection.h Iterator.h StackProc.h
+${NIHCLLIB}(Process.o): ExceptAct.h Exception.h nihclerrs.h
+${NIHCLLIB}(Random.o): Random.h Object.h
+${NIHCLLIB}(Random.o): nihclIO.h OIO.h OIOfd.h
+${NIHCLLIB}(Range.o): Range.h Object.h
+${NIHCLLIB}(Range.o): nihclIO.h OIO.h OIOfd.h
+${NIHCLLIB}(Rectangle.o): Rectangle.h Object.h
+${NIHCLLIB}(Rectangle.o): Point.h
+${NIHCLLIB}(Rectangle.o): nihclIO.h OIO.h OIOfd.h
+${NIHCLLIB}(Regex.o): Regex.h String.h Object.h
+${NIHCLLIB}(Regex.o): Range.h regex.h
+${NIHCLLIB}(Regex.o): nihclIO.h OIO.h OIOfd.h
+${NIHCLLIB}(Scheduler.o): Process.h Link.h Object.h
+${NIHCLLIB}(Scheduler.o): String.h
+${NIHCLLIB}(Scheduler.o): nihclconfig.h
+${NIHCLLIB}(Scheduler.o): Scheduler.h LinkedList.h SeqCltn.h
+${NIHCLLIB}(Scheduler.o): Collection.h Iterator.h StackProc.h
+${NIHCLLIB}(Semaphore.o): Semaphore.h Object.h
+${NIHCLLIB}(Semaphore.o): LinkedList.h SeqCltn.h Collection.h Iterator.h Link.h Process.h
+${NIHCLLIB}(Semaphore.o): String.h
+${NIHCLLIB}(Semaphore.o): nihclconfig.h
+${NIHCLLIB}(Semaphore.o): Scheduler.h StackProc.h nihclIO.h
+${NIHCLLIB}(Semaphore.o): OIO.h OIOfd.h
+${NIHCLLIB}(SeqCltn.o): SeqCltn.h Collection.h Object.h
+${NIHCLLIB}(SeqCltn.o): Iterator.h
+${NIHCLLIB}(Set.o): Set.h Collection.h Object.h
+${NIHCLLIB}(Set.o): Iterator.h
+${NIHCLLIB}(Set.o): ArrayOb.h OrderedCltn.h SeqCltn.h nihclIO.h OIO.h OIOfd.h
+${NIHCLLIB}(SharedQueue.o): SharedQueue.h ArrayOb.h Collection.h Object.h
+${NIHCLLIB}(SharedQueue.o): Iterator.h Semaphore.h LinkedList.h
+${NIHCLLIB}(SharedQueue.o): SeqCltn.h Link.h nihclIO.h OIO.h OIOfd.h
+${NIHCLLIB}(SortedCltn.o): SortedCltn.h OrderedCltn.h SeqCltn.h Collection.h Object.h
+${NIHCLLIB}(SortedCltn.o): Iterator.h ArrayOb.h Range.h nihclIO.h
+${NIHCLLIB}(SortedCltn.o): OIO.h OIOfd.h
+${NIHCLLIB}(Stack.o): Stack.h OrderedCltn.h SeqCltn.h Collection.h Object.h
+${NIHCLLIB}(Stack.o): Iterator.h ArrayOb.h nihclIO.h OIO.h
+${NIHCLLIB}(Stack.o): OIOfd.h
+${NIHCLLIB}(StackProc.o): StackProc.h
+${NIHCLLIB}(StackProc.o): Process.h Link.h Object.h
+${NIHCLLIB}(StackProc.o): String.h
+${NIHCLLIB}(StackProc.o): nihclconfig.h
+${NIHCLLIB}(StackProc.o): Scheduler.h LinkedList.h SeqCltn.h
+${NIHCLLIB}(StackProc.o): Collection.h Iterator.h nihclIO.h OIO.h OIOfd.h
+${NIHCLLIB}(String.o): String.h Object.h
+${NIHCLLIB}(String.o): Range.h nihclconfig.h
+${NIHCLLIB}(String.o): nihclIO.h
+${NIHCLLIB}(String.o): OIO.h OIOfd.h
+${NIHCLLIB}(Time.o): Date.h Object.h
+${NIHCLLIB}(Time.o): Time.h nihclconfig.h
+${NIHCLLIB}(Time.o): nihclIO.h OIO.h
+${NIHCLLIB}(Time.o): OIOfd.h
+${NIHCLLIB}(_main.o): Object.h
+${NIHCLLIB}(nihclerrs.o): nihclerrs.h

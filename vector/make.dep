@@ -1,0 +1,50 @@
+# DO NOT DELETE THIS LINE -- make depend depends on it.
+
+libnihclvec.a(BitVec.o): IntVec.h Vector.h ${NIHCLINCDIR}/Object.h
+libnihclvec.a(BitVec.o): BitVec.h bitstreams.h ${NIHCLINCDIR}/nihclconfig.h
+libnihclvec.a(BitVec.o): ${NIHCLINCDIR}/nihclIO.h ${NIHCLINCDIR}/OIO.h
+libnihclvec.a(BitVec.o): ${NIHCLINCDIR}/OIOfd.h
+libnihclvec.a(ByteVec.o): ByteVec.h Vector.h ${NIHCLINCDIR}/Object.h
+libnihclvec.a(ByteVec.o): BitVec.h IntVec.h ${NIHCLINCDIR}/nihclIO.h ${NIHCLINCDIR}/OIO.h ${NIHCLINCDIR}/OIOfd.h
+libnihclvec.a(ByteVect.o): ByteVec.h Vector.h ${NIHCLINCDIR}/Object.h
+libnihclvec.a(ByteVect.o): BitVec.h IntVec.h
+libnihclvec.a(ByteVect.o): ${NIHCLINCDIR}/nihclconfig.h
+libnihclvec.a(ByteVect.o): ${NIHCLINCDIR}/nihclIO.h ${NIHCLINCDIR}/OIO.h
+libnihclvec.a(ByteVect.o): ${NIHCLINCDIR}/OIOfd.h
+libnihclvec.a(DoubleVec.o): DoubleVec.h Vector.h ${NIHCLINCDIR}/Object.h
+libnihclvec.a(DoubleVec.o): BitVec.h IntVec.h
+libnihclvec.a(DoubleVec.o): ${NIHCLINCDIR}/nihclIO.h ${NIHCLINCDIR}/OIO.h ${NIHCLINCDIR}/OIOfd.h
+libnihclvec.a(DoubleVect.o): DoubleVec.h Vector.h ${NIHCLINCDIR}/Object.h
+libnihclvec.a(DoubleVect.o): BitVec.h IntVec.h FloatVec.h
+libnihclvec.a(DoubleVect.o): ${NIHCLINCDIR}/nihclconfig.h
+libnihclvec.a(DoubleVect.o): ${NIHCLINCDIR}/nihclIO.h ${NIHCLINCDIR}/OIO.h
+libnihclvec.a(DoubleVect.o): ${NIHCLINCDIR}/OIOfd.h
+libnihclvec.a(FloatVec.o): FloatVec.h Vector.h ${NIHCLINCDIR}/Object.h
+libnihclvec.a(FloatVec.o): BitVec.h IntVec.h
+libnihclvec.a(FloatVec.o): ${NIHCLINCDIR}/nihclIO.h ${NIHCLINCDIR}/OIO.h ${NIHCLINCDIR}/OIOfd.h
+libnihclvec.a(FloatVect.o): FloatVec.h Vector.h ${NIHCLINCDIR}/Object.h
+libnihclvec.a(FloatVect.o): BitVec.h IntVec.h DoubleVec.h
+libnihclvec.a(FloatVect.o): ${NIHCLINCDIR}/nihclconfig.h
+libnihclvec.a(IntVec.o): IntVec.h Vector.h ${NIHCLINCDIR}/Object.h
+libnihclvec.a(IntVec.o): BitVec.h ${NIHCLINCDIR}/nihclIO.h ${NIHCLINCDIR}/OIO.h ${NIHCLINCDIR}/OIOfd.h
+libnihclvec.a(IntVect.o): IntVec.h Vector.h ${NIHCLINCDIR}/Object.h
+libnihclvec.a(IntVect.o): BitVec.h ${NIHCLINCDIR}/nihclconfig.h
+libnihclvec.a(IntVect.o): ${NIHCLINCDIR}/nihclIO.h ${NIHCLINCDIR}/OIO.h
+libnihclvec.a(IntVect.o): ${NIHCLINCDIR}/OIOfd.h
+libnihclvec.a(LongVec.o): LongVec.h Vector.h ${NIHCLINCDIR}/Object.h
+libnihclvec.a(LongVec.o): BitVec.h IntVec.h ${NIHCLINCDIR}/nihclIO.h ${NIHCLINCDIR}/OIO.h ${NIHCLINCDIR}/OIOfd.h
+libnihclvec.a(LongVect.o): LongVec.h Vector.h ${NIHCLINCDIR}/Object.h
+libnihclvec.a(LongVect.o): BitVec.h IntVec.h
+libnihclvec.a(LongVect.o): ${NIHCLINCDIR}/nihclconfig.h
+libnihclvec.a(LongVect.o): ${NIHCLINCDIR}/nihclIO.h ${NIHCLINCDIR}/OIO.h
+libnihclvec.a(LongVect.o): ${NIHCLINCDIR}/OIOfd.h
+libnihclvec.a(ShortVec.o): ShortVec.h Vector.h ${NIHCLINCDIR}/Object.h
+libnihclvec.a(ShortVec.o): BitVec.h IntVec.h
+libnihclvec.a(ShortVec.o): ${NIHCLINCDIR}/nihclIO.h ${NIHCLINCDIR}/OIO.h ${NIHCLINCDIR}/OIOfd.h
+libnihclvec.a(ShortVect.o): ShortVec.h Vector.h ${NIHCLINCDIR}/Object.h
+libnihclvec.a(ShortVect.o): BitVec.h IntVec.h
+libnihclvec.a(ShortVect.o): ${NIHCLINCDIR}/nihclconfig.h
+libnihclvec.a(ShortVect.o): ${NIHCLINCDIR}/nihclIO.h ${NIHCLINCDIR}/OIO.h
+libnihclvec.a(ShortVect.o): ${NIHCLINCDIR}/OIOfd.h
+libnihclvec.a(Vector.o): Vector.h ${NIHCLINCDIR}/Object.h
+libnihclvec.a(Vector.o): ${NIHCLINCDIR}/nihclIO.h ${NIHCLINCDIR}/OIO.h ${NIHCLINCDIR}/OIOfd.h

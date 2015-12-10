@@ -1,0 +1,2 @@
+VECS = BitVec.c ByteVec.c DoubleVec.c FloatVec.c IntVec.c LongVec.c ShortVec.c
+OBJECTS = libnihclvec.a(BitVec.o) libnihclvec.a(ByteVec.o) libnihclvec.a(ByteVect.o) libnihclvec.a(DoubleVec.o) libnihclvec.a(DoubleVect.o) libnihclvec.a(FloatVec.o) libnihclvec.a(FloatVect.o) libnihclvec.a(IntVec.o) libnihclvec.a(IntVect.o) libnihclvec.a(LongVec.o) libnihclvec.a(LongVect.o) libnihclvec.a(ShortVec.o) libnihclvec.a(ShortVect.o) libnihclvec.a(Vector.o)

@@ -1,0 +1,50 @@
+# DO NOT DELETE THIS LINE -- make depend depends on it.
+
+BitVec.o: IntVec.h Vector.h ${NIHCLINCDIR}/Object.h
+BitVec.o: BitVec.h bitstreams.h ${NIHCLINCDIR}/nihclconfig.h
+BitVec.o: ${NIHCLINCDIR}/nihclIO.h ${NIHCLINCDIR}/OIO.h
+BitVec.o: ${NIHCLINCDIR}/OIOfd.h
+ByteVec.o: ByteVec.h Vector.h ${NIHCLINCDIR}/Object.h
+ByteVec.o: BitVec.h IntVec.h ${NIHCLINCDIR}/nihclIO.h ${NIHCLINCDIR}/OIO.h ${NIHCLINCDIR}/OIOfd.h
+ByteVect.o: ByteVec.h Vector.h ${NIHCLINCDIR}/Object.h
+ByteVect.o: BitVec.h IntVec.h
+ByteVect.o: ${NIHCLINCDIR}/nihclconfig.h
+ByteVect.o: ${NIHCLINCDIR}/nihclIO.h ${NIHCLINCDIR}/OIO.h
+ByteVect.o: ${NIHCLINCDIR}/OIOfd.h
+DoubleVec.o: DoubleVec.h Vector.h ${NIHCLINCDIR}/Object.h
+DoubleVec.o: BitVec.h IntVec.h
+DoubleVec.o: ${NIHCLINCDIR}/nihclIO.h ${NIHCLINCDIR}/OIO.h ${NIHCLINCDIR}/OIOfd.h
+DoubleVect.o: DoubleVec.h Vector.h ${NIHCLINCDIR}/Object.h
+DoubleVect.o: BitVec.h IntVec.h FloatVec.h
+DoubleVect.o: ${NIHCLINCDIR}/nihclconfig.h
+DoubleVect.o: ${NIHCLINCDIR}/nihclIO.h ${NIHCLINCDIR}/OIO.h
+DoubleVect.o: ${NIHCLINCDIR}/OIOfd.h
+FloatVec.o: FloatVec.h Vector.h ${NIHCLINCDIR}/Object.h
+FloatVec.o: BitVec.h IntVec.h
+FloatVec.o: ${NIHCLINCDIR}/nihclIO.h ${NIHCLINCDIR}/OIO.h ${NIHCLINCDIR}/OIOfd.h
+FloatVect.o: FloatVec.h Vector.h ${NIHCLINCDIR}/Object.h
+FloatVect.o: BitVec.h IntVec.h DoubleVec.h
+FloatVect.o: ${NIHCLINCDIR}/nihclconfig.h
+IntVec.o: IntVec.h Vector.h ${NIHCLINCDIR}/Object.h
+IntVec.o: BitVec.h ${NIHCLINCDIR}/nihclIO.h ${NIHCLINCDIR}/OIO.h ${NIHCLINCDIR}/OIOfd.h
+IntVect.o: IntVec.h Vector.h ${NIHCLINCDIR}/Object.h
+IntVect.o: BitVec.h ${NIHCLINCDIR}/nihclconfig.h
+IntVect.o: ${NIHCLINCDIR}/nihclIO.h ${NIHCLINCDIR}/OIO.h
+IntVect.o: ${NIHCLINCDIR}/OIOfd.h
+LongVec.o: LongVec.h Vector.h ${NIHCLINCDIR}/Object.h
+LongVec.o: BitVec.h IntVec.h ${NIHCLINCDIR}/nihclIO.h ${NIHCLINCDIR}/OIO.h ${NIHCLINCDIR}/OIOfd.h
+LongVect.o: LongVec.h Vector.h ${NIHCLINCDIR}/Object.h
+LongVect.o: BitVec.h IntVec.h
+LongVect.o: ${NIHCLINCDIR}/nihclconfig.h
+LongVect.o: ${NIHCLINCDIR}/nihclIO.h ${NIHCLINCDIR}/OIO.h
+LongVect.o: ${NIHCLINCDIR}/OIOfd.h
+ShortVec.o: ShortVec.h Vector.h ${NIHCLINCDIR}/Object.h
+ShortVec.o: BitVec.h IntVec.h
+ShortVec.o: ${NIHCLINCDIR}/nihclIO.h ${NIHCLINCDIR}/OIO.h ${NIHCLINCDIR}/OIOfd.h
+ShortVect.o: ShortVec.h Vector.h ${NIHCLINCDIR}/Object.h
+ShortVect.o: BitVec.h IntVec.h
+ShortVect.o: ${NIHCLINCDIR}/nihclconfig.h
+ShortVect.o: ${NIHCLINCDIR}/nihclIO.h ${NIHCLINCDIR}/OIO.h
+ShortVect.o: ${NIHCLINCDIR}/OIOfd.h
+Vector.o: Vector.h ${NIHCLINCDIR}/Object.h
+Vector.o: ${NIHCLINCDIR}/nihclIO.h ${NIHCLINCDIR}/OIO.h ${NIHCLINCDIR}/OIOfd.h

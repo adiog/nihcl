@@ -1,0 +1,8 @@
+ACCESS OBJECTS WITH operator[]():
+Smith John A. 111-22-3333 22222
+Fried Harry I. 123-45-6789 22221
+Chavez Maria G. 444-555-6666 22223
+ACCESS OBJECTS WITH Iterator:
+Smith John A. 111-22-3333 22222
+Fried Harry I. 123-45-6789 22221
+Chavez Maria G. 444-555-6666 22223

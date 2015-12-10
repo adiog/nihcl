@@ -1,0 +1,8 @@
+#! /bin/csh
+rm -f CHANGES_C
+foreach f ([A-Z]*.c [A-Z]*_c.m4 [A-Z]*.p Template_c)
+	echo $f
+	echo "**********" $f "**********" >>CHANGES_C
+	sed -f $1 <$f >+$f
+	cat changes >>CHANGES_C
+end

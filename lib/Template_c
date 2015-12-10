@@ -1,0 +1,251 @@
+/* Template.c  -- example implementation of an NIH Library class
+
+	THIS SOFTWARE FITS THE DESCRIPTION IN THE U.S. COPYRIGHT ACT OF A
+	"UNITED STATES GOVERNMENT WORK".  IT WAS WRITTEN AS A PART OF THE
+	AUTHOR'S OFFICIAL DUTIES AS A GOVERNMENT EMPLOYEE.  THIS MEANS IT
+	CANNOT BE COPYRIGHTED.  THIS SOFTWARE IS FREELY AVAILABLE TO THE
+	PUBLIC FOR USE WITHOUT A COPYRIGHT NOTICE, AND THERE ARE NO
+	RESTRICTIONS ON ITS USE, NOW OR SUBSEQUENTLY.
+
+Author:
+	K. E. Gorlen
+	Bg. 12A, Rm. 2033
+	Computer Systems Laboratory
+	Division of Computer Research and Technology
+	National Institutes of Health
+	Bethesda, Maryland 20892
+	Phone: (301) 496-1111
+	uucp: uunet!nih-csl!kgorlen
+	Internet: kgorlen@alw.nih.gov
+	February, 1987
+
+Function:
+	
+Modification History:
+
+$Log:	Template_c,v $
+# Revision 3.0  90/05/20  00:21:40  kgorlen
+# Release for 1st edition.
+# 
+*/
+
+#include "THIS_CLASS.h"
+#include "nihclIO.h"
+// #include .h files for other classes used
+
+#define	THIS	THIS_CLASS
+// Define BASE only for classes with one base class
+#define	BASE	BASE_CLASS
+// Define list of addresses of descriptors of all base classes:
+#define	BASE_CLASSES BASE::desc()
+// Define list of addresses of descriptors of all member classes:
+#define	MEMBER_CLASSES
+// Define list of addresses of descriptors of all virtual base
+// classes:
+#define VIRTUAL_BASE_CLASSES
+
+DEFINE_CLASS(THIS_CLASS,1,"$Header: /afs/alw.nih.gov/unix/sun4_40c/usr/local/src/nihcl-3.0/share/lib/RCS/Template_c,v 3.0 90/05/20 00:21:40 kgorlen Rel $",NULL,NULL);
+// For abstract classes:
+//DEFINE_ABSTRACT_CLASS(THIS_CLASS,1,"$Header: /afs/alw.nih.gov/unix/sun4_40c/usr/local/src/nihcl-3.0/share/lib/RCS/Template_c,v 3.0 90/05/20 00:21:40 kgorlen Rel $",NULL,NULL);
+// For non-abstract classes with multiple base classes:
+//DEFINE_CLASS_MI(THIS_CLASS,1,"$Header: /afs/alw.nih.gov/unix/sun4_40c/usr/local/src/nihcl-3.0/share/lib/RCS/Template_c,v 3.0 90/05/20 00:21:40 kgorlen Rel $",NULL,NULL);
+// For abstract classes with multiple base classes:
+//DEFINE_ABSTRACT_CLASS_MI(THIS_CLASS,1,"$Header: /afs/alw.nih.gov/unix/sun4_40c/usr/local/src/nihcl-3.0/share/lib/RCS/Template_c,v 3.0 90/05/20 00:21:40 kgorlen Rel $",NULL,NULL);
+
+extern const int // error codes
+
+/* _castdown() for classes with multiple base classes:
+
+void* THIS_CLASS::_castdown(const Class& target) const
+// (Probably a good candidate for memoization.)
+{
+	if (&target == desc()) return (void*)this;
+	void* p = BASE1::_castdown(target);
+	void* q = p;
+	if (p = BASE2::_castdown(target)) ambigCheck(p,q,target);
+// ...
+	if (p = BASEn::_castdown(target)) ambigCheck(p,q,target);
+	return q;
+}
+
+*/
+
+bool THIS_CLASS::operator==(const THIS_CLASS& a) const
+// Test two instances of THIS_CLASS for equality
+{
+}
+
+const Class* THIS_CLASS::species() const
+// Return a pointer to the descriptor of the species of this class
+{
+	return &classDesc;
+}
+
+bool THIS_CLASS::isEqual(const Object& p) const
+// Test two objects for equality
+{
+	return p.isSpecies(classDesc) && *this==castdown(p);
+}
+
+unsigned THIS_CLASS::hash() const
+// If two objects are equal (i.e., isEqual) they must have
+// the same hash
+{
+}
+
+int THIS_CLASS::compare(const Object& p) const
+// Compare two objects.  If *this > p return >0,
+// *this == p return 0, and if *this < p return <0.
+{
+	assertArgSpecies(p,classDesc,"compare");
+}
+
+void THIS_CLASS::deepenShallowCopy()
+// Called by deepCopy() to convert a shallow copy to a deep copy.
+// deepCopy() makes the shallow copy by calling the copy
+// constructor.
+{
+/*
+Deepen base classes in order specified in class declaration.
+
+Deepen virtual base classes (VBase):
+	VBase::deepenVBase();		// do not do this for class Object
+
+Deepen non-virtual base classes (BASE):
+	BASE::deepenShallowCopy();	// do not do this for class Object
+
+Nothing need be done for member variables that are fundamental
+types.  Copy a member variable o that is an NIHCL object:
+	o.deepenShallowCopy();
+
+Copy a member variable p that is a pointer to an NIHCL object of
+class CLASS:
+	p = (CLASS*)p->deepCopy();
+*/
+}
+
+void THIS_CLASS::printOn(ostream& strm) const
+// Print this object on an ostream
+{
+}
+
+// Object I/O
+
+/*
+Member class instances are constructed in the order they are
+declared in the class declaration, regardless of the order they
+appear in the constructor initialization list, so they must be
+stored in this order.  Note that member class instances are
+constructed before body of constructor is executed.
+*/
+
+// Construct an object from OIOin "strm".
+THIS_CLASS::THIS_CLASS(OIOin& strm)
+:
+#ifdef MI
+	Object(strm),
+#endif
+/*
+Call readFrom() constructors of all ancestor virtual base classes:
+	VBase(strm),
+*/
+	BASE(strm)
+/*
+Read a member variable o that is an instance of an NIHCL class:
+	o(strm)
+{
+Read a member variable f that is a fundamental type using ">>":
+	strm >> f;
+
+Read a member variable p that is a pointer to an instance of
+the NIHCL class CLASS:
+	p = CLASS::readFrom(strm);
+
+Read member variables in the same order that they are stored.
+*/
+}
+
+void THIS_CLASS::storer(OIOout& strm) const
+// Store the member variables of this object on OIOout "strm".
+{
+/*
+Store virtual base classes (VBase) in inheritance DAG order:
+	VBase::storeVBaseOn(strm);
+
+Store non-virtual base classes in order specified in class
+declaration:
+	BASE::storer(strm);
+
+Store a member variable f that is a fundamental type using "<<":
+	strm << f;
+
+Store a member variable o that is an instance of the NIHCL class
+CLASS:
+	o.storeMemberOn(strm);
+
+Store a member variable p that is a pointer to an instance of an
+NIHCL class:
+	p->storeOn(strm);
+
+Store member variables in the same order that they are read.
+*/
+}
+
+// Construct an object from file descriptor "fd".
+THIS_CLASS::THIS_CLASS(OIOifd& fd)
+:
+#ifdef MI
+	Object(fd),
+#endif
+/*
+Call readFrom() constructors of all ancestor virtual base classes:
+	VBase(fd),
+*/
+	BASE(fd)
+/*
+Read a member variable o that is an instance of an NIHCL class:
+	o(fd)
+{
+Read a member variable f that is a fundamental type:
+	fd >> f;
+
+Read a member variable a that is a pointer to an array of length l:
+	fd.get(a,l);
+
+Read a member variable p that is a pointer to an instance of the
+NIHCL class CLASS:
+	p = CLASS::readFrom(fd);
+
+Read member variables in the same order that they are stored.
+*/
+}
+
+void THIS_CLASS::storer(OIOofd& fd) const
+// Store an object on file descriptor "fd".
+{
+/*
+Store virtual base classes (VBase) in inheritance DAG order:
+	VBase::storeVBaseOn(fd);
+
+Store non-virtual base classes in order specified in class
+declaration:
+	BASE::storer(fd);
+
+Store a member variable f that is a fundamental type:
+	fd << f;
+
+Store a member variable a that is a pointer to an array
+of length l:
+	fd.put(a,l);
+
+Store a member variable o that is an instance of the NIHCL class
+CLASS:
+	o.storeMemberOn(fd);
+
+Store a member variable p that is a pointer to an instance of an
+NIHCL class:
+	p->storeOn(fd);
+
+Store member variables in the same order that they are read.
+*/
+}

@@ -1,0 +1,70 @@
+#!/bin/sh
+# $Header: /afs/alw.nih.gov/unix/sun4_40c/usr/local/src/nihcl-3.0/share/ex/RCS/verify,v 3.0 90/05/15 22:46:39 kgorlen Rel $
+echo ex2-1;	./ex2-1 | diff -c - ex2-1.v
+echo ex2-2;	./ex2-2 | diff -c - ex2-2.v
+echo ex2-3;	./ex2-3 | diff -c - ex2-3.v
+echo ex5-1;	./ex5-1 | diff -c - ex5-1.v
+echo ex5-2;	./ex5-2 <ex5-2.in | diff -c - ex5-2.v
+echo ex5-3;	./ex5-3 | diff -c - ex5-3.v
+echo ex5-4;	./ex5-4 <ex5-4.in | diff -c - ex5-4.v
+# ex5-5 has two output files which must exist
+echo ex5-5;	touch ex5-5.1.out ex5-5.2.out
+		./ex5-5
+		diff -c ex5-5.1.out ex5-5.1.v
+		diff -c ex5-5.2.out ex5-5.2.v
+		rm ex5-5.1.out ex5-5.2.out
+echo ex5-6;	./ex5-6 <ex5-6.in | diff -c - ex5-6.v
+echo ex5-7;	./ex5-7 <ex5-7.in | diff -c - ex5-7.v
+echo ex5-8;	./ex5-8 | diff -c - ex5-8.v
+echo ex5-9;	./ex5-9 | diff -c - ex5-9.v
+echo ex5-10;	./ex5-10 | diff -c - ex5-10.v
+echo ex5-11;	./ex5-11 | diff -c - ex5-11.v
+echo ex6-1;	./ex6-1 | diff -c - ex6-1.v
+echo ex6-2;	./ex6-2 | diff -c - ex6-2.v
+echo ex6-3;	./ex6-3 | diff -c - ex6-3.v
+echo ex6-4;	./ex6-4 | diff -c - ex6-4.v
+echo ex7-1;	./ex7-1 | diff -c - ex7-1.v
+echo ex7-2;	./ex7-2 | diff -c - ex7-2.v
+echo ex7-3;	./ex7-3 | diff -c - ex7-3.v
+echo ex8-1;	./ex8-1 | diff -c - ex8-1.v
+echo ex8-2;	./ex8-2 | diff -c - ex8-2.v
+echo ex8-3;	./ex8-3 | diff -c - ex8-3.v
+echo ex8-4;	./ex8-4 | diff -c - ex8-4.v
+echo ex8-5;	./ex8-5 2>&1 | diff -c - ex8-5.v
+echo ex8-6;	./ex8-6 | diff -c - ex8-6.v
+echo ex8-7;	./ex8-7 | diff -c - ex8-7.v
+echo ex8-8;	./ex8-8 | diff -c - ex8-8.v
+echo ex8-9;	./ex8-9 | diff -c - ex8-9.v
+echo ex8-10;	./ex8-10 | diff -c - ex8-10.v
+echo ex8-11;	./ex8-11 <ex8-11.in | diff -c - ex8-11.v
+echo ex8-12;	./ex8-12 | diff -c - ex8-12.v
+echo ex8-13;	./ex8-13 | diff -c - ex8-13.v
+echo ex8-14;	./ex8-14 <ex8-14.in | diff -c - ex8-14.v
+echo ex8-15;	./ex8-15 | diff -c - ex8-15.v
+echo ex8-16;	./ex8-16 | diff -c - ex8-16.v
+echo ex9-1;	./ex9-1 | diff -c - ex9-1.v
+echo ex9-2;	./ex9-2 | diff -c - ex9-2.v
+echo ex9-3;	./ex9-3 | diff -c - ex9-3.v
+echo ex10-1;	./ex10-1 | diff -c - ex10-1.v
+echo ex10-1K;	./ex10-1K | diff -c - ex10-1K.v
+echo ex10-1S;	./ex10-1S | diff -c - ex10-1S.v
+echo ex10-1SK;	./ex10-1SK | diff -c - ex10-1SK.v
+echo ex11-1;	./ex11-1 | diff -c - ex11-1.v
+echo ex11-2;	./ex11-2 | diff -c - ex11-2.v
+echo ex11-3;	./ex11-3 | diff -c - ex11-3.v
+echo ex11-4;	./ex11-4 | diff -c - ex11-4.v
+echo ex13-1;	./ex13-1 | diff -c - ex13-1.v
+echo ex13-2;	./ex13-2 | diff -c - ex13-2.v
+echo ex13-3;	./ex13-3 | diff -c - ex13-3.v
+echo ex13-4;	./ex13-4 | diff -c - ex13-4.v
+echo ex13-5;	./ex13-5 | diff -c - ex13-5.v
+echo ex13-6;	./ex13-6 | diff -c - ex13-6.v
+echo ex13-7;	./ex13-7 | diff -c - ex13-7.v
+echo ex13-8;	./ex13-8 | diff -c - ex13-8.v
+echo ex13-9;	./ex13-9 | diff -c - ex13-9.v
+echo ex13-10;	./ex13-10 | diff -c - ex13-10.v
+echo ex13-11;	./ex13-11 | diff -c - ex13-11.v
+echo "*** Expect [AMBIGCASTDN] error message ***"
+echo ex14-1;	./ex14-1 | diff -c - ex14-1.v
+echo "*** Verify ex14-2 manually ***"
+#echo ex14-2;	./ex14-2 | diff -c - ex14-2.v

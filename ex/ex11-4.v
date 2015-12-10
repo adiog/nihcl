@@ -1,0 +1,16 @@
+process Main sending: THE MESSAGE
+StackProc: P1 received THE MESSAGE
+StackProc: P2 received THE MESSAGE
+StackProc: P3 received THE MESSAGE
+StackProc: P4 received THE MESSAGE
+StackProc: P5 received THE MESSAGE
+StackProc: P6 received THE MESSAGE
+StackProc: P7 received THE MESSAGE
+StackProc: P7 sent THE MESSAGE
+StackProc: P6 sent THE MESSAGE
+StackProc: P5 sent THE MESSAGE
+StackProc: P4 sent THE MESSAGE
+StackProc: P3 sent THE MESSAGE
+StackProc: P2 sent THE MESSAGE
+StackProc: P1 sent THE MESSAGE
+process Main received: THE MESSAGE

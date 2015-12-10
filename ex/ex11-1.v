@@ -1,0 +1,15 @@
+P7 start
+P6 start
+P7 resume
+P5 start
+P6 resume
+P4 start
+P5 resume
+P3 start
+P4 resume
+P2 start
+P3 resume
+P1 start
+P2 resume
+main Process
+P1 resume

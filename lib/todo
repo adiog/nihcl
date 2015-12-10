@@ -1,0 +1,12 @@
+FDSet.c: Fix for systems that don't have getdtablesize()
+
+Per class implementaton of deepCopy()?:
+	classname* classname::deepCopy() { return classname::castdown(Object::deepCopy()); }
+
+RevIterator (wouldn't have to implement for unsequenced collections).
+
+AVLTree and SplayTree
+
+Add support for microseconds to class Time.
+
+LinkedList::remove(const Object&) -- Object's Link is modified.

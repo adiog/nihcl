@@ -1,0 +1,8 @@
+#!/bin/sh
+echo bitvec;	./bitvec  2>&1 | diff -c - bitvec.v
+echo bytevec;	./bytevec 2>&1 | diff -c - bytevec.v
+echo shortvec;	./shortvec 2>&1 | diff -c - shortvec.v
+echo intvec;	./intvec 2>&1 | diff -c - intvec.v
+echo longvec;	./longvec 2>&1 | diff -c - longvec.v
+echo floatvec;	./floatvec 2>&1 | diff -c - floatvec.v
+echo doublevec;	./doublevec 2>&1 | diff -c - doublevec.v

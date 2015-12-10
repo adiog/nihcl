@@ -1,0 +1,306 @@
+# $Header: /afs/alw.nih.gov/unix/sun4_40c/usr/local/src/nihcl-3.0/share/lib/RCS/MAKEFILE,v 3.0 90/05/20 21:03:14 kgorlen Rel $
+# C++ compiler
+CC = CC
+
+# C++ debug switch
+CCDEBUG =
+#CCDEBUG = -g
+
+# C++ flags
+# NOTE: Disable +p option when compiling with AT&T R2.1
+CCFLAGS = +p
+#CCFLAGS =
+
+# C++ include files
+I = /usr/include/CC
+
+# If using BSD
+SYS = BSD
+# If using System V
+#SYS = SYSV
+
+# Compile with nested types (works with AT&T R2.1 and GNU C++)
+NESTED_TYPES =
+#NESTED_TYPES = -DNESTED_TYPES
+
+# Disable AT&T R2.0/R2.1 bug work-around code
+BUGDEFS =
+#BUGDEFS = -DBUG_bC2728 -DBUG_38 -DBUG_39 -DBUG_OPTYPECONST
+# Defining BUG_TOOBIG disables code that prevents C compiler "yacc stack overflows"
+#BUGDEFS = -DBUG_bC2728 -DBUG_38 -DBUG_39 -DBUG_OPTYPECONST -DBUG_TOOBIG
+
+# Enable debug code
+DEBUGDEFS =
+#DEBUGDEFS = -DDEBUG_OBJIO -DDEBUG_PROCESS
+
+# Flags for ln
+#LNFLAGS =
+LNFLAGS = -s
+
+# If using "patch"
+MAIN = _main.c_p
+# If using "munch"
+#MAIN = _main.c_m
+
+# For no multiple inheritance support
+MI =
+# Enable support for multiple inheritance
+#MI = -DMI
+
+NIHCLLIB = libnihcl.a
+
+CFLAGS = ${MI} ${CCDEBUG} ${CCFLAGS} ${NESTED_TYPES} ${BUGDEFS} ${DEBUGDEFS}
+
+# Target Directories
+NIHCLLIBDIR = /usr/lib
+NIHCLINCDIR = /usr/include/nihcl
+NIHCLSRCDIR = /usr/local/src/nihcl
+ERRGENDIR = /usr/local/bin
+ERRTABDIR = /usr/local/lib
+
+OBJECTS = regex.o ArrayOb.o Arraychar.o Assoc.o AssocInt.o Bag.o BitBoard.o Bitset.o Class.o Collection.o Date.o Dictionary.o Exception.o FDSet.o Float.o Fraction.o Heap.o HeapProc.o IdentDict.o IdentSet.o Integer.o Iterator.o KeySortCltn.o Link.o LinkOb.o LinkedList.o LookupKey.o Nil.o OIOTbl.o OIOfd.o OIOnih.o OIOstream.o Object.o OrderedCltn.o Point.o Process.o Random.o Range.o Rectangle.o Regex.o Scheduler.o Semaphore.o SeqCltn.o Set.o SharedQueue.o SortedCltn.o Stack.o StackProc.o String.o Time.o _main.o nihclerrs.o
+
+GENERICS = Arraychar.h Arraychar.c
+
+.SUFFIXES: ..c .s
+.c.o:
+	${CC} ${CFLAGS} -c $<
+.c..c:
+	${CC} ${CFLAGS} +i -c $<
+.c.s:
+	${CC} ${CFLAGS} +i -S $<
+
+.PRECIOUS: ${NIHCLLIB}
+
+all: always nihclerrsx.h regex.o ${NIHCLLIB}
+
+always:
+	${MAKE} generic _main.c
+
+nihclerrsx.h: nihclerrs.err
+	-if test -f /usr/bin/errcom ; then errcom nihclerrs.err ; else ${ERRGENDIR}/errgen -R${ERRTABDIR} nihclerrs.err; fi
+	sed -f nihclerrs.sed <nihclerrs.c >nihclerrs.tmp
+	mv nihclerrs.tmp nihclerrs.c
+	sed -n -e "s/^\([A-Z][a-zA-Z]*\).*/int NIHCL_\1	= NIHCL__\1;/p" <nihclerrs.err >nihclerrsx.h
+
+generic: ${GENERICS}
+
+_main.c:
+	-rm -f targetlist *.o _main.c
+	ln ${LNFLAGS} ${MAIN} _main.c
+
+Arraychar.h: Array_h.m4
+	echo "ARRAYDECLARE(Arraychar,char)" | m4 Array_h.m4 - >Arraychar.h
+
+Arraychar.c: Array_c.m4 Arraychar.p
+	m4 Array_c.m4 Arraychar.p >Arraychar.c
+
+regex.o: regex/regex.c regex.h
+#	cc -O -I. -D'SIGN_EXTEND_CHAR(c)=(((c) & 0x80) ? ((c) | 0xffffff80) : (c))' -c regex/regex.c
+	cc -O -I. -c regex/regex.c
+
+# Hack to make stdarg work on sparc
+
+Class.o ${NIHCLLIB}(Class.o): Class.c
+#	${CC} ${CFLAGS} -F -c Class.c | sed -e 's/__0__builtin/__builtin/g' >Class..c
+	${CC} ${MI} ${CCFLAGS} ${NESTED_TYPES} ${BUGDEFS} ${DEBUGDEFS} -F -c Class.c | sed -e 's/__0__builtin/__builtin/g' >Class..c
+	cc ${CCDEBUG} -c -o Class.o Class..c
+	rm Class..c
+
+Exception.o ${NIHCLLIB}(Exception.o): Exception.c
+#	${CC} ${CFLAGS} -F -c Exception.c | sed -e 's/__0__builtin/__builtin/g' >Exception..c
+	${CC} ${MI} ${CCFLAGS} ${NESTED_TYPES} ${BUGDEFS} ${DEBUGDEFS} -F -c Exception.c | sed -e 's/__0__builtin/__builtin/g' >Exception..c
+	cc ${CCDEBUG} -c -o Exception.o Exception..c
+	rm Exception..c
+
+
+${NIHCLLIB}: ${OBJECTS}
+	ar rv $@ $?
+	if test ${SYS} = BSD ; then ranlib ${NIHCLLIB}; fi
+	rm *.o
+
+install:
+	cp lib*.a ${NIHCLLIBDIR}
+	if test ${SYS} = BSD ; then \
+		for i in lib*.a; do (cd ${NIHCLLIBDIR}; ranlib -t $$i); done; \
+	fi
+	-mkdir ${NIHCLINCDIR}
+	-chmod u+w ${NIHCLINCDIR}/*.h ${NIHCLINCDIR}/Template_[ch]
+	-rm -f ${NIHCLINCDIR}/*.h ${NIHCLINCDIR}/Template_[ch]
+	cp *.h Template_[ch] ${NIHCLINCDIR}
+
+clean:
+	-rm -f *.o *..c *.a nihclerrsx.h ${GENERICS} _main.c make.tdep*
+
+# DO NOT DELETE THIS LINE -- make depend depends on it.
+
+ArrayOb.o: ArrayOb.h
+ArrayOb.o: Collection.h Object.h
+ArrayOb.o: Iterator.h nihclIO.h OIO.h OIOfd.h
+Arraychar.o: Arraychar.h Collection.h Object.h
+Arraychar.o: Iterator.h
+Arraychar.o: nihclconfig.h
+Arraychar.o: nihclIO.h
+Arraychar.o: OIO.h OIOfd.h
+Assoc.o: Assoc.h LookupKey.h Object.h
+Assoc.o: nihclIO.h OIO.h
+Assoc.o: OIOfd.h
+AssocInt.o: AssocInt.h LookupKey.h Object.h
+AssocInt.o: Integer.h
+AssocInt.o: nihclIO.h OIO.h OIOfd.h
+Bag.o: Bag.h Collection.h Object.h
+Bag.o: Iterator.h
+Bag.o: Dictionary.h Set.h ArrayOb.h AssocInt.h LookupKey.h Integer.h
+Bag.o: nihclIO.h OIO.h OIOfd.h
+BitBoard.o: BitBoard.h Object.h
+BitBoard.o: nihclIO.h
+BitBoard.o: OIO.h OIOfd.h
+Bitset.o: Bitset.h Object.h
+Bitset.o: nihclIO.h OIO.h OIOfd.h
+Class.o: Object.h
+Class.o: String.h
+Class.o: Dictionary.h
+Class.o: Set.h Collection.h Iterator.h ArrayOb.h Assoc.h LookupKey.h
+Class.o: OrderedCltn.h SeqCltn.h IdentSet.h nihclIO.h OIO.h OIOfd.h
+Class.o: OIOTbl.h IdentDict.h
+Collection.o: Collection.h Object.h
+Collection.o: Iterator.h
+Collection.o: ArrayOb.h nihclIO.h OIO.h OIOfd.h
+Date.o: Date.h Object.h
+Date.o: String.h
+Date.o: nihclIO.h OIO.h OIOfd.h
+Dictionary.o: Dictionary.h Set.h Collection.h Object.h
+Dictionary.o: Iterator.h ArrayOb.h LookupKey.h
+Dictionary.o: Assoc.h
+Exception.o: ExceptAct.h Exception.h Object.h
+Exception.o: nihclerrs.h
+Exception.o: nihclconfig.h
+Exception.o: nihclerrsx.h
+FDSet.o: FDSet.h Object.h
+FDSet.o: nihclIO.h OIO.h OIOfd.h
+FDSet.o: nihclconfig.h
+Float.o: Float.h Object.h
+Float.o: nihclIO.h OIO.h OIOfd.h
+Fraction.o: Fraction.h Object.h
+Fraction.o: nihclIO.h OIO.h OIOfd.h
+Heap.o: Heap.h Collection.h
+Heap.o: Object.h
+Heap.o: Iterator.h OrderedCltn.h SeqCltn.h ArrayOb.h
+Heap.o: nihclIO.h OIO.h OIOfd.h
+HeapProc.o: HeapProc.h Process.h Link.h Object.h
+HeapProc.o: String.h
+HeapProc.o: nihclconfig.h
+HeapProc.o: Scheduler.h LinkedList.h SeqCltn.h
+HeapProc.o: Collection.h Iterator.h StackProc.h nihclIO.h OIO.h OIOfd.h
+IdentDict.o: IdentDict.h Dictionary.h Set.h Collection.h Object.h
+IdentDict.o: Iterator.h ArrayOb.h LookupKey.h
+IdentSet.o: IdentSet.h Set.h Collection.h Object.h
+IdentSet.o: Iterator.h
+IdentSet.o: ArrayOb.h
+Integer.o: Integer.h Object.h
+Integer.o: nihclIO.h
+Integer.o: OIO.h OIOfd.h
+Iterator.o: Iterator.h Object.h
+Iterator.o: Collection.h
+Iterator.o: SeqCltn.h nihclIO.h OIO.h OIOfd.h
+KeySortCltn.o: nihclIO.h OIO.h Object.h
+KeySortCltn.o: OIOfd.h
+KeySortCltn.o: Assoc.h LookupKey.h KeySortCltn.h SortedCltn.h OrderedCltn.h
+KeySortCltn.o: SeqCltn.h Collection.h Iterator.h ArrayOb.h Range.h
+Link.o: Link.h Object.h
+Link.o: LinkOb.h
+LinkOb.o: LinkOb.h Link.h Object.h
+LinkOb.o: nihclIO.h
+LinkOb.o: OIO.h OIOfd.h
+LinkedList.o: LinkedList.h SeqCltn.h Collection.h Object.h
+LinkedList.o: Iterator.h Link.h nihclIO.h OIO.h
+LinkedList.o: OIOfd.h
+LookupKey.o: LookupKey.h Object.h
+LookupKey.o: nihclIO.h
+LookupKey.o: OIO.h OIOfd.h
+Nil.o: Object.h
+OIOTbl.o: OIOTbl.h IdentDict.h Dictionary.h Set.h Collection.h Object.h
+OIOTbl.o: Iterator.h ArrayOb.h OrderedCltn.h
+OIOTbl.o: SeqCltn.h AssocInt.h LookupKey.h Integer.h
+OIOfd.o: OIOfd.h Object.h
+OIOfd.o: OIOTbl.h IdentDict.h Dictionary.h
+OIOfd.o: Set.h Collection.h Iterator.h ArrayOb.h OrderedCltn.h SeqCltn.h
+OIOnih.o: OIOnih.h OIOstream.h OIO.h Object.h
+OIOnih.o: OIOTbl.h
+OIOnih.o: IdentDict.h Dictionary.h Set.h Collection.h Iterator.h ArrayOb.h
+OIOnih.o: OrderedCltn.h SeqCltn.h
+OIOstream.o: OIOstream.h
+OIOstream.o: OIO.h Object.h
+OIOstream.o: OIOTbl.h IdentDict.h Dictionary.h Set.h
+OIOstream.o: Collection.h Iterator.h ArrayOb.h OrderedCltn.h SeqCltn.h
+Object.o: nihclconfig.h
+Object.o: nihclIO.h
+Object.o: OIO.h Object.h
+Object.o: OIOfd.h
+Object.o: OIOTbl.h IdentDict.h Dictionary.h
+Object.o: Set.h Collection.h Iterator.h ArrayOb.h OrderedCltn.h SeqCltn.h
+Object.o: LookupKey.h IdentSet.h String.h
+Object.o: Assoc.h AssocInt.h Integer.h
+OrderedCltn.o: OrderedCltn.h SeqCltn.h Collection.h
+OrderedCltn.o: Object.h
+OrderedCltn.o: Iterator.h ArrayOb.h nihclIO.h OIO.h
+OrderedCltn.o: OIOfd.h
+Point.o: Point.h Object.h
+Point.o: nihclIO.h OIO.h OIOfd.h
+Process.o: Process.h Link.h Object.h
+Process.o: String.h
+Process.o: nihclconfig.h
+Process.o: Scheduler.h
+Process.o: LinkedList.h SeqCltn.h Collection.h Iterator.h StackProc.h
+Process.o: ExceptAct.h Exception.h nihclerrs.h
+Random.o: Random.h Object.h
+Random.o: nihclIO.h OIO.h OIOfd.h
+Range.o: Range.h Object.h
+Range.o: nihclIO.h OIO.h OIOfd.h
+Rectangle.o: Rectangle.h Object.h
+Rectangle.o: Point.h
+Rectangle.o: nihclIO.h OIO.h OIOfd.h
+Regex.o: Regex.h String.h Object.h
+Regex.o: Range.h regex.h
+Regex.o: nihclIO.h OIO.h OIOfd.h
+Scheduler.o: Process.h Link.h Object.h
+Scheduler.o: String.h
+Scheduler.o: nihclconfig.h
+Scheduler.o: Scheduler.h LinkedList.h SeqCltn.h
+Scheduler.o: Collection.h Iterator.h StackProc.h
+Semaphore.o: Semaphore.h Object.h
+Semaphore.o: LinkedList.h SeqCltn.h Collection.h Iterator.h Link.h Process.h
+Semaphore.o: String.h
+Semaphore.o: nihclconfig.h
+Semaphore.o: Scheduler.h StackProc.h nihclIO.h
+Semaphore.o: OIO.h OIOfd.h
+SeqCltn.o: SeqCltn.h Collection.h Object.h
+SeqCltn.o: Iterator.h
+Set.o: Set.h Collection.h Object.h
+Set.o: Iterator.h
+Set.o: ArrayOb.h OrderedCltn.h SeqCltn.h nihclIO.h OIO.h OIOfd.h
+SharedQueue.o: SharedQueue.h ArrayOb.h Collection.h Object.h
+SharedQueue.o: Iterator.h Semaphore.h LinkedList.h
+SharedQueue.o: SeqCltn.h Link.h nihclIO.h OIO.h OIOfd.h
+SortedCltn.o: SortedCltn.h OrderedCltn.h SeqCltn.h Collection.h Object.h
+SortedCltn.o: Iterator.h ArrayOb.h Range.h nihclIO.h
+SortedCltn.o: OIO.h OIOfd.h
+Stack.o: Stack.h OrderedCltn.h SeqCltn.h Collection.h Object.h
+Stack.o: Iterator.h ArrayOb.h nihclIO.h OIO.h
+Stack.o: OIOfd.h
+StackProc.o: StackProc.h
+StackProc.o: Process.h Link.h Object.h
+StackProc.o: String.h
+StackProc.o: nihclconfig.h
+StackProc.o: Scheduler.h LinkedList.h SeqCltn.h
+StackProc.o: Collection.h Iterator.h nihclIO.h OIO.h OIOfd.h
+String.o: String.h Object.h
+String.o: Range.h nihclconfig.h
+String.o: nihclIO.h
+String.o: OIO.h OIOfd.h
+Time.o: Date.h Object.h
+Time.o: Time.h nihclconfig.h
+Time.o: nihclIO.h OIO.h
+Time.o: OIOfd.h
+_main.o: Object.h
+nihclerrs.o: nihclerrs.h

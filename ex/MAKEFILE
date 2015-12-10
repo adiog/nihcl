@@ -1,0 +1,655 @@
+# $Header: /afs/alw.nih.gov/unix/sun4_40c/usr/local/src/nihcl-3.0/share/ex/RCS/MAKEFILE,v 3.0 90/05/20 21:05:07 kgorlen Rel $
+# C++ compiler
+CC = CC
+
+# C++ debug switch
+CCDEBUG =
+#CCDEBUG = -g
+
+# C++ flags
+# NOTE: Disable +p option when compiling with AT&T R2.1
+CCFLAGS = +p
+#CCFLAGS =
+
+# C++ include files
+I = /usr/include/CC
+
+# If using BSD
+SYS = BSD
+# If using System V
+#SYS = SYSV
+
+# Compile with nested types (works with AT&T R2.1 and GNU C++)
+NESTED_TYPES =
+#NESTED_TYPES = -DNESTED_TYPES
+
+# Disable AT&T R2.0/R2.1 bug work-around code
+BUGDEFS =
+
+# Enable debug code
+DEBUGDEFS =
+
+NIHCLINCDIR = /usr/include/nihcl
+NIHCLLIBDIR = /usr/local/lib
+NIHCLVECINCDIR = ${NIHCLINCDIR}
+NIHCLLIB = ${NIHCLLIBDIR}/libnihcl.a
+NIHCLMILIB = ${NIHCLLIBDIR}/libnihclmi.a
+NIHCLVECLIB = ${NIHCLLIBDIR}/libnihclvec.a
+
+CFLAGS = -I${NIHCLINCDIR} ${CCDEBUG} ${CCFLAGS} ${NESTED_TYPES} ${BUGDEFS} ${DEBUGDEFS}
+LFLAGS = -lm ${CCDEBUG}
+
+PROGS = ex10-1 ex10-1K ex10-1S ex10-1SK ex11-1 ex11-2 ex11-3 ex11-4 ex13-1 ex13-10 ex13-11 ex13-2 ex13-3 ex13-4 ex13-5 ex13-6 ex13-7 ex13-8 ex13-9 ex14-1 ex14-2 ex2-1 ex2-2 ex2-3 ex5-1 ex5-10 ex5-11 ex5-2 ex5-3 ex5-4 ex5-5 ex5-6 ex5-7 ex5-8 ex5-9 ex6-1 ex6-2 ex6-3 ex6-4 ex7-1 ex7-2 ex7-3 ex8-1 ex8-10 ex8-11 ex8-12 ex8-13 ex8-14 ex8-15 ex8-16 ex8-2 ex8-3 ex8-4 ex8-5 ex8-6 ex8-7 ex8-8 ex8-9 ex9-1 ex9-2 ex9-3 ex9-4
+
+CLASSES = AllLink.o AllVehicles.o AmphibVhcl.o ArrayOb.o ArrayPartial.o AutoDeriv.o BigInt.o Circle.o DrawBridgeQ.o ExString.o LandVhcl.o Line.o Matrix.o Partial.o Patient.o Picture.o QLink.o Shape.o StopLightQ.o Vehicle.o VehicleQ.o WaterVhcl.o
+
+.SUFFIXES: ..c .s .C
+.c:
+	$(CC) $(CFLAGS) $< -o $* $(LFLAGS)
+.c.o:
+	$(CC) $(CFLAGS) -c $<
+.C.o:
+	$(CC) $(CFLAGS) -c $<
+.c..c:
+	${CC} ${CFLAGS} +i -c $<
+.c.s:
+	${CC} ${CFLAGS} +i -S $<
+
+all:${CLASSES} ${PROGS} ${SUBDIRS}
+
+# C program to add ints
+ex2-1.o: ex2-1.c
+	cc ${CCDEBUG} -c $<
+
+ex2-1: $$@.o
+	cc $@.o -o $@ ${LFLAGS}
+
+# C program to add multiple-precision integers using mp library
+ex2-2.o: ex2-2.c
+	cc ${CCDEBUG} -c $<
+
+ex2-2: $$@.o
+	cc $@.o -o $@ -lmp ${LFLAGS}
+
+# C++ program to add instances of class BigInt
+ex2-3: $$@.o BigInt.o
+	$(CC) $@.o -o $@ BigInt.o ${LFLAGS}
+
+# Writing to the standard output stream
+ex5-1: $$@.o
+	$(CC) $@.o -o $@ ${LFLAGS}
+
+# Reading from the standard input stream
+ex5-2: $$@.o
+	$(CC) $@.o -o $@ ${LFLAGS}
+
+# Writing a BigInt to the standard output
+ex5-3: $$@.o BigInt.o
+	$(CC) $@.o -o $@ BigInt.o ${LFLAGS}
+
+# Extending stream I/O for class BigInt
+ex5-4: $$@.o BigInt.o
+	$(CC) $@.o -o $@ BigInt.o ${LFLAGS}
+
+# Opening a stream for an output file
+ex5-5: $$@.o
+	$(CC) $@.o -o $@ ${LFLAGS}
+
+# String substitution
+ex5-6: $$@.o ExString.o
+	$(CC) $@.o -o $@ ExString.o ${LFLAGS}
+
+# Find dates of working days
+ex5-7: $$@.o ${NIHCLLIB}
+	$(CC) $@.o -o $@ ${NIHCLLIB} ${LFLAGS}
+
+# Vector operations
+ex5-8.o: ex5-8.c
+	$(CC) $(CFLAGS) -I${NIHCLVECINCDIR} -c $*.c
+
+ex5-8: $$@.o ${NIHCLLIB} ${NIHCLVECLIB}
+	$(CC) $@.o -o $@ ${NIHCLVECLIB} ${NIHCLLIB} ${LFLAGS}
+
+# Matrix algebra with Class Matrix
+ex5-9: $$@.o Matrix.o
+	$(CC) $@.o -o $@ Matrix.o ${LFLAGS}
+
+# One dimensional automatic derivatives with class AutoDeriv
+ex5-10: $$@.o AutoDeriv.o
+	$(CC) $@.o -o $@ AutoDeriv.o ${LFLAGS}
+
+# Newton's method with Partial automatic derivatives
+ex5-11: $$@.o ArrayPartial.o Partial.o Matrix.o
+	$(CC) $@.o -o $@ ArrayPartial.o Partial.o Matrix.o ${LFLAGS}
+
+# Geometry class hierarchy
+ex6-1: $$@.o 
+	$(CC) $@.o -o $@ ${LFLAGS}
+
+# Improved geometry class hierarchy
+ex6-2: $$@.o
+	$(CC) $@.o -o $@ ${LFLAGS}
+
+# Order of construction of base and member classes
+ex6-3: $$@.o
+	$(CC) $@.o -o $@ ${LFLAGS}
+
+# Calling a virtual function from a base class constructor
+ex6-4: $$@.o
+	$(CC) $@.o -o $@ ${LFLAGS}
+
+# Geometry class hierarchy using NIH class library
+ex7-1: $$@.o ${NIHCLLIB}
+	$(CC) $@.o -o $@ ${NIHCLLIB} ${LFLAGS}
+
+#  Improved geometry class hierarchy using NIH class library
+ex7-2: $$@.o Circle.o Line.o Picture.o Shape.o ${NIHCLLIB}
+	$(CC) $@.o Circle.o Line.o Picture.o Shape.o -o $@ ${NIHCLLIB} ${LFLAGS}
+
+#  Object I/O readFrom()
+ex7-3: $$@.o Circle.o Line.o Picture.o Shape.o ${NIHCLLIB}
+	$(CC) $@.o Circle.o Line.o Picture.o Shape.o -o $@ ${NIHCLLIB} ${LFLAGS}
+
+#  Description of a Patient object
+ex8-1: $$@.o Patient.o ${NIHCLLIB}
+	$(CC) $@.o Patient.o -o $@ ${NIHCLLIB} ${LFLAGS}
+
+#  Use of an Iterator with container for objects of unknown class
+ex8-2: $$@.o ${NIHCLLIB}
+	$(CC) $@.o -o $@ ${NIHCLLIB} ${LFLAGS}
+
+#  Nested Iterators
+ex8-3: $$@.o ${NIHCLLIB}
+	$(CC) $@.o -o $@ ${NIHCLLIB} ${LFLAGS}
+
+#  Incorrectly modifying a container during iteration
+ex8-4: $$@.o ${NIHCLLIB}
+	$(CC) $@.o -o $@ ${NIHCLLIB} ${LFLAGS}
+
+#  Modifying a container during iteration
+ex8-5: $$@.o ${NIHCLLIB}
+	$(CC) $@.o -o $@ ${NIHCLLIB} ${LFLAGS}
+
+#  Sequential access to Objects in an OrderedCltn
+ex8-6: $$@.o Patient.o ${NIHCLLIB}
+	$(CC) $@.o Patient.o -o $@ ${NIHCLLIB} ${LFLAGS}
+
+#  Sorting Patient records by name
+ex8-7: $$@.o Patient.o ${NIHCLLIB}
+	$(CC) $@.o Patient.o -o $@ ${NIHCLLIB} ${LFLAGS}
+
+#  Sorting Patient records with a KeySortCltn
+ex8-8: $$@.o Patient.o ${NIHCLLIB}
+	$(CC) $@.o Patient.o -o $@ ${NIHCLLIB} ${LFLAGS}
+
+#  Sorting on Multiple Keys with ArrayOb and KeySortCltn
+ex8-9: $$@.o Patient.o ${NIHCLLIB}
+	$(CC) $@.o Patient.o -o $@ ${NIHCLLIB} ${LFLAGS}
+
+#  Linking into a LinkedList
+ex8-10: $$@.o ${NIHCLLIB}
+	$(CC) $@.o -o $@ ${NIHCLLIB} ${LFLAGS}
+
+#  Test if date falls on a weekday
+ex8-11: $$@.o ${NIHCLLIB}
+	$(CC) $@.o -o $@ ${NIHCLLIB} ${LFLAGS}
+
+#  Binary Set operators
+ex8-12: $$@.o Patient.o ${NIHCLLIB}
+	$(CC) $@.o Patient.o -o $@ ${NIHCLLIB} ${LFLAGS}
+
+# Comparison of classes Set and IdentSet
+ex8-13: $$@.o ${NIHCLLIB}
+	$(CC) $@.o -o $@ ${NIHCLLIB} ${LFLAGS}
+
+#  A Dictionary of Patient records keyed by name
+ex8-14: $$@.o Patient.o ${NIHCLLIB}
+	$(CC) $@.o Patient.o -o $@ ${NIHCLLIB} ${LFLAGS}
+
+# Comparison of classes Dictionary and IdentDict
+ex8-15: $$@.o ${NIHCLLIB}
+	$(CC) $@.o -o $@ ${NIHCLLIB} ${LFLAGS}
+
+#  Property list
+ex8-16: $$@.o Patient.o ${NIHCLLIB}
+	$(CC) $@.o Patient.o -o $@ ${NIHCLLIB} ${LFLAGS}
+
+# Class ArrayOb example
+ex9-1: $$@.o ArrayOb.o ${NIHCLLIB}
+	$(CC) $@.o -o $@ ${NIHCLLIB} ${LFLAGS}
+
+# Incorrect handling of member pointers to class instances
+ex9-2: $$@.o ${NIHCLLIB}
+	$(CC) $@.o -o $@ ${NIHCLLIB} ${LFLAGS}
+
+# Correct handling of member pointers to class instances
+ex9-3: $$@.o ${NIHCLLIB}
+	$(CC) $@.o -o $@ ${NIHCLLIB} ${LFLAGS}
+
+# Virtual inline function calls
+ex9-4: $$@.o
+	$(CC) $@.o -o $@ ${LFLAGS}
+
+# Variations of isEqual()
+ex10-1K.o: ex10-1K.c
+	$(CC) $(CFLAGS) -c -DKINDOF $*.c
+
+ex10-1S.o: ex10-1S.c
+	$(CC) $(CFLAGS) -c -DSTRICT $*.c
+
+ex10-1SK.o: ex10-1SK.c
+	$(CC) $(CFLAGS) -c -DSTRICT -DKINDOF $*.c
+
+ex10-1: $$@.o ${NIHCLLIB}
+	$(CC) $@.o -o $@ ${NIHCLLIB} ${LFLAGS}
+
+ex10-1K: $$@.o ${NIHCLLIB}
+	$(CC) $@.o -o $@ ${NIHCLLIB} ${LFLAGS}
+
+ex10-1S: $$@.o ${NIHCLLIB}
+	$(CC) $@.o -o $@ ${NIHCLLIB} ${LFLAGS}
+
+ex10-1SK: $$@.o ${NIHCLLIB}
+	$(CC) $@.o -o $@ ${NIHCLLIB} ${LFLAGS}
+
+# Scheduling lightweight processes in the NIH class library
+ex11-1: $$@.o
+	$(CC) $@.o -o $@ ${NIHCLLIB} ${LFLAGS}
+
+# Managing N resources with a Semaphore
+ex11-2: $$@.o
+	$(CC) $@.o -o $@ ${NIHCLLIB} ${LFLAGS}
+
+# Protecting a critical section of code with an AutoSignal
+ex11-3: $$@.o
+	$(CC) $@.o -o $@ ${NIHCLLIB} ${LFLAGS}
+
+# Communication between lightweight processes with a SharedQueue
+ex11-4: $$@.o
+	$(CC) $@.o -o $@ ${NIHCLLIB} ${LFLAGS}
+
+# Class Vehicle with multiple links
+ex13-1: $$@.o
+	$(CC) $@.o -o $@ ${LFLAGS}
+
+# Improved vehicle linked lists
+ex13-2: $$@.o
+	$(CC) $@.o -o $@ ${LFLAGS}
+
+# Virtual functions and multiple inheritance
+ex13-3: $$@.o
+	$(CC) $@.o -o $@ ${LFLAGS}
+
+# Class AmphibiousVehicle with virtual base class
+ex13-4: $$@.o
+	$(CC) $@.o -o $@ ${LFLAGS}
+
+# Virtual base classes and virtual functions
+ex13-5: $$@.o
+	$(CC) $@.o -o $@ ${LFLAGS}
+
+# Order of construction of multiple base, virtual base, and member classes
+ex13-6: $$@.o
+	$(CC) $@.o -o $@ ${LFLAGS}
+
+# Calling a virtual function from a base class constructor
+ex13-7: $$@.o
+	$(CC) $@.o -o $@ ${LFLAGS}
+
+# Static method for avoiding undesired multiple calls to member functions of virtual base classes
+ex13-8: $$@.o
+	$(CC) $@.o -o $@ ${LFLAGS}
+
+# MI with the NIH Class Library
+
+VEHICLEOBJS = AllLink.o AllVehicles.o AmphibVhcl.o DrawBridgeQ.o LandVhcl.o QLink.o StopLightQ.o Vehicle.o VehicleQ.o WaterVhcl.o
+
+# Hack to make stdarg work on sparc
+
+Vehicle.o: Vehicle.c
+#	${CC} ${CFLAGS} -F -c Vehicle.c | sed -e 's/__0__builtin/__builtin/g' >Vehicle..c
+	${CC} -I${NIHCLINCDIR} ${CCFLAGS} ${NESTED_TYPES} ${BUGDEFS} ${DEBUGDEFS} -F -c Vehicle.c | sed -e 's/__0__builtin/__builtin/g' >Vehicle..c
+	cc ${CCDEBUG} -c -o Vehicle.o Vehicle..c
+	rm Vehicle..c
+
+ex13-9: $$@.o ${VEHICLEOBJS} ${NIHCLMILIB}
+	$(CC) $@.o -o $@ ${VEHICLEOBJS} ${NIHCLMILIB} ${LFLAGS}
+
+# MI and Object I/O readFrom()
+ex13-10: $$@.o ${VEHICLEOBJS} ${NIHCLMILIB}
+	$(CC) $@.o -o $@ ${VEHICLEOBJS} ${NIHCLMILIB} ${LFLAGS}
+
+# Limitation of Object I/O
+ex13-11: $$@.o ${VEHICLEOBJS} ${NIHCLMILIB}
+	$(CC) $@.o -o $@ ${VEHICLEOBJS} ${NIHCLMILIB} ${LFLAGS}
+
+# Exception handling in the NIH Class Library
+ex14-1: $$@.o ${NIHCLLIB}
+	$(CC) $@.o -o $@ ${NIHCLLIB} ${LFLAGS}
+
+# Counted pointers
+ex14-2: $$@.o Patient.o ${NIHCLLIB}
+	$(CC) $@.o -o $@ Patient.o ${NIHCLLIB} ${LFLAGS}
+
+clean:
+	-rm -f *.o $(PROGS) *..c *..s core
+
+# DO NOT DELETE THIS LINE -- make depend depends on it.
+
+AllLink.o: AllLink.h ${NIHCLINCDIR}/Link.h ${NIHCLINCDIR}/Object.h
+AllLink.o: ${NIHCLINCDIR}/nihclIO.h
+AllLink.o: ${NIHCLINCDIR}/OIO.h ${NIHCLINCDIR}/OIOfd.h
+AllVehicles.o: AllVehicles.h ${NIHCLINCDIR}/LinkedList.h
+AllVehicles.o: ${NIHCLINCDIR}/SeqCltn.h ${NIHCLINCDIR}/Collection.h
+AllVehicles.o: ${NIHCLINCDIR}/Object.h
+AllVehicles.o: ${NIHCLINCDIR}/Iterator.h ${NIHCLINCDIR}/Link.h
+AllVehicles.o: AllLink.h ${NIHCLINCDIR}/nihclIO.h
+AllVehicles.o: ${NIHCLINCDIR}/OIO.h ${NIHCLINCDIR}/OIOfd.h
+AmphibVhcl.o: AmphibVhcl.h LandVhcl.h Vehicle.h AllLink.h
+AmphibVhcl.o: ${NIHCLINCDIR}/Link.h ${NIHCLINCDIR}/Object.h
+AmphibVhcl.o: QLink.h AllVehicles.h
+AmphibVhcl.o: ${NIHCLINCDIR}/LinkedList.h ${NIHCLINCDIR}/SeqCltn.h
+AmphibVhcl.o: ${NIHCLINCDIR}/Collection.h ${NIHCLINCDIR}/Iterator.h
+AmphibVhcl.o: ${NIHCLINCDIR}/IdentSet.h ${NIHCLINCDIR}/Set.h
+AmphibVhcl.o: ArrayOb.h WaterVhcl.h ${NIHCLINCDIR}/nihclIO.h
+AmphibVhcl.o: ${NIHCLINCDIR}/OIO.h ${NIHCLINCDIR}/OIOfd.h
+ArrayOb.o: ArrayOb.h
+ArrayOb.o: ${NIHCLINCDIR}/Collection.h ${NIHCLINCDIR}/Object.h
+ArrayOb.o: ${NIHCLINCDIR}/Iterator.h ${NIHCLINCDIR}/nihclIO.h
+ArrayOb.o: ${NIHCLINCDIR}/OIO.h ${NIHCLINCDIR}/OIOfd.h
+ArrayPartial.o: ArrayPartial.h Partial.h
+ArrayPartial.o: Matrix.h
+AutoDeriv.o: AutoDeriv.h
+BigInt.o: BigInt.h
+Circle.o: Circle.h Shape.h ${NIHCLINCDIR}/Object.h
+Circle.o: ${NIHCLINCDIR}/Point.h
+Circle.o: ${NIHCLINCDIR}/Stack.h ${NIHCLINCDIR}/OrderedCltn.h
+Circle.o: ${NIHCLINCDIR}/SeqCltn.h ${NIHCLINCDIR}/Collection.h
+Circle.o: ${NIHCLINCDIR}/Iterator.h ArrayOb.h
+Circle.o: ${NIHCLINCDIR}/nihclIO.h ${NIHCLINCDIR}/OIO.h
+Circle.o: ${NIHCLINCDIR}/OIOfd.h
+DrawBridgeQ.o: DrawBridgeQ.h VehicleQ.h ${NIHCLINCDIR}/LinkedList.h
+DrawBridgeQ.o: ${NIHCLINCDIR}/SeqCltn.h ${NIHCLINCDIR}/Collection.h
+DrawBridgeQ.o: ${NIHCLINCDIR}/Object.h
+DrawBridgeQ.o: ${NIHCLINCDIR}/Iterator.h ${NIHCLINCDIR}/Link.h
+DrawBridgeQ.o: WaterVhcl.h Vehicle.h AllLink.h QLink.h AllVehicles.h
+DrawBridgeQ.o: ${NIHCLINCDIR}/IdentSet.h ${NIHCLINCDIR}/Set.h
+DrawBridgeQ.o: ArrayOb.h ${NIHCLINCDIR}/nihclIO.h
+DrawBridgeQ.o: ${NIHCLINCDIR}/OIO.h ${NIHCLINCDIR}/OIOfd.h
+ExString.o: ExString.h
+LandVhcl.o: LandVhcl.h Vehicle.h AllLink.h ${NIHCLINCDIR}/Link.h
+LandVhcl.o: ${NIHCLINCDIR}/Object.h
+LandVhcl.o: QLink.h
+LandVhcl.o: AllVehicles.h ${NIHCLINCDIR}/LinkedList.h
+LandVhcl.o: ${NIHCLINCDIR}/SeqCltn.h ${NIHCLINCDIR}/Collection.h
+LandVhcl.o: ${NIHCLINCDIR}/Iterator.h ${NIHCLINCDIR}/IdentSet.h
+LandVhcl.o: ${NIHCLINCDIR}/Set.h ArrayOb.h ${NIHCLINCDIR}/nihclIO.h
+LandVhcl.o: ${NIHCLINCDIR}/OIO.h ${NIHCLINCDIR}/OIOfd.h
+Line.o: Line.h Shape.h ${NIHCLINCDIR}/Object.h
+Line.o: ${NIHCLINCDIR}/Point.h
+Line.o: ${NIHCLINCDIR}/Stack.h
+Line.o: ${NIHCLINCDIR}/OrderedCltn.h ${NIHCLINCDIR}/SeqCltn.h
+Line.o: ${NIHCLINCDIR}/Collection.h ${NIHCLINCDIR}/Iterator.h
+Line.o: ArrayOb.h ${NIHCLINCDIR}/nihclIO.h ${NIHCLINCDIR}/OIO.h
+Line.o: ${NIHCLINCDIR}/OIOfd.h
+Matrix.o: Matrix.h
+Partial.o: Partial.h
+Patient.o: Patient.h ${NIHCLINCDIR}/Object.h
+Patient.o: ${NIHCLINCDIR}/String.h
+Patient.o: ${NIHCLINCDIR}/nihclIO.h
+Patient.o: ${NIHCLINCDIR}/OIO.h ${NIHCLINCDIR}/OIOfd.h
+Picture.o: Picture.h Shape.h ${NIHCLINCDIR}/Object.h
+Picture.o: ${NIHCLINCDIR}/Point.h
+Picture.o: ${NIHCLINCDIR}/Stack.h ${NIHCLINCDIR}/OrderedCltn.h
+Picture.o: ${NIHCLINCDIR}/SeqCltn.h ${NIHCLINCDIR}/Collection.h
+Picture.o: ${NIHCLINCDIR}/Iterator.h ArrayOb.h
+Picture.o: ${NIHCLINCDIR}/nihclIO.h ${NIHCLINCDIR}/OIO.h
+Picture.o: ${NIHCLINCDIR}/OIOfd.h
+QLink.o: QLink.h ${NIHCLINCDIR}/Link.h ${NIHCLINCDIR}/Object.h
+QLink.o: ${NIHCLINCDIR}/nihclIO.h
+QLink.o: ${NIHCLINCDIR}/OIO.h ${NIHCLINCDIR}/OIOfd.h
+Shape.o: Shape.h ${NIHCLINCDIR}/Object.h
+Shape.o: ${NIHCLINCDIR}/Point.h
+Shape.o: ${NIHCLINCDIR}/Stack.h
+Shape.o: ${NIHCLINCDIR}/OrderedCltn.h ${NIHCLINCDIR}/SeqCltn.h
+Shape.o: ${NIHCLINCDIR}/Collection.h ${NIHCLINCDIR}/Iterator.h
+Shape.o: ArrayOb.h ${NIHCLINCDIR}/nihclIO.h ${NIHCLINCDIR}/OIO.h
+Shape.o: ${NIHCLINCDIR}/OIOfd.h
+StopLightQ.o: StopLightQ.h VehicleQ.h ${NIHCLINCDIR}/LinkedList.h
+StopLightQ.o: ${NIHCLINCDIR}/SeqCltn.h ${NIHCLINCDIR}/Collection.h
+StopLightQ.o: ${NIHCLINCDIR}/Object.h
+StopLightQ.o: ${NIHCLINCDIR}/Iterator.h ${NIHCLINCDIR}/Link.h
+StopLightQ.o: LandVhcl.h Vehicle.h AllLink.h QLink.h AllVehicles.h
+StopLightQ.o: ${NIHCLINCDIR}/IdentSet.h ${NIHCLINCDIR}/Set.h
+StopLightQ.o: ArrayOb.h ${NIHCLINCDIR}/nihclIO.h ${NIHCLINCDIR}/OIO.h
+StopLightQ.o: ${NIHCLINCDIR}/OIOfd.h
+Vehicle.o: Vehicle.h AllLink.h ${NIHCLINCDIR}/Link.h
+Vehicle.o: ${NIHCLINCDIR}/Object.h
+Vehicle.o: QLink.h
+Vehicle.o: AllVehicles.h ${NIHCLINCDIR}/LinkedList.h
+Vehicle.o: ${NIHCLINCDIR}/SeqCltn.h ${NIHCLINCDIR}/Collection.h
+Vehicle.o: ${NIHCLINCDIR}/Iterator.h ${NIHCLINCDIR}/IdentSet.h
+Vehicle.o: ${NIHCLINCDIR}/Set.h ArrayOb.h VehicleQ.h
+Vehicle.o: ${NIHCLINCDIR}/OrderedCltn.h ${NIHCLINCDIR}/nihclIO.h
+Vehicle.o: ${NIHCLINCDIR}/OIO.h ${NIHCLINCDIR}/OIOfd.h
+Vehicle.o: ${NIHCLINCDIR}/OIOnih.h ${NIHCLINCDIR}/OIOstream.h
+VehicleQ.o: VehicleQ.h ${NIHCLINCDIR}/LinkedList.h
+VehicleQ.o: ${NIHCLINCDIR}/SeqCltn.h ${NIHCLINCDIR}/Collection.h
+VehicleQ.o: ${NIHCLINCDIR}/Object.h
+VehicleQ.o: ${NIHCLINCDIR}/Iterator.h ${NIHCLINCDIR}/Link.h QLink.h
+VehicleQ.o: ${NIHCLINCDIR}/nihclIO.h ${NIHCLINCDIR}/OIO.h
+VehicleQ.o: ${NIHCLINCDIR}/OIOfd.h
+WaterVhcl.o: WaterVhcl.h Vehicle.h AllLink.h ${NIHCLINCDIR}/Link.h
+WaterVhcl.o: ${NIHCLINCDIR}/Object.h
+WaterVhcl.o: QLink.h
+WaterVhcl.o: AllVehicles.h ${NIHCLINCDIR}/LinkedList.h
+WaterVhcl.o: ${NIHCLINCDIR}/SeqCltn.h ${NIHCLINCDIR}/Collection.h
+WaterVhcl.o: ${NIHCLINCDIR}/Iterator.h ${NIHCLINCDIR}/IdentSet.h
+WaterVhcl.o: ${NIHCLINCDIR}/Set.h ArrayOb.h ${NIHCLINCDIR}/nihclIO.h
+WaterVhcl.o: ${NIHCLINCDIR}/OIO.h ${NIHCLINCDIR}/OIOfd.h
+ex10-1.o: ${NIHCLINCDIR}/Object.h
+ex10-1.o: ${NIHCLINCDIR}/nihclIO.h ${NIHCLINCDIR}/OIO.h
+ex10-1.o: ${NIHCLINCDIR}/OIOfd.h
+ex10-1K.o: ${NIHCLINCDIR}/Object.h
+ex10-1K.o: ${NIHCLINCDIR}/nihclIO.h ${NIHCLINCDIR}/OIO.h
+ex10-1K.o: ${NIHCLINCDIR}/OIOfd.h
+ex10-1S.o: ${NIHCLINCDIR}/Object.h
+ex10-1S.o: ${NIHCLINCDIR}/nihclIO.h ${NIHCLINCDIR}/OIO.h
+ex10-1S.o: ${NIHCLINCDIR}/OIOfd.h
+ex10-1SK.o: ${NIHCLINCDIR}/Object.h
+ex10-1SK.o: ${NIHCLINCDIR}/nihclIO.h ${NIHCLINCDIR}/OIO.h
+ex10-1SK.o: ${NIHCLINCDIR}/OIOfd.h
+ex11-1.o: ${NIHCLINCDIR}/Scheduler.h ${NIHCLINCDIR}/LinkedList.h
+ex11-1.o: ${NIHCLINCDIR}/SeqCltn.h ${NIHCLINCDIR}/Collection.h
+ex11-1.o: ${NIHCLINCDIR}/Object.h
+ex11-1.o: ${NIHCLINCDIR}/Iterator.h ${NIHCLINCDIR}/Link.h
+ex11-1.o: ${NIHCLINCDIR}/StackProc.h
+ex11-1.o: ${NIHCLINCDIR}/Process.h
+ex11-1.o: ${NIHCLINCDIR}/String.h
+ex11-1.o: ${NIHCLINCDIR}/nihclconfig.h
+ex11-1.o: ${NIHCLINCDIR}/Semaphore.h
+ex11-2.o: ${NIHCLINCDIR}/OrderedCltn.h ${NIHCLINCDIR}/SeqCltn.h
+ex11-2.o: ${NIHCLINCDIR}/Collection.h ${NIHCLINCDIR}/Object.h
+ex11-2.o: ${NIHCLINCDIR}/Iterator.h ArrayOb.h
+ex11-2.o: ${NIHCLINCDIR}/Scheduler.h ${NIHCLINCDIR}/LinkedList.h
+ex11-2.o: ${NIHCLINCDIR}/Link.h ${NIHCLINCDIR}/StackProc.h
+ex11-2.o: ${NIHCLINCDIR}/Process.h ${NIHCLINCDIR}/String.h
+ex11-2.o: ${NIHCLINCDIR}/nihclconfig.h
+ex11-2.o: ${NIHCLINCDIR}/Semaphore.h
+ex11-3.o: ${NIHCLINCDIR}/Scheduler.h ${NIHCLINCDIR}/LinkedList.h
+ex11-3.o: ${NIHCLINCDIR}/SeqCltn.h ${NIHCLINCDIR}/Collection.h
+ex11-3.o: ${NIHCLINCDIR}/Object.h
+ex11-3.o: ${NIHCLINCDIR}/Iterator.h ${NIHCLINCDIR}/Link.h
+ex11-3.o: ${NIHCLINCDIR}/StackProc.h
+ex11-3.o: ${NIHCLINCDIR}/Process.h
+ex11-3.o: ${NIHCLINCDIR}/String.h
+ex11-3.o: ${NIHCLINCDIR}/nihclconfig.h
+ex11-3.o: ${NIHCLINCDIR}/Semaphore.h
+ex11-4.o: ${NIHCLINCDIR}/SharedQueue.h ArrayOb.h
+ex11-4.o: ${NIHCLINCDIR}/Collection.h ${NIHCLINCDIR}/Object.h
+ex11-4.o: ${NIHCLINCDIR}/Iterator.h
+ex11-4.o: ${NIHCLINCDIR}/Semaphore.h ${NIHCLINCDIR}/LinkedList.h
+ex11-4.o: ${NIHCLINCDIR}/SeqCltn.h ${NIHCLINCDIR}/Link.h
+ex11-4.o: ${NIHCLINCDIR}/Scheduler.h ${NIHCLINCDIR}/StackProc.h
+ex11-4.o: ${NIHCLINCDIR}/Process.h ${NIHCLINCDIR}/String.h
+ex11-4.o: ${NIHCLINCDIR}/nihclconfig.h
+ex13-10.o: LandVhcl.h Vehicle.h AllLink.h ${NIHCLINCDIR}/Link.h
+ex13-10.o: ${NIHCLINCDIR}/Object.h
+ex13-10.o: QLink.h AllVehicles.h
+ex13-10.o: ${NIHCLINCDIR}/LinkedList.h ${NIHCLINCDIR}/SeqCltn.h
+ex13-10.o: ${NIHCLINCDIR}/Collection.h ${NIHCLINCDIR}/Iterator.h
+ex13-10.o: ${NIHCLINCDIR}/IdentSet.h ${NIHCLINCDIR}/Set.h ArrayOb.h
+ex13-10.o: WaterVhcl.h AmphibVhcl.h StopLightQ.h VehicleQ.h DrawBridgeQ.h
+ex13-10.o: ${NIHCLINCDIR}/OrderedCltn.h ${NIHCLINCDIR}/OIOnih.h
+ex13-10.o: ${NIHCLINCDIR}/OIOstream.h ${NIHCLINCDIR}/OIO.h
+ex13-11.o: QLink.h ${NIHCLINCDIR}/Link.h ${NIHCLINCDIR}/Object.h
+ex13-11.o: LandVhcl.h
+ex13-11.o: Vehicle.h AllLink.h AllVehicles.h ${NIHCLINCDIR}/LinkedList.h
+ex13-11.o: ${NIHCLINCDIR}/SeqCltn.h ${NIHCLINCDIR}/Collection.h
+ex13-11.o: ${NIHCLINCDIR}/Iterator.h ${NIHCLINCDIR}/IdentSet.h
+ex13-11.o: ${NIHCLINCDIR}/Set.h ArrayOb.h ${NIHCLINCDIR}/OIOnih.h
+ex13-11.o: ${NIHCLINCDIR}/OIOstream.h ${NIHCLINCDIR}/OIO.h
+ex13-9.o: LandVhcl.h Vehicle.h AllLink.h ${NIHCLINCDIR}/Link.h
+ex13-9.o: ${NIHCLINCDIR}/Object.h
+ex13-9.o: QLink.h
+ex13-9.o: AllVehicles.h ${NIHCLINCDIR}/LinkedList.h
+ex13-9.o: ${NIHCLINCDIR}/SeqCltn.h ${NIHCLINCDIR}/Collection.h
+ex13-9.o: ${NIHCLINCDIR}/Iterator.h ${NIHCLINCDIR}/IdentSet.h
+ex13-9.o: ${NIHCLINCDIR}/Set.h ArrayOb.h WaterVhcl.h AmphibVhcl.h
+ex13-9.o: StopLightQ.h VehicleQ.h DrawBridgeQ.h
+ex14-1.o: ${NIHCLINCDIR}/IdentDict.h ${NIHCLINCDIR}/Dictionary.h
+ex14-1.o: ${NIHCLINCDIR}/Set.h ${NIHCLINCDIR}/Collection.h
+ex14-1.o: ${NIHCLINCDIR}/Object.h
+ex14-1.o: ${NIHCLINCDIR}/Iterator.h ArrayOb.h ${NIHCLINCDIR}/String.h
+ex14-1.o: ${NIHCLINCDIR}/Date.h ${NIHCLINCDIR}/Exception.h
+ex14-1.o: ${NIHCLINCDIR}/nihclerrs.h
+ex14-2.o: Patient.h ${NIHCLINCDIR}/Object.h
+ex14-2.o: ${NIHCLINCDIR}/String.h
+ex14-2.o: ${NIHCLINCDIR}/IdentDict.h
+ex14-2.o: ${NIHCLINCDIR}/Dictionary.h ${NIHCLINCDIR}/Set.h
+ex14-2.o: ${NIHCLINCDIR}/Collection.h ${NIHCLINCDIR}/Iterator.h
+ex14-2.o: ArrayOb.h ${NIHCLINCDIR}/AssocInt.h
+ex14-2.o: ${NIHCLINCDIR}/LookupKey.h ${NIHCLINCDIR}/Integer.h
+ex2-3.o: BigInt.h
+ex5-10.o: AutoDeriv.h
+ex5-11.o: ArrayPartial.h Partial.h
+ex5-11.o: Matrix.h
+ex5-3.o: BigInt.h
+ex5-4.o: BigInt.h
+ex5-6.o: ExString.h
+ex5-7.o: ${NIHCLINCDIR}/Date.h ${NIHCLINCDIR}/Object.h
+ex5-7.o: ${NIHCLINCDIR}/String.h
+ex5-8.o: ${NIHCLINCDIR}/IntVec.h ${NIHCLINCDIR}/Vector.h
+ex5-8.o: ${NIHCLINCDIR}/Object.h
+ex5-8.o: ${NIHCLINCDIR}/BitVec.h
+ex5-9.o: Matrix.h
+ex7-1.o: ${NIHCLINCDIR}/Point.h ${NIHCLINCDIR}/Object.h
+ex7-1.o: ${NIHCLINCDIR}/Stack.h
+ex7-1.o: ${NIHCLINCDIR}/OrderedCltn.h ${NIHCLINCDIR}/SeqCltn.h
+ex7-1.o: ${NIHCLINCDIR}/Collection.h ${NIHCLINCDIR}/Iterator.h
+ex7-1.o: ArrayOb.h
+ex7-2.o: ${NIHCLINCDIR}/Point.h ${NIHCLINCDIR}/Object.h
+ex7-2.o: Line.h Shape.h ${NIHCLINCDIR}/Stack.h
+ex7-2.o: ${NIHCLINCDIR}/OrderedCltn.h ${NIHCLINCDIR}/SeqCltn.h
+ex7-2.o: ${NIHCLINCDIR}/Collection.h ${NIHCLINCDIR}/Iterator.h
+ex7-2.o: ArrayOb.h Circle.h Picture.h ${NIHCLINCDIR}/OIOnih.h
+ex7-2.o: ${NIHCLINCDIR}/OIOstream.h ${NIHCLINCDIR}/OIO.h
+ex7-3.o: ${NIHCLINCDIR}/Point.h ${NIHCLINCDIR}/Object.h
+ex7-3.o: Line.h Shape.h ${NIHCLINCDIR}/Stack.h
+ex7-3.o: ${NIHCLINCDIR}/OrderedCltn.h ${NIHCLINCDIR}/SeqCltn.h
+ex7-3.o: ${NIHCLINCDIR}/Collection.h ${NIHCLINCDIR}/Iterator.h
+ex7-3.o: ArrayOb.h Circle.h Picture.h ${NIHCLINCDIR}/OIOnih.h
+ex7-3.o: ${NIHCLINCDIR}/OIOstream.h ${NIHCLINCDIR}/OIO.h
+ex8-1.o: Patient.h ${NIHCLINCDIR}/Object.h
+ex8-1.o: ${NIHCLINCDIR}/String.h
+ex8-10.o: ${NIHCLINCDIR}/LinkOb.h ${NIHCLINCDIR}/Link.h
+ex8-10.o: ${NIHCLINCDIR}/Object.h
+ex8-10.o: ${NIHCLINCDIR}/LinkedList.h ${NIHCLINCDIR}/SeqCltn.h
+ex8-10.o: ${NIHCLINCDIR}/Collection.h ${NIHCLINCDIR}/Iterator.h
+ex8-10.o: ${NIHCLINCDIR}/String.h
+ex8-11.o: ${NIHCLINCDIR}/Date.h ${NIHCLINCDIR}/Object.h
+ex8-11.o: ${NIHCLINCDIR}/Set.h
+ex8-11.o: ${NIHCLINCDIR}/Collection.h ${NIHCLINCDIR}/Iterator.h
+ex8-11.o: ArrayOb.h ${NIHCLINCDIR}/String.h
+ex8-12.o: Patient.h ${NIHCLINCDIR}/Object.h
+ex8-12.o: ${NIHCLINCDIR}/String.h
+ex8-12.o: ${NIHCLINCDIR}/Set.h
+ex8-12.o: ${NIHCLINCDIR}/Collection.h ${NIHCLINCDIR}/Iterator.h
+ex8-12.o: ArrayOb.h ${NIHCLINCDIR}/SortedCltn.h
+ex8-12.o: ${NIHCLINCDIR}/OrderedCltn.h ${NIHCLINCDIR}/SeqCltn.h
+ex8-12.o: ${NIHCLINCDIR}/Range.h
+ex8-13.o: ${NIHCLINCDIR}/Set.h ${NIHCLINCDIR}/Collection.h
+ex8-13.o: ${NIHCLINCDIR}/Object.h
+ex8-13.o: ${NIHCLINCDIR}/Iterator.h ArrayOb.h
+ex8-13.o: ${NIHCLINCDIR}/IdentSet.h ${NIHCLINCDIR}/String.h
+ex8-13.o: ${NIHCLINCDIR}/SortedCltn.h ${NIHCLINCDIR}/OrderedCltn.h
+ex8-13.o: ${NIHCLINCDIR}/SeqCltn.h ${NIHCLINCDIR}/Range.h
+ex8-14.o: ${NIHCLINCDIR}/Assoc.h ${NIHCLINCDIR}/LookupKey.h
+ex8-14.o: ${NIHCLINCDIR}/Object.h
+ex8-14.o: ${NIHCLINCDIR}/Dictionary.h ${NIHCLINCDIR}/Set.h
+ex8-14.o: ${NIHCLINCDIR}/Collection.h ${NIHCLINCDIR}/Iterator.h
+ex8-14.o: ArrayOb.h ${NIHCLINCDIR}/SortedCltn.h
+ex8-14.o: ${NIHCLINCDIR}/OrderedCltn.h ${NIHCLINCDIR}/SeqCltn.h
+ex8-14.o: ${NIHCLINCDIR}/Range.h ${NIHCLINCDIR}/String.h
+ex8-14.o: Patient.h
+ex8-15.o: ${NIHCLINCDIR}/Dictionary.h ${NIHCLINCDIR}/Set.h
+ex8-15.o: ${NIHCLINCDIR}/Collection.h ${NIHCLINCDIR}/Object.h
+ex8-15.o: ${NIHCLINCDIR}/Iterator.h ArrayOb.h
+ex8-15.o: ${NIHCLINCDIR}/IdentDict.h ${NIHCLINCDIR}/LookupKey.h
+ex8-15.o: ${NIHCLINCDIR}/String.h
+ex8-15.o: ${NIHCLINCDIR}/SortedCltn.h
+ex8-15.o: ${NIHCLINCDIR}/OrderedCltn.h ${NIHCLINCDIR}/SeqCltn.h
+ex8-15.o: ${NIHCLINCDIR}/Range.h
+ex8-16.o: ${NIHCLINCDIR}/IdentDict.h ${NIHCLINCDIR}/Dictionary.h
+ex8-16.o: ${NIHCLINCDIR}/Set.h ${NIHCLINCDIR}/Collection.h
+ex8-16.o: ${NIHCLINCDIR}/Object.h
+ex8-16.o: ${NIHCLINCDIR}/Iterator.h ArrayOb.h ${NIHCLINCDIR}/String.h
+ex8-16.o: ${NIHCLINCDIR}/Date.h Patient.h
+ex8-2.o: ${NIHCLINCDIR}/OrderedCltn.h ${NIHCLINCDIR}/SeqCltn.h
+ex8-2.o: ${NIHCLINCDIR}/Collection.h ${NIHCLINCDIR}/Object.h
+ex8-2.o: ${NIHCLINCDIR}/Iterator.h ArrayOb.h
+ex8-2.o: ${NIHCLINCDIR}/String.h
+ex8-3.o: ${NIHCLINCDIR}/OrderedCltn.h ${NIHCLINCDIR}/SeqCltn.h
+ex8-3.o: ${NIHCLINCDIR}/Collection.h ${NIHCLINCDIR}/Object.h
+ex8-3.o: ${NIHCLINCDIR}/Iterator.h ArrayOb.h
+ex8-3.o: ${NIHCLINCDIR}/String.h
+ex8-4.o: ${NIHCLINCDIR}/OrderedCltn.h ${NIHCLINCDIR}/SeqCltn.h
+ex8-4.o: ${NIHCLINCDIR}/Collection.h ${NIHCLINCDIR}/Object.h
+ex8-4.o: ${NIHCLINCDIR}/Iterator.h ArrayOb.h
+ex8-4.o: ${NIHCLINCDIR}/String.h
+ex8-5.o: ${NIHCLINCDIR}/OrderedCltn.h ${NIHCLINCDIR}/SeqCltn.h
+ex8-5.o: ${NIHCLINCDIR}/Collection.h ${NIHCLINCDIR}/Object.h
+ex8-5.o: ${NIHCLINCDIR}/Iterator.h ArrayOb.h
+ex8-5.o: ${NIHCLINCDIR}/String.h
+ex8-6.o: ${NIHCLINCDIR}/OrderedCltn.h ${NIHCLINCDIR}/SeqCltn.h
+ex8-6.o: ${NIHCLINCDIR}/Collection.h ${NIHCLINCDIR}/Object.h
+ex8-6.o: ${NIHCLINCDIR}/Iterator.h ArrayOb.h
+ex8-6.o: Patient.h ${NIHCLINCDIR}/String.h
+ex8-7.o: ${NIHCLINCDIR}/SortedCltn.h ${NIHCLINCDIR}/OrderedCltn.h
+ex8-7.o: ${NIHCLINCDIR}/SeqCltn.h ${NIHCLINCDIR}/Collection.h
+ex8-7.o: ${NIHCLINCDIR}/Object.h
+ex8-7.o: ${NIHCLINCDIR}/Iterator.h ArrayOb.h ${NIHCLINCDIR}/Range.h
+ex8-7.o: ${NIHCLINCDIR}/String.h
+ex8-7.o: Patient.h
+ex8-8.o: ${NIHCLINCDIR}/Assoc.h ${NIHCLINCDIR}/LookupKey.h
+ex8-8.o: ${NIHCLINCDIR}/Object.h
+ex8-8.o: ${NIHCLINCDIR}/Integer.h ${NIHCLINCDIR}/Iterator.h
+ex8-8.o: ${NIHCLINCDIR}/KeySortCltn.h ${NIHCLINCDIR}/SortedCltn.h
+ex8-8.o: ${NIHCLINCDIR}/OrderedCltn.h ${NIHCLINCDIR}/SeqCltn.h
+ex8-8.o: ${NIHCLINCDIR}/Collection.h ArrayOb.h ${NIHCLINCDIR}/Range.h
+ex8-8.o: ${NIHCLINCDIR}/String.h
+ex8-8.o: Patient.h
+ex8-9.o: ${NIHCLINCDIR}/KeySortCltn.h ${NIHCLINCDIR}/SortedCltn.h
+ex8-9.o: ${NIHCLINCDIR}/OrderedCltn.h ${NIHCLINCDIR}/SeqCltn.h
+ex8-9.o: ${NIHCLINCDIR}/Collection.h ${NIHCLINCDIR}/Object.h
+ex8-9.o: ${NIHCLINCDIR}/Iterator.h ArrayOb.h
+ex8-9.o: ${NIHCLINCDIR}/Range.h ${NIHCLINCDIR}/LookupKey.h
+ex8-9.o: ${NIHCLINCDIR}/Assoc.h Patient.h ${NIHCLINCDIR}/String.h
+ex8-9.o: ${NIHCLINCDIR}/Integer.h
+ex9-1.o: ArrayOb.h ${NIHCLINCDIR}/Collection.h
+ex9-1.o: ${NIHCLINCDIR}/Object.h
+ex9-1.o: ${NIHCLINCDIR}/Iterator.h ${NIHCLINCDIR}/Point.h
+ex9-1.o: ${NIHCLINCDIR}/String.h
+ex9-1.o: ${NIHCLINCDIR}/Date.h
+ex9-2.o: ${NIHCLINCDIR}/String.h ${NIHCLINCDIR}/Object.h
+ex9-3.o: ${NIHCLINCDIR}/String.h ${NIHCLINCDIR}/Object.h

@@ -1,0 +1,106 @@
+# C++ compiler
+CC = CC
+
+# C++ debug switch
+CCDEBUG =
+#CCDEBUG = -g
+
+# C++ flags
+# NOTE: Disable +p option when compiling with AT&T R2.1
+CCFLAGS = +p
+#CCFLAGS =
+
+# C++ include files
+I = /usr/include/CC
+
+# If using BSD
+SYS = BSD
+# If using System V
+#SYS = SYSV
+
+# Compile with nested types (works with AT&T R2.1 and GNU C++)
+NESTED_TYPES =
+#NESTED_TYPES = -DNESTED_TYPES
+
+# Disable AT&T R2.0/R2.1 bug work-around code
+BUGDEFS =
+
+# Enable debug code
+DEBUGDEFS =
+
+CFLAGS = ${CCDEBUG} ${CCFLAGS} ${NESTED_TYPES} ${BUGDEFS} ${DEBUGDEFS}
+LFLAGS = ${CCDEBUG}
+
+# Target Directories for Installation
+LIB_ID = libC
+# CLIBDIR is directory where ${LIB_ID}.a resides
+CLIBDIR = /usr/lib
+ERRGENDIR = /usr/local/bin
+ERRTABDIR = /usr/local/lib
+ERRINCDIR = $I
+
+OBJECTS = ErrFac.o dofile.o errgen.o errors.o errtst.o gettok.o
+
+.SUFFIXES: .s ..c
+
+.c.o:
+	${CC} ${CFLAGS} -c $<
+.c..c:
+	${CC} ${CFLAGS} +i -c $<
+.c.s:
+	${CC} ${CFLAGS} +i -S $<
+
+all: ${ERRTABDIR}/errgen_tab ${OBJECTS} errgen testerrs.h errtst verify
+
+errgen:  ErrFac.o gettok.o dofile.o errgen.o
+	${CC} ErrFac.o gettok.o dofile.o errgen.o -o $@ ${LFLAGS}
+#	strip errgen
+
+errors.o: errors.c
+	${CC} ${CFLAGS} -F -c errors.c | sed -e 's/__0__builtin/__builtin/g' >errors..c
+	cc ${CCDEBUG} -c -o errors.o errors..c
+	rm errors..c
+
+errtst:  errtst.o errors.o testerrs.o
+	${CC} errtst.o errors.o testerrs.o -o $@ ${LFLAGS}
+
+testerrs.h: errgen testerrs.err
+	-chmod a+w testerrs.[ch]
+	./errgen -R${ERRTABDIR} testerrs
+	chmod a-w testerrs.[ch]
+	${CC} -I. ${CFLAGS} -c testerrs.c
+
+verify: errtst
+	./errtst 2>&1 | cmp -s - errtst.v
+
+${ERRTABDIR}/errgen_tab:
+	cp errgen_tab ${ERRTABDIR}
+
+install:
+	-mkdir ${ERRGENDIR}
+	cp errgen ${ERRGENDIR}
+	-mkdir ${ERRINCDIR}
+	-chmod ug+w ${ERRINCDIR}/errlib.h ${ERRINCDIR}/errors.h
+	cp errlib.h ${ERRINCDIR}
+	cp errors.h ${ERRINCDIR}
+	ar rv ${CLIBDIR}/${LIB_ID}.a errors.o
+	if test ${SYS} = BSD ; then cd ${CLIBDIR}; ranlib ${LIB_ID}.a; fi
+	
+clean:
+	-chmod a+w testerrs.[ch]
+	-rm -f *.o *..c *..s core errgen errtst testerrs.[ch]
+
+# DO NOT DELETE THIS LINE -- make depend depends on it.
+
+ErrFac.o: ErrFac.h errors.h
+dofile.o: dofile.h
+errgen.o: ErrFac.h errors.h
+errgen.o: gettok.h
+errgen.o: dofile.h
+errors.o: errors.h
+errors.o: errlib.h
+errtst.o: errors.h
+errtst.o: errlib.h testerrs.h
+gettok.o: gettok.h
+testerrs.o: errors.h
+testerrs.o: testerrs.h

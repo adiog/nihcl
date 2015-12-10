@@ -1,0 +1,8 @@
+#! /bin/csh
+rm -f CHANGES_H
+foreach f ([A-Z]*.h [A-Z]*_h.m4 Template_h)
+	echo $f
+	echo "**********" $f "**********" >>CHANGES_H
+	ed $f <$1 >>CHANGES_H
+	mv temp +$f
+end

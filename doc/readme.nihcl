@@ -1,0 +1,1417 @@
+\begindata{text, 268719356}
+\textdsversion{12}
+\template{default}
+\define{example
+menu:[Region~4,Example~12]
+attr:[LeftMargin LeftMargin Inch 32768]
+attr:[Justification LeftJustified Point 0]
+attr:[FontFace FixedFace Int Set]
+attr:[FontFamily AndyType Int 0]
+attr:[FontSize PreviousFontSize Point -2]}
+\define{description
+menu:[Region~4,Description~11]
+attr:[LeftMargin LeftMargin Cm 120222]
+attr:[Indent LeftMargin Cm -36991]}
+\define{code
+menu:[Region,Code]
+attr:[FontFace FixedFace Int Set]
+attr:[FontFamily AndyType Int 0]}
+\define{type
+}
+\formatnote{.ds Cl Release Notes
+
+.so nihclmac.tr}
+
+\begindata{lookz, 268715344}
+hidden
+\enddata{lookz, 268715344}
+\view{lookzview,268715344,3,0,0}
+
+\section{INTRODUCTION
+
+}
+These are the release notes for Revision 3.0 of the NIH Class Library, the 
+version of the library described by our book \italic{Data Abstraction and 
+Object-Oriented Programming in C++} by Keith E. Gorlen, Sanford M. Orlow, and 
+Perry S. Plexico (ISBN 0471 92346 X), published by John Wiley and Sons.
+
+
+This release of the NIH Class Library contains the following classes:
+
+
+\bold{NIHCL}---Library Static Member Variables and Functions
+
+    \bold{Object}---Root of the NIH Class Library Inheritance Tree
+
+        \bold{Bitset}---Set of Small Integers (like Pascal's type SET)
+
+        \bold{Class}---Class Descriptor
+
+        \bold{Collection}---Abstract Class for Collections
+
+            \bold{Arraychar}---Byte Array
+
+            \bold{ArrayOb}---Array of Object Pointers
+
+            \bold{Bag}---Unordered Collection of Objects
+
+            \bold{SeqCltn}---Abstract Class for Ordered, Indexed Collections
+
+                \bold{Heap}---Min-Max Heap of Object Pointers
+
+                \bold{LinkedList}---Singly-Linked List
+
+                \bold{OrderedCltn}---Ordered Collection of Object Pointers
+
+                    \bold{SortedCltn}---Sorted Collection
+
+                        \bold{KeySortCltn}---Keyed Sorted Collection
+
+                \bold{Stack}---Stack of Object Pointers
+
+            \bold{Set}---Unordered Collection of Non-Duplicate Objects
+
+                \bold{Dictionary}---Set of Associations
+
+                    \bold{IdentDict}---Dictionary Keyed by Object Address
+
+                \bold{IdentSet}---Set Keyed by Object Address
+
+        \bold{Date}---Gregorian Calendar Date
+
+        \bold{FDSet}---Set of File Descriptors for Use with \code{select(2)} 
+System Call
+
+        \bold{Float}---Floating Point Number
+
+        \bold{Fraction}---Rational Arithmetic
+
+        \bold{Integer}---Integer Number Object
+
+        \bold{Iterator}---Collection Iterator
+
+        \bold{Link}---Abstract Class for LinkedList Links
+
+            \bold{LinkOb}---Link Containing Object Pointer
+
+            \bold{Process}---Co-routine Process Object
+
+                \bold{HeapProc}---Process with Stack in Free Store
+
+                \bold{StackProc}---Process with Stack on \code{main()} Stack
+
+        \bold{LookupKey}---Abstract Class for Dictionary Associations
+
+            \bold{Assoc}---Association of Object Pointers
+
+            \bold{AssocInt}---Association of Object Pointer with Integer
+
+        \bold{Nil}---The Nil Object
+
+        \bold{Point}---X-Y Coordinate Pair
+
+        \bold{Random}---Random Number Generator
+
+        \bold{Range}---Range of Integers
+
+        \bold{Rectangle}---Rectangle Object
+
+        \bold{Scheduler}---Co-routine Process Scheduler
+
+        \bold{Semaphore}---Process Synchronization
+
+        \bold{SharedQueue}---Shared Queue of Objects
+
+        \bold{String}---Character String
+
+            \bold{Regex}---Regular Expression
+
+        \bold{Time}---Time of Day
+
+        \bold{Vector}---Abstract Class for Vectors
+
+            \bold{BitVec}---Bit Vector
+
+            \bold{ByteVec}---Byte Vector
+
+            \bold{ShortVec}---Short Integer Vector
+
+            \bold{IntVec}---Integer Vector
+
+            \bold{LongVec}---Long Integer Vector
+
+            \bold{FloatVec}---Floating Point Vector
+
+            \bold{DoubleVec}---Double-Precision Floating Point Vector
+
+    \bold{OIOifd}---File Descriptor Object I/O \type{\code{readFrom()}} 
+Formatting
+
+    \bold{OIOin}---Abstract Class for Object I/O \type{\code{readFrom()}} 
+Formatting
+
+        \bold{OIOistream}---Abstract Class for Stream Object I/O 
+\type{\code{readFrom()}} Formatting
+
+            \bold{OIOnihin}---Stream Object I/O \type{\code{readFrom()}} 
+Formatting
+
+    \bold{OIOofd}---File Descriptor Object I/O \type{\code{storeOn()}} 
+Formatting
+
+    \bold{OIOout}---Abstract Class for Object I/O \type{\code{storeOn()}} 
+Formatting
+
+        \bold{OIOostream}---Abstract Class for Stream Object I/O 
+\type{\code{storeOn()}} Formatting
+
+            \bold{OIOnihout}---Stream Object I/O \type{\code{storeOn()}} 
+Formatting
+
+    \bold{ReadFromTbl}---Tables used by Object I/O \type{\code{readFrom()}}
+
+    \bold{StoreOnTbl}---Tables used by Object I/O \type{\code{storeOn()}}
+
+
+
+\section{CHANGES BETWEEN OOPS V2R2 AND NIHCL R3.0
+
+
+}This section highlights the most significant changes that have been made 
+since the previous release.  It is by no stretch of the imagination complete.
+
+
+\subsection{Library name changed from "OOPS" to "NIH Class Library" (NIHCL)
+
+}
+Since there's too many things called "OOPS" these days, we've changed the name 
+of our library to the "NIH Class Library".  All file and C++ names containing 
+"OOPS" have been changed, often just by substituting "NIHCL" for "OOPS".
+
+
+\subsection{Class NIHCL
+
+}
+With the introduction of static member functions and (useful) static member 
+variables in R2.0, it is now possible to eliminate most global names.  In 
+R3.0, we've gathered many previously global functions and variables and made 
+them static members of a new class, \code{NIHCL}, which is the base class of 
+\code{Object}.  Here's a list of the public functions:
+
+
+\example{static class NIHCL \{
+
+// ...
+
+public:             // static member functions
+
+    static unsigned char charBitMask(int i);
+
+    static unsigned short shortBitMask(int i);
+
+    static unsigned int intBitMask(int i);
+
+    static unsigned char bitCount(int i);
+
+    static unsigned char bitReverse(int i);
+
+    static void initialize();           // library initialization
+
+    static bool initialized();          // library initialized?
+
+    static void setError(int error, int sev ...);
+
+\} NIHCL_init;
+
+}
+Since all NIH Library classes inherit these members, their member functions 
+can use these names without needing to specify a scope qualifier, except to 
+resolve ambiguities.  However, non-member functions and member functions of 
+classes not derived from \code{NIHCL} can access them with the \code{NIHCL} 
+scope qualifier; for example:
+
+
+\example{NIHCL::setError(ERROR_CODE, DEFAULT);
+
+}
+\subsection{Optional support for multiple inheritance
+
+}
+The NIH Class Library can be compiled to support Multiple Inheritance (MI) by 
+defining the preprocessor symbol \typewriter{MI}.  \italic{All classes linked 
+together in a program must all have been compiled with the same \typewriter{MI} 
+option setting}.  The major effect of this switch is that all classes derived 
+from \code{Object} specify it as a virtual base class.  Since C++ does not 
+permit a pointer to a virtual base class to be cast down to a pointer to a 
+derived class, the new \code{DECLARE_MEMBERS} macro defines an overloaded 
+family of static member functions named \code{castDown()} that can perform 
+this conversion. (If \code{MI} is not enabled, \code{castDown()} becomes an 
+ordinary pointer cast.)
+
+
+The \code{castDown()} functions all call the function \code{_castDown()} to 
+perform the pointer conversion.  If a class has only a single base class, it 
+uses the \code{DEFINE_CLASS} and \code{DEFINE_ABSTRACT_CLASS} preprocessor 
+macros as before, and these generate an  implementation of \code{_castDown()} 
+suitable for the single inheritance case.  If a class has multiple base 
+classes, it uses the new \code{DEFINE_CLASS_MI} and 
+\code{DEFINE_ABSTRACT_CLASS_MI} macros, which do \italic{not} generate 
+\code{_castDown()}---the class provider must supply a definition as described 
+in \code{Template_c}.
+
+
+All \code{readFrom()} constructors must specify the \code{readFrom()} 
+constructor for the virtual base class \code{Object} in their initialization 
+lists when \code{MI} is enabled.  See \code{Template_h} for details.
+
+
+If you use virtual base classes in conjunction with the NIH Class Library, you 
+must take care when implementing the \code{deepCopy()} and \code{storeOn()} 
+operations that a virtual base class's member variables are only deepened or 
+stored once.  The library provides the functions \code{deepenVBase()} and 
+\code{storeVBaseOn()} to help with this.  Call \code{deepenVBase()} instead of 
+\code{deepenShallowCopy()} to deepen the member variables of a virtual base 
+class, and call \code{storeVBaseOn()} instead of \code{storer()} to store the 
+member variables of a virtual base class.
+
+
+\subsection{\code{DECLARE_MEMBERS}  macro
+
+}
+The new DECLARE_MEMBERS preprocessor macro generates the declarations for the 
+class descriptor and most of the member functions that all NIH Library classes 
+must provide, including:
+
+
+\example{private:
+
+	static Class classDesc;		// class descriptor
+
+public:
+
+\italic{	classname}* castDown(Object*);
+
+	const \italic{classname}* castDown(const Object*);
+
+	\italic{classname}& castDown(Object&);
+
+	const \italic{classname}& castDown(const Object&);
+
+	static const Class* desc();		// return class descriptor
+
+	static \italic{classname}* readFrom(OIOin&);
+
+	static \italic{classname}* readFrom(OIOifd&);
+
+	\italic{classname}(OIOin&);			// readFrom() constructors
+
+	\italic{classname}(OIOout&);
+
+	virtual const Class* isA() const;
+
+	virtual Object* shallowCopy() const;
+
+	virtual void* _castdown(const Class&) const;
+
+protected:
+
+   void deepenVBase();
+
+	void storeVBaseOn(OIOofd&) const;	// store virtual base class
+
+	void storeVBaseOn(OIOout&) const;
+
+private:
+
+	static Object* reader(OIOin& strm);
+
+	static Object* reader(OIOifd& fd);
+
+}
+The DECLARE_MEMBERS macro takes a single argument, the name of the class being 
+declared.
+
+
+\subsection{New implementation of Process classes
+
+}
+In R3.0, class \code{Process} has two derived classes, \code{StackProc} and 
+\code{HeapProc}, which serve as the base classes for client processes. 
+ \code{StackProc} and \code{HeapProc} differ in where a process's stack is 
+located when the process is running: a \code{StackProc} has its stack located 
+on the real stack in the stack segment, while a \code{HeapProc} has its stack 
+in the free storage area in the data segment.  A context switch of a 
+\code{StackProc} involves copying the active part of the current process's 
+stack into a save area, then copying the saved stack of the new process onto 
+the real stack.  A context switch of a \code{HeapProc} involves simply 
+resetting the processor's stack pointer and frame pointer registers to point 
+to the new stack, so a \code{StackProc} context switch is much slower than a 
+\code{HeapProc} context switch.  However, using \code{HeapProc}s tends to 
+break debuggers, which usually can't cope with the bizarre stack location, so 
+programs using them are difficult to debug.  Also, the stack area for a 
+\code{HeapProc} must be specified when it is constructed, and must be large 
+enough to hold the largest stack that can occur anytime during execution.  In 
+contrast, the stack save area for a \code{StackProc} grows in size if 
+necessary and must only be large enough to hold the largest stack in use when 
+the process is suspended.  Thus, the tradeoff is debuggability and reduced 
+memory requirement vs. speed.
+
+
+Fiddling with the stack area and machine registers is something you can't do 
+directly from C++, so processes are inherently non-portable.  The R3.0 
+implementation of the \code{Process} classes attempts to use the C library 
+routines \code{setjmp()}, \code{longjmp()}, and \code{alloca()} to do context 
+switching.  While this works on many machines, you may need to write your own 
+versions of these routines for machines on which it doesn't.  See the section 
+on \italic{PORTING THE PROCESS CLASSES} for instructions.
+
+
+\subsection{External \code{class_}\italic{classname} identifiers eliminated
+
+}
+The class descriptor for each class no longer has an external identifier of 
+the form \code{class_}\italic{classname}.  Instead, the class descriptor is a 
+static member variable of each class, and the inline static member function 
+\code{desc()} returns its address.
+
+
+\subsection{Changes to Object I/O
+
+}
+Previous releases of OOPS have a fundamental problem in the way they handle 
+object I/O for classes with member variables that are class instances.  For 
+example, consider an OOPS class \code{X} with a member variable of class 
+\code{M}, where \code{M} is also an OOPS class:
+
+
+\example{class X : public BASE \{
+
+    M m;    // a member class instance
+
+    M* p;   // a member pointer to a class instance
+
+    int i;  // a fundamental type
+
+// ...
+
+\};
+
+}
+Previous releases implement \code{X::storer()} and\code{ X::X(istream&,X&)} as 
+follows:
+
+
+\example{void X::storer(ostream& strm)
+
+\{
+
+    BASE::storer(strm);
+
+    m.storeOn(strm);
+
+    p->storeOn(strm);
+
+    strm << i << " ";
+
+\}
+
+
+void X::X(istream&strm, X& where)
+
+    : (strm,where)
+
+\{
+
+    this = &where;
+
+    readFrom(strm,"M",m);
+
+    p = (M*)readFrom(strm,"M");
+
+    strm >> i;
+
+\}
+
+
+void X::storer(FileDescTy& fd)
+
+\{
+
+    BASE::storer(fd);
+
+    m.storeOn(fd);
+
+    p->storeOn(fd);
+
+    storeBin(fd,i);
+
+\}
+
+
+void X::X(FileDescTy& fd, X& where)
+
+    : (fd,where)
+
+\{
+
+    this = &where;
+
+    readFrom(fd,"M",m);
+
+    p = (M*)readFrom(fd,"M");
+
+    readBin(fd,i);
+
+\}
+
+}
+The problem is that this constructor first initializes \code{m} using the 
+\code{M::M()} constructor, then calls \code{readFrom()}, which overwrites this 
+initialized instance with an instance constructed by reading \code{strm}.  We 
+didn't notice this bug earlier because, in practice, the problem occurs only 
+in classes \code{Rectangle} and \code{SharedQueue}, and has no obvious 
+consequences.  The worst that is likely to happen is that \code{M::M()} 
+allocates some memory that never gets reclaimed.
+
+
+Unfortunately, the fix requires some widespread changes.  But, it turns out 
+that numerous other improvements become possible.  The new format for 
+\code{storer()} functions and \code{readFrom()} constructors when not using MI 
+is:
+
+
+\example{void X::storer(OIOout& strm)
+
+\{
+
+    BASE::storer(strm);
+
+    m.storeMemberOn(strm);
+
+    p->storeOn(strm);
+
+    strm << i;
+
+\}
+
+
+void X::X(OIOin& strm)
+
+    : (strm), m(strm)
+
+\{
+
+    p = M::readFrom(strm);
+
+    strm >> i;
+
+\}
+
+
+void X::storer(OIOofd& fd)
+
+\{
+
+    BASE::storer(fd);
+
+    m.storeMemberOn(fd);
+
+    p->storeOn(fd);
+
+    fd << i;
+
+\}
+
+
+void X::X(OIOifd& fd)
+
+    : (fd), m(fd)
+
+\{
+
+    p = M::readFrom(fd);
+
+    fd >> i;
+
+\}
+
+}
+The new format is simpler and consistent---\code{storer()} functions always 
+call \code{BASE::storer()} and \code{X::X(OIOin&)} constructors always call 
+\code{BASE::BASE(OIOin&)}.
+
+
+\paragraph{Public \code{readFrom()} constructor
+
+}
+Since other classes in general must have access to \code{X::X(OIOin&)}, it 
+must be public instead of protected, requiring a change to all header files.
+
+
+\paragraph{Changes to \code{readFrom()}}
+
+
+As explained previously, calls to \code{readFrom()} that specify the third 
+argument overwrite an initialized instance of a class.  Since this is 
+generally a bad thing to do, the third argument to \code{readFrom()} has been 
+eliminated; thus, \code{readFrom()} will only return a pointer to an object. 
+This form of \code{readFrom()} was used to initialize member class instances. 
+ These must now be initialized via the \code{readFrom()} constructor in the 
+initializer list, as shown in the example.  When converting old programs, 
+these calls to \code{readFrom()} will be flagged as errors because the three 
+argument form of \code{readFrom()} is no longer defined.  \italic{Note that 
+when you change the \code{readFrom()} constructor, you must also change the 
+corresponding \code{storer()} function to store the member using 
+\code{storeMemberOn()} rather than \code{storeOn()}.} 
+
+
+In previous releases, the second argument to \code{readFrom()} was an optional 
+name of the class of object that was expected to be read.  If the object read 
+was of a different class, \code{readFrom()} raised an error.  Beginning with 
+this release, \code{readFrom(OIOin&)}, and \code{readFrom(OIOifd&)} are static 
+member functions of each class which will also accept derived classes of the 
+specified class, just as C++ allows a pointer to a derived class to be used 
+instead of a pointer to a base class.  The global functions 
+\code{readFrom(istream, const char* classname)} and \code{readFrom(int fd, 
+const char* classname)} have been eliminated.
+
+
+\paragraph{\code{istream&} replaced by \code{OIOin&}
+
+}
+The type of the first (and now only) argument to the constructors called by 
+\code{readFrom(istream&)} has been changed from an \code{istream&} to an 
+\code{OIOin&}.  This avoids naming conflicts with other constructors.  Also, 
+\code{OIOin} is an abstract base class, and all input operators are virtual 
+functions, so you can customize the Object I/O format by defining your own 
+derived classes.   \code{OIOistream} and \code{OIOnihin} implement a format 
+similar to the old OOPS format.
+
+
+\paragraph{\code{ostream&} replaced by \code{OIOout&}
+
+}
+The type of the argument to the \code{storer(ostream&)} function has been 
+changed  to an \code{OIOout&}.  \code{OIOout} is an abstract base class, and 
+all output operators are virtual functions, so you can customize the Object 
+I/O format by defining your own derived classes.   \code{OIOostream} and 
+\code{OIOnihout} implement a format similar to the old OOPS format.
+
+
+\paragraph{Automatic separators output by \code{OIOostream::operator<<()}
+
+}
+It is no longer necessary to explicitly output a space after each number 
+written in a \code{storer(OIOnihout&)} function.  Class \code{OIOostream} 
+reimplements \code{operator<<()} to supply the space automatically.
+
+
+\paragraph{\code{FileDescTy&} replaced by \code{OIOifd&/OIOofd&}
+
+}
+The type of the argument to the \code{storer(FileDescTy&)} function has been 
+changed  to an \code{OIOofd&}. and the argument to the 
+\code{readFrom(FileDescTy&)} function has been changed to an \code{OIOifd&}. 
+ \code{OIOifd} and \code{OIOofd} are not abstract classes, and their I/O 
+operators are not virtual functions as in \code{OIOin} and \code{OIOout}, so 
+using them does not incur the overhead of a virtual function call for each 
+member variable.
+
+
+\paragraph{Change to \code{readFrom(OIOin&)}
+
+}
+Encountering EOF during \code{readFrom(OIOin&)} is now always an error. 
+ Previous releases returned \code{nil} if the input stream was initially at 
+the EOF.  \code{readFrom(OIOin&)} now behaves like \code{readFrom(OIOifd&)} 
+always has.
+
+
+\paragraph{\code{storeBin()} replaced by \code{OIOofd::operator<<()} and 
+\code{OIOofd::put()}
+
+}
+The function \code{storeBin(FileDescTy&, \italic{type})} has been replaced by 
+\code{OIOofd::operator<<(\italic{type})} and the function 
+\code{storeBin(FileDescTy&, \italic{type}*, unsigned)} has been replaced by 
+\code{OIOofd::put(\italic{type}*, unsigned)}.
+
+
+\paragraph{\code{readBin()} replaced by \code{OIOifd::operator>>()} and 
+\code{OIOifd::get()}
+
+}
+The function \code{readBin(FileDescTy&, \italic{type})} has been replaced by 
+\code{OIOifd::operator>>(\italic{type})} and the function 
+\code{readBin(FileDescTy&, \italic{type}*, unsigned)} has been replaced by 
+\code{OIOifd::get(\italic{type}*, unsigned)}.
+
+
+\paragraph{\code{read_Cstring()} replaced by \code{OIOin::getCstring()}
+
+}
+The function \code{read_Cstring()} has been replaced by 
+\code{OIOin::getCstring()}.
+
+
+\paragraph{\code{store_Cstring()} replaced by \code{OIOout::putCstring()}
+
+}
+The function \code{store_Cstring()} has been replaced by 
+\code{OIOout::putCstring()}.
+
+
+\paragraph{\code{READ_OBJECT_AS_BINARY} eliminated
+
+}
+The \code{READ_OBJECT_AS_BINARY} macro has been eliminated.  Replace it with 
+code to read member variables individually using \code{>>} and \code{get()}.
+
+
+\paragraph{\code{STORE_OBJECT_AS_BINARY} eliminated
+
+}
+The \code{STORE_OBJECT_AS_BINARY} macro has been eliminated.  Replace it with 
+code to store member variables individually using \code{<<} and \code{put()}.
+
+
+\subsection{Changes to the \code{DEFINE_CLASS} macro
+
+}
+The new version of the \code{DEFINE_CLASS} macro has hooks for supporting 
+multiple inheritance.  Before calling the \code{DEFINE_CLASS} macro, you must 
+define three preprocessor symbols: \code{BASE_CLASSES}, \code{MEMBER_CLASSES}, 
+and \code{VIRTUAL_BASE_CLASSES}.  As an example, suppose you are writing the 
+implementation of a class with the following declaration:
+
+
+\example{class X: public A, public virtual B \{
+
+    C c;        // C is a class
+
+    D d;        // D is a class
+
+//...
+
+\};
+
+}
+Set the symbol \code{BASE_CLASSES} to a list of the addresses of the class 
+descriptors for the base classes of the class you are defining.  These must be 
+in the same order as they appear in the class declaration:
+
+
+\example{#define BASE_CLASSES A::desc(), B::desc()
+
+}
+Set the symbol \code{MEMBER_CLASSES} to a list of the addresses of the class 
+descriptors for any member variables of the class that are NIH Library 
+classes.  These must be in the same order as they appear in the class 
+declaration:
+
+
+\example{#define MEMBER_CLASSES C::desc(), D::desc()
+
+}
+If a class has no class members, define \code{MEMBER_CLASSES}, but give it no 
+value.
+
+
+Set the symbol \code{VIRTUAL_BASE_CLASSES} to a list of the addresses of the 
+class descriptors for the virtual base classes of the class you are defining. 
+ These must be in the same order as they appear in the class declaration:
+
+
+\example{#define VIRTUAL_BASE_CLASSES B::desc()
+
+}
+If a class has no virtual base classes, define \code{VIRTUAL_BASE_CLASSES}, 
+but give it no value.
+
+
+Now you are ready to call the \code{DEFINE_CLASS} macro:
+
+
+\example{DEFINE_CLASS(\italic{classname},\italic{version},\italic{identificatio\
+n},\italic{initor1},\italic{initor2})
+
+}
+\italic{Classname} is the name of the class you are defining.
+
+
+\italic{Version} is the version number of the class you are defining.  It 
+should be changed whenever the format of the information written by the 
+\code{storer()} function changes such that older versions of \code{readFrom()} 
+can no longer interpret it correctly.
+
+
+\italic{Identification} is a character string that identifies the revision 
+level of the implementation of the class.  It is simply stored in the class 
+descriptor where you can retrieve it by calling the function 
+\code{Class::ident()}.  The identification parameter is intended for use with 
+a revision control system such as RCS or SCCS.  NIH Library classes specify it 
+as the string "\code{$}\code{Header}\code{$}", which RCS replaces with the 
+revision identification.
+
+
+\italic{Initor1} and \italic{initor2} are pointers to functions you may supply 
+to perform initialization for the class, for example, initializing 
+\code{static} data that the class uses.
+
+
+\code{\subsection{DEFINE_ABSTRACT_CLASS}}
+
+
+Abstract classes should use the new macro \code{DEFINE_ABSTRACT_CLASS} instead 
+of \code{DEFINE_CLASS}.  \code{\code{DEFINE_ABSTRACT_CLASS }}has the same 
+arguments as \code{DEFINE_CLASS}; the only difference is that the 
+\code{reader()} functions it generates do not reference the class's object I/O 
+constructors, and \code{shallowCopy()} is defined as a 
+\code{derivedClassResponsibility()}.
+
+
+\subsection{Change to \code{Class::className()}
+
+}
+The function \code{className()} returns the name of the class of the object to 
+which it is applied.  In previous releases \code{Class::className()} does not 
+do this.  Instead, it returns the name of the class described by the class 
+object to which it is applied.  This release eliminates this inconsistency: 
+\code{className()} returns \code{"Class"} when applied to an instance of class 
+\code{Class}.  The new function \code{Class::name()} returns the name of the 
+class described by an instance of class \code{Class}.
+
+
+\subsection{New member functions of class \code{Class}
+
+}
+\code{Class** baseClasses()} returns a zero-terminated array of pointers to 
+the class descriptors of the base classes of this class.
+
+
+\code{Class** memberClasses()} returns a zero-terminated array of pointers to 
+the class descriptors of the member classes of this class.
+
+
+\code{Class** virtualBaseClasses()} returns a zero-terminated array of 
+pointers to the class descriptors of the virtual base classes of this class.
+
+
+\code{unsigned long signature()} returns the signature of this class.  The 
+signature of a class is computed by hashing the signatures of this class's 
+base and member classes and the version number of this class.  It is currently 
+used by \code{storeOn()}/\code{readFrom()} to prevent obsolete versions of 
+objects from being read.
+
+
+\code{const Class* Class::lookup(const char* name)} returns a pointer to the 
+class descriptor object for the class with the specified name. 
+ \code{Class::lookup()} returns 0 if the name is not found.
+
+
+\subsection{Changes to \code{copy()}, \code{shallowCopy()}, and 
+\code{deepCopy()}
+
+}
+In previous releases, \code{shallowCopy()} made a bitwise copy of an object, 
+and \code{deepCopy()} first made a shallow copy of an object, and then called 
+the virtual function \code{deepenShallowCopy()} to convert the shallow copy to 
+a deep copy.  Each class reimplemented \code{deepenShallowCopy()} to handle 
+any pointer member variables contained in instances of its class.
+
+
+The problems with this approach are that (1) it is usually unsafe to make a 
+shallow copy of an object that contains pointers, and (2) with Release 2.0 of 
+the AT&T C++ Translator, objects may contain compiler-generated pointers which 
+\code{deepenShallowCopy()} cannot handle easily and portably.
+
+
+The following changes have been made in an attempt to solve these problems:
+
+
+Each class now reimplements the virtual function \code{shallowCopy()} to call 
+the initialization constructor \code{X::X(const X&)} to make a shallow copy of 
+an object.  The implementation of \code{shallowCopy()} is the same for all 
+classes and is generated automatically by the \code{\code{DEFINE_CLASS}} 
+macro:
+
+
+\example{Object* \italic{classname}::shallowCopy()
+
+\{
+
+    return new \italic{classname}(*this);
+
+\}
+
+}
+\code{Object::deepCopy()} still calls the virtual function 
+\code{deepenShallowCopy()} to convert a shallow copy, now made by the 
+initialization constructor, to a deep copy.  Since the shallow copy is no 
+longer a simple bitwise copy, you may need to change \code{deepenShallowCopy()} 
+for some classes.
+
+
+In previous releases, \code{copy()} defaulted to \code{deepCopy()} since it 
+was unsafe for general use.  Beginning with this release, \code{copy()} 
+defaults to \code{shallowCopy()} as it does in Smalltalk-80.  Also, 
+\code{Object::deepCopy()} is no longer a virtual function.
+
+
+\subsection{New function \code{dumpOn()} and changes to \code{printOn()}
+
+}
+To make the \code{printOn()} function more useful in application programs, it 
+has been changed to print minimal formatting information, the idea being that 
+this can frequently be added by an application to suit its specific needs. 
+ The virtual function \code{dumpOn()} has been added to assist in debugging by 
+printing more detailed information than \code{printOn()}. 
+ \code{Object::dumpOn()} prints the name of an object's class, a left square 
+bracket (\code{"["}), calls \code{printOn()}, then prints a matching right 
+square bracket and a newline (\code{"]\\n"}).  \code{Collection::dumpOn()} 
+does the same, except that it applies \code{dumpOn()} to all objects in the 
+collection instead of calling \code{printOn()}.  Other classes reimplement 
+\code{dumpOn()} to print more appropriate information.
+
+
+By default, \code{dumpOn()} sends its output to \code{cerr}.  A default 
+argument has also been added to \code{printOn()} so that it writes to 
+\code{cout} by default.
+
+
+\subsection{Changes to class \code{Link}
+
+}
+\paragraph{Constructor \code{Link(const Link&)} changed to \code{Link(Link*)}}
+
+
+The constructor \code{Link(const Link&)}, which constructs a \code{Link} that 
+points to the argument \code{Link}, has been replaced by the constructor 
+\code{Link(Link*)}.  This change was necessary so that \code{shallowCopy()} 
+could call the constructor \code{Link(const Link&)} to make a bitwise copy. 
+ We suggest temporarily commenting out the declaration of this constructor in 
+the file \code{Link.h} and recompiling the programs that depend upon it so you 
+can easily detect and change the code using \code{Link(const Link&)} to use 
+the new \code{Link(Link*)} constructor instead.
+
+
+As a result of this change, \code{Link::shallowCopy()} is now enabled and will 
+return a bitwise copy of a \code{Link}.
+
+
+\paragraph{New function \code{isListEnd()}}
+
+
+Class \code{Link} has a new member function \code{bool isListEnd()}, which you 
+must use to check for the end of a \code{LinkedList} instead of checking for a 
+pointer to \code{Nil}.  Compile your program with \code{-DMI} to find the 
+places where you need to make this change.
+
+
+\subsection{Changes to class \code{Iterator}
+
+}
+\code{Iterator::shallowCopy()} now produces a shallow copy with a pointer to 
+the same collection bound to the original instead of to a shallow copy of the 
+collection bound to the original, as in prior releases. 
+ \code{Iterator::deepCopy()} works as before: it produces a deep copy with a 
+pointer to a deep copy of the collection bound to the original.
+
+
+The member variable \code{Object* state} has been added, which collection 
+classes can use to associate additional state information with an 
+\code{Iterator}.  For example, a collection class implemented as a tree 
+structure can use \code{state} to point to a \code{Stack} used to maintain the 
+state of a traversal of the tree.  The destructor for class \code{Iterator} 
+calls a new virtual function, \code{doFinish()}, which a class that uses 
+\code{state} can reimplement to delete the state object when the 
+\code{Iterator} is destroyed.
+
+
+The \code{storeOn()} format has changed as a result of these modifications.
+
+
+The function \code{Object* Iterator::operator()()} has been added to return a 
+pointer to the current object, or 0 if there is none.
+
+
+\subsection{Changes to class \code{Dictionary}
+
+}
+The return type of \code{assocAt()}, \code{removeAssoc()}, and 
+\code{removeKey()} has been changed from \code{LookupKey&} to \code{LookupKey*} 
+for consistency with the return types of similar functions. 
+ \code{Dictionary::assocAt()} returns 0 instead of \code{nil} if the key is 
+not found.
+
+
+\subsection{\code{const} arguments to member functions
+
+}
+In previous versions , it was possible to convert, or "widen", a pointer to a 
+\code{const} object into a pointer to a non-\code{const} object by adding the 
+\code{const} object to a collection class and then removing it:
+
+
+\example{Object* f(const Object& co)
+
+\{
+
+    OrderedCltn c;
+
+    c.add(co);
+
+    return c.remove(co);
+
+\}
+
+}
+C++ R2.0 now issues error or warning messages when a \code{const} pointer is 
+converted into a non-\code{const} pointer.  To eliminate these problems, the 
+const arguments to some functions such as \code{add()} have been changed to 
+non-\code{const} arguments.  These changes affect classes \code{Assoc}, 
+\code{LinkOb}, and the collection classes.
+
+
+If you need to add a \code{const} object to a collection class, you must use 
+an explicit cast:
+
+
+\example{c.add((Object&)co);
+
+}
+\subsection{Change to \code{Bag::remove(const Object&)}
+
+}
+\code{Bag::remove(const Object&)} now returns 0 until last occurrence removed 
+instead of the address of the argument to eliminate "widening" of the 
+\code{const} argument.
+
+
+\subsection{\code{shouldNotImplement()} functions now \code{private}
+
+}
+Virtual member functions that a class reimplements to call 
+\code{shouldNotImplement()} have been made private so that the compiler can 
+give an error message if a client program attempts to apply the function to an 
+instance of the class.
+
+
+\subsection{Change to class Stack
+
+}
+When a \code{Stack} is converted to another type of collection, the objects in 
+the \code{Stack} are added to the collection from the top of the stack down. 
+ Previous releases added them bottom-up.
+
+
+\subsection{Changes to class Heap}
+
+
+The new member function \code{Heap::removeId(const Object&)} allows you to 
+remove the object that is the \italic{same} (i.e. \code{isSame()}) as the 
+argument object from a \code{Heap}.
+
+
+Iterating over a \code{Heap} now visits the objects in the heap in sorted 
+order, from smallest to largest.  Previous implementations visited the objects 
+in heap order.  This affects the order in which \code{printOn()} lists the 
+objects in a \code{Heap}, for example.
+
+
+\subsection{Changes to class LinkedList
+
+}
+The new member function \code{LinkedList::removeId(const Object&)} allows you 
+to remove the object that is the \italic{same} (i.e. \code{isSame()}) as the 
+argument object from a \code{LinkedList}.
+
+
+\subsection{Changes to class LookupKey
+
+}
+The virtual function \code{Object* LookupKey::value() const} has been replaced 
+by two virtual functions
+
+
+\example{virtual Object* value();
+
+virtual const Object* value() const;
+
+}
+to prevent obtaining a non-const pointer from a const \code{LookupKey}.
+
+
+\subsection{Changes to class Arraychar
+
+}
+The constructor for class \code{Arraychar} now initializes each element of the 
+the array to 0.
+
+
+The virtual function \code{removeAll()} has been implemented, which resets 
+each element of the array to 0.
+
+
+\subsection{Changes to class Assoc
+
+}
+The virtual function \code{Object* Assoc::value() const} has been replaced by 
+two virtual functions
+
+
+\example{virtual Object* value();
+
+virtual const Object* value() const;
+
+}
+to prevent obtaining a non-const pointer from a const \code{Assoc}.
+
+
+\subsection{Changes to class AssocInt
+
+}
+The virtual function \code{Object* AssocInt::value() const} has been replaced 
+by two virtual functions
+
+
+\example{virtual Object* value();
+
+virtual const Object* value() const;
+
+}
+to prevent obtaining a non-const pointer from a const \code{AssocInt}.
+
+
+
+\section{CHANGES BETWEEN OOPS V2R1 AND OOPS V2R2
+
+}
+\subsection{Class name changes
+
+}
+The name of class \code{Arrayobid} is now \code{ArrayOb}, the name of class 
+\code{Linkobid} is now \code{LinkOb}, and the typedef \code{obid} has been 
+removed.  Just change all occurrences of \code{Arrayobid} to \code{ArrayOb}, 
+\code{Linkobid} to \code{LinkOb}, and \code{obid} to \code{Object*}.
+
+
+\subsection{Type \code{bool} now \code{int}
+
+}
+Type \code{bool} has been changed from \code{char} to \code{int} for 
+compatibility with X V11.
+
+
+\subsection{New \code{String} class
+
+}
+There is a new, more efficient implementation of class \code{String}.  The new 
+\code{String} class is compatible with the old \code{String} class except for 
+the following:
+
+
+\example{String(char c, unsigned l =1);
+
+}
+is now:
+
+
+\example{String(char& c, unsigned l=1,
+
+    unsigned extra=DEFAULT_STRING_EXTRA);
+
+}
+The argument\code{ unsigned extra} has been added to most of the 
+\code{String::String()} constructors to allow the programmer to give a hint as 
+to how much space to allocate in the string for additional characters.  When 
+properly used, this can reduce the number of calls made to the memory 
+allocator.
+
+
+Assignment to substrings has changed slightly.  The old \code{String} class 
+handled an assignment to a substring such as:
+
+
+\example{String s = "abcdef";
+
+s(0,2) = "123";         // result is 12cdef
+
+}
+by truncating the source string to the length of the destination substring. 
+ An assignment such as:
+
+
+\example{s(0,2) = "1";           // result is 1\\0cdef
+
+}
+would cause a null byte to be inserted in the destination substring.
+
+
+The new \code{String} class replaces the target substring with the source 
+string, adjusting the length of the target string if necessary.  Thus
+
+
+\example{String s = "abcdef";
+
+s(0,2) = "123";         // result is 123cdef
+
+}
+and:	
+
+
+\example{s(0,2) = "1";           // result is 1cdef
+
+}
+\subsection{Changes to Class \code{Process}
+
+}
+An interface to \code{select}(2) has been added:
+
+
+\example{void Process::select(FDSet& rdmask, FDSet& wrmask, FDSet& exmask);
+
+}
+
+\section{PORTING THE PROCESS CLASSES
+
+}
+This section describes the steps to follow if you want to be a pioneer and 
+port the \code{Process} classes to a new machine/operating system.
+
+
+If your target system provides the C library routines \code{setjmp()}, 
+\code{longjmp()}, and \code{alloca()}, and if the implementation of 
+\code{setjmp()}/\code{longjmp()} operates by saving/restoring all of the 
+machine's volatile registers (as they do on the Sun-3, Sun-4, and IBM RT/AOS), 
+then the port should be very easy; otherwise, you'll need to write versions of 
+these routines in assembly language that behave as expected.
+
+
+To find out how your \code{setjmp()}/\code{longjmp()} works, either look at 
+the source code for these routines (if you're fortunate enough to have it) or 
+use the debugger to disassemble them.  A data structure of type 
+\code{jmp_buf}, defined in \code{setjmp.h}, is passed as an argument to these 
+routines.  If your \code{setjmp()} just saves all the volatile registers in it 
+to be restored later by \code{longjmp()}, then you're probably in luck---all 
+you need to figure out are the offsets in the \code{jmp_buf} structure where 
+the PC (Program Counter), SP (Stack Pointer), and FP (Frame Pointer) registers 
+are saved.
+
+
+Next, look at \code{nihclconfig.h} and locate the place where it defines the 
+machine-specific inline functions \code{SETJMP()}, \code{LONGJMP()}, 
+\code{_SETJMP()}, \code{_LONGJMP()}, \code{ENV_PC()}, \code{ENV_SP()}, and 
+\code{ENV_FP()}.  These define the interface to the \code{Process} classes. 
+ For example, here are the definitions for SunOS 4.0 on the Sun-3:
+
+
+\example{#ifdef SUNOS4
+
+
+#ifdef mc68000
+
+typedef jmp_buf JMP_BUF;
+
+inline int SETJMP(JMP_BUF env)              \{ return setjmp(env); \}
+
+inline void LONGJMP(JMP_BUF env, int val)   \{ longjmp(env,val); \}
+
+inline int _SETJMP(JMP_BUF env)             \{ return _setjmp(env); \}
+
+inline void _LONGJMP(JMP_BUF env, int val)  \{ _longjmp(env,val); \}
+
+inline unsigned& ENV_PC(JMP_BUF env)        
+
+                    \{ return (unsigned&)env[3]; \}
+
+inline unsigned& ENV_SP(JMP_BUF env)        
+
+                    \{ return (unsigned&)env[2]; \}
+
+inline unsigned& ENV_FP(JMP_BUF env)        
+
+                    \{ return (unsigned&)env[15]; \}
+
+#endif
+
+
+// ...
+
+#endif
+
+}
+Add an \code{#if} ... \code{#endif} section for your machine and define the 
+\code{ENV_PC()}, \code{ENV_SP()}, and \code{ENV_FP()} functions to return a 
+reference to the appropriate word in the \code{JMP_BUF} array.
+
+
+If your machine doesn't use both an SP and FP, then you'll also need to add 
+some machine dependent C++ code to \code{HeapProc.c} to relocate only the one 
+actually used.  See the code for the \code{ibm032} in \code{HeapProc.c} as an 
+example.
+
+
+If your system has both \code{setjmp()}/\code{longjmp()} and 
+\code{_setjmp()}/\code{_longjmp()}, define \code{SETJMP()}, \code{LONGJMP()}, 
+\code{_SETJMP()}, and \code{_LONGJMP()} to call the corresponding routine.  If 
+your system doesn't have the "\code{_}" versions, check your documentation to 
+see if your \code{setjmp()}/\code{longjmp()} saves and restores the signal 
+mask; if so, define \code{_SETJMP()} and \code{_LONGJMP()} to call 
+\code{setjmp()} and \code{longjmp()}, respectively.  See the code for 
+\code{SUNOS3} as an example.
+
+
+If your \code{setjmp()} and \code{longjmp()} do \italic{not} save and restore 
+the signal mask, you'll need to provide versions that do.  Define 
+\code{JMP_BUF} to be a struct that consists of a \code{jmp_buf} plus whatever 
+other members you need to save the signal mask.  Then define \code{_SETJMP()} 
+and \code{_LONGJMP()} to call \code{setjmp()} and \code{longjmp()} using the 
+\code{jmp_buf} part of a \code{JMP_BUF}, and define \code{SETJMP()} and 
+\code{LONGJMP()} to do the same, but in addition to save/restore the signal 
+mask using the other members of a \code{JMP_BUF}.  See the code for the 
+\code{mc300} as an example.
+
+
+If your \code{setjmp()}/\code{longjmp()} do not work by saving/restoring all 
+volatile registers (as on the VAX), you'll need to write versions with 
+different names that do, and call these instead from the interface functions.
+
+
+If you succeed in porting the \code{Process} classes to a new 
+machine/operating system, we'd appreciate a copy of the code for inclusion in 
+future releases.
+
+
+
+\section{AT&T C++ TRANSLATOR RELEASE 2.00/2.1 BUGS
+
+}
+Releases 2.00 and R2.1 of the AT&T C++ Translator have a few bugs that we had 
+to insert work-arounds for in the NIH Class Library.  These are conditionally 
+compiled based on the definition of preprocessor symbols beginning with 
+\code{\code{BUG_}}.  If you are using the NIH Class Library to test a Release 
+2.00 or 2.1 -compatible C++ compiler, we suggest that you edit the master 
+\code{Makefile} to define these symbols:
+
+
+\example{# Disable AT&T R2.0/R2.1 bug work-around code
+
+#BUGDEFS =
+
+BUGDEFS = -DBUG_bC2728 -DBUG_38 -DBUG_39 -DBUG_OPTYPECONST
+
+}
+
+\section{YACC STACK OVERFLOWS
+
+}
+The preprocessor symbol \code{BUG_TOOBIG} controls compilation of code we had 
+to insert to avoid "yacc stack overflow" errors in the SunOS 3.5 C compiler. 
+ Release 2.0 produces very complicated expressions for the inline copy 
+constructors it generates for deeply-derived classes.  Explicitly defining 
+non-inline copy constructors solves the problem.  If you are a C compiler 
+vendor, please make your tables big enough to handle the C code generated by 
+the AT&T C++ Translator!
+
+
+
+\section{COMPILING UNDER AT&T C++ TRANSLATOR RELEASE 2.1
+
+}
+R3.0 of the NIH Class Library has been tested with Release 2.1 of the AT&T C++ 
+Translator under SunOS 4.0.  The following subsections summarize the changes 
+required when compiling with R2.1.
+
+
+\subsection{Inconsistent declarations of alloca() in header files
+
+}
+The header files supplied with R2.1 declare \code{alloca()} with a return type 
+of \code{void*} in \code{alloca.h} and \code{char*} in \code{malloc.h}, so you 
+get an error message from the compiler when both of these files are included 
+in the same compilation unit.  We solved this problem by changing the return 
+type of the declaration of \code{alloca()} in \code{malloc.h} to \code{void*}.
+
+
+\subsection{Warning and error messages due to #pragmas in SunOS 4.0 header 
+files
+
+}
+The C compiler occasionally issues warning messages such as the following when 
+compiling the output of the AT&T C++ Translator (both R2.0 and R2.1) under 
+SunOS 4.0:
+
+
+\indent{"/usr/include/CC/sys/signal.h", line 38: warning: function name 
+expected
+
+}
+This is because C++ doesn't understand the \code{#pragma} directives it 
+encounters in some system header files,  so it just passes them through to the 
+C compiler.  The warning message results because C++ eliminates or moves the C 
+function declarations that the \code{pragma} references.  Another problem is 
+that the C++ header files use \code{#define} to temporarily rename system 
+functions when they include the vendor's C header files as a way to hide the 
+effects of the vendor's C declarations for these functions.  Unfortunately, 
+this garbles the function names in the \code{#pragma} directives also.
+
+
+Under R2.0, the \code{#pragma} problem just results in warning messages, but 
+under R2.1, the C compilation occasionally fails with an error message.  We 
+manually made a new, self-contained version of \code{/usr/include/CC/setjmp.h} 
+with the following \code{pragma} at the end:
+
+
+\example{/*
+
+ * Routines that call setjmp have strange control flow graphs,
+
+ * since a call to a routine that calls resume/longjmp will eventually
+
+ * return at the setjmp site, not the original call site.  This
+
+ * utterly wrecks control flow analysis.
+
+ */
+
+#pragma unknown_control_flow(sigsetjmp, setjmp, _setjmp)
+
+}
+This eliminates the error messages, but not the warning messages.  It would 
+probably be no worse to simply remove the \code{#pragma}s altogether, since 
+they don't seem to be having the intended effect, and that would eliminate the 
+warning messages also.
+
+
+\subsection{C++ Translator +p option broken
+
+}
+The +p option produces spurious errors under R2.1.  Edit the master 
+\code{Makefile} to not use the +p option when compiling with R2.1:
+
+
+\example{# C++ flags
+
+# NOTE: Disable +p option when compiling with AT&T R2.1
+
+#CCFLAGS = +p
+
+CCFLAGS =
+
+}
+\subsection{Optional support for nested types
+
+}
+You can optionally define the preprocessor symbol \code{NESTED_TYPES} to cause 
+the NIH Class Library to use nested types under R2.1.  Edit the master 
+\code{Makefile} as follows:
+
+
+\example{# Compile with nested types (works with AT&T R2.1 and GNU C++)
+
+#NESTED_TYPES =
+
+NESTED_TYPES = -DNESTED_TYPES
+
+}\enddata{text,268719356}

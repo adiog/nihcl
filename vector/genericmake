@@ -1,0 +1,25 @@
+# $Header: /afs/alw.nih.gov/unix/sun4_40c/usr/local/src/nihcl-3.0/share/vector/RCS/genericmake,v 3.0 90/05/16 23:00:48 kgorlen Rel $
+.h.c:
+	-chmod u+w $*.c; rm -f $*.c
+	sed -n -f Vec1.sed < $< | m4 bitvecmac.m4 Vec.m4 - > $*.c
+	sed -n -f Vec2.sed < $< | m4 bitvecmac.m4 Vec.m4 - >> $*.c
+	chmod a-w $*.c
+
+IntVec.c: IntVec.h bitvecmac.m4 Vec.m4 Vec?.sed
+
+ShortVec.c: ShortVec.h bitvecmac.m4 Vec.m4 Vec?.sed
+
+LongVec.c: LongVec.h bitvecmac.m4 Vec.m4 Vec?.sed
+
+ByteVec.c: ByteVec.h bitvecmac.m4 Vec.m4 Vec?.sed
+
+FloatVec.c: FloatVec.h bitvecmac.m4 Vec.m4 Vec?.sed
+
+DoubleVec.c: DoubleVec.h bitvecmac.m4 Vec.m4 Vec?.sed
+
+# ComplexVec.c: Complex.h ComplexVec.h bitvecmac.m4 Vec.m4 Vec?.sed
+
+BitVec.c: BitVec.h bitvecmac.m4 BitVec.m4 BitVec.sed
+	-chmod u+w BitVec.c; rm -f BitVec.c
+	sed -n -f BitVec.sed < BitVec.h | m4 bitvecmac.m4 BitVec.m4 - > BitVec.c
+	chmod a-w BitVec.c

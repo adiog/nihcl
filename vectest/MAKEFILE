@@ -1,0 +1,87 @@
+# $Header: /afs/alw.nih.gov/unix/sun4_40c/usr/local/src/nihcl-3.0/share/vectest/RCS/MAKEFILE,v 3.0 90/05/20 21:04:25 kgorlen Rel $
+# C++ compiler
+CC = CC
+
+# C++ debug switch
+CCDEBUG =
+#CCDEBUG = -g
+
+# C++ flags
+# NOTE: Disable +p option when compiling with AT&T R2.1
+CCFLAGS = +p
+#CCFLAGS =
+
+# C++ include files
+I = /usr/include/CC
+
+# If using BSD
+SYS = BSD
+# If using System V
+#SYS = SYSV
+
+# Compile with nested types (works with AT&T R2.1 and GNU C++)
+NESTED_TYPES =
+#NESTED_TYPES = -DNESTED_TYPES
+
+# Disable AT&T R2.0/R2.1 bug work-around code
+BUGDEFS =
+#BUGDEFS = -DBUG_bC2728 -DBUG_38 -DBUG_39 -DBUG_OPTYPECONST
+# Defining BUG_TOOBIG disables code that prevents C compiler "yacc stack overflows"
+#BUGDEFS = -DBUG_bC2728 -DBUG_38 -DBUG_39 -DBUG_OPTYPECONST -DBUG_TOOBIG
+
+# Enable debug code
+DEBUGDEFS =
+#DEBUGDEFS = -DDEBUG_OBJIO -DDEBUG_PROCESS
+
+# For no multiple inheritance support
+MI =
+# Enable support for multiple inheritance
+#MI = -DMI
+
+NIHCLINC = ../lib
+NIHCLLIB = ../lib/libnihcl.a
+NIHVECINCDIR = ../vector
+NIHVECLIB = ../vector/libnihclvec.a
+
+CFLAGS = -I${NIHCLINC} -I${NIHVECINCDIR} ${MI} ${CCDEBUG} ${CCFLAGS} ${NESTED_TYPES} ${BUGDEFS} ${DEBUGDEFS}
+LFLAGS = ${CCDEBUG} ${NIHVECLIB} ${NIHCLLIB} -lm
+
+PROGS = bitvec bytevec doublevec floatvec intvec longvec shortvec
+
+.SUFFIXES: ..c .s
+.c.o:
+	${CC} ${CFLAGS} -c $<
+.c..c:
+	${CC} ${CFLAGS} +i -c $<
+.c.s:
+	${CC} ${CFLAGS} +i -S $<
+
+all: ${PROGS}
+
+${PROGS}: $$@.o ${NIHCLLIB} ${NIHVECLIB}
+	${CC} $@.o -o $@ ${LFLAGS}
+
+clean:
+	-rm -f *.o ${PROGS} *..c *.s make.tdep core
+
+# DO NOT DELETE THIS LINE -- make depend depends on it.
+
+bitvec.o: ${NIHVECINCDIR}/IntVec.h ${NIHVECINCDIR}/Vector.h ${NIHCLINC}/Object.h
+bitvec.o: ${NIHVECINCDIR}/BitVec.h
+bytevec.o: ${NIHVECINCDIR}/IntVec.h ${NIHVECINCDIR}/Vector.h ${NIHCLINC}/Object.h
+bytevec.o: ${NIHVECINCDIR}/BitVec.h
+bytevec.o: ${NIHVECINCDIR}/ByteVec.h
+doublevec.o: ${NIHVECINCDIR}/IntVec.h ${NIHVECINCDIR}/Vector.h ${NIHCLINC}/Object.h
+doublevec.o: ${NIHVECINCDIR}/BitVec.h
+doublevec.o: ${NIHVECINCDIR}/DoubleVec.h
+floatvec.o: ${NIHVECINCDIR}/IntVec.h ${NIHVECINCDIR}/Vector.h ${NIHCLINC}/Object.h
+floatvec.o: ${NIHVECINCDIR}/BitVec.h
+floatvec.o: ${NIHVECINCDIR}/FloatVec.h
+intvec.o: ${NIHVECINCDIR}/IntVec.h ${NIHVECINCDIR}/Vector.h ${NIHCLINC}/Object.h
+intvec.o: ${NIHVECINCDIR}/BitVec.h
+longvec.o: ${NIHVECINCDIR}/IntVec.h ${NIHVECINCDIR}/Vector.h ${NIHCLINC}/Object.h
+longvec.o: ${NIHVECINCDIR}/BitVec.h
+longvec.o: ${NIHVECINCDIR}/LongVec.h
+shortvec.o: ${NIHVECINCDIR}/IntVec.h ${NIHVECINCDIR}/Vector.h ${NIHCLINC}/Object.h
+shortvec.o: ${NIHVECINCDIR}/BitVec.h
+shortvec.o: ${NIHVECINCDIR}/ShortVec.h

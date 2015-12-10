@@ -1,0 +1,1 @@
+OBJECTS = array.o arraychar.o bag.o bitboard.o bitset.o class.o date.o dep.o dict.o error.o except.o fc.o fdset.o fraction.o heap.o iddictio.o identdict.o identset.o iterator.o keysortcltn.o linkedlist.o object.o oio.o orderedcltn.o point.o process.o random.o range.o rectangle.o regex.o seqcltn.o sets.o sortedcltn.o stack.o stackproc.o string.o substring.o tim.o

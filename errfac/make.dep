@@ -1,0 +1,14 @@
+# DO NOT DELETE THIS LINE -- make depend depends on it.
+
+ErrFac.o: ErrFac.h errors.h
+dofile.o: dofile.h
+errgen.o: ErrFac.h errors.h
+errgen.o: gettok.h
+errgen.o: dofile.h
+errors.o: errors.h
+errors.o: errlib.h
+errtst.o: errors.h
+errtst.o: errlib.h testerrs.h
+gettok.o: gettok.h
+testerrs.o: errors.h
+testerrs.o: testerrs.h

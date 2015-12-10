@@ -1,0 +1,2614 @@
+.ig
+	A complete rewrite of the texttroff macro package.
+	It would be loosely modelled after the -ms macros
+
+	main concept is to separate the elements of the page,
+	so a trap for the footer and a trap for the header separatly
+
+	Also all default values are in well known registers,
+	initialized by the .IZ macro
+..
+.\"
+.	\" IZ - initialize. Provide some default settings
+.de IZ
+.nr PS \n(.p	\" pointsize
+.nr VS \n(.v	\" linespacing
+.nr HM 1i	\" header margin
+.nr FM 1i	\" footer margin
+.nr LL \n(.l	\" line length
+.nr IN 36p	\" indent to allow outdenting headers
+.nr LT \n(.l-\n(INu	\" title length
+.\" trap setting
+.\"
+.\" for the top of page
+.wh 0 NP
+.\" for dealing with footnotes
+.wh 14i FO	\" footer trap, temp position
+.	\" to process footnote overflow, we fire this trap
+.	\" the trap for FO will be moved way up so we will fire
+.	\" this one when FO is putting the footnote out
+.wh -\\n(FMu Fx
+.	\" Now install FO on top of this position so it
+.	\" will be fired when no footnote needs to be processed
+.ch -\\n(FMu FO
+.\" for the bottom tittle
+.wh -\\n(FMu/2u BT
+..
+.\"
+.	\" TA - set tabstops
+.de TA
+.ta \\n(ENu +\\n(ENu +\\n(ENu +\\n(ENu +\\n(ENu +\\n(ENu +\\n(ENu +\\n(ENu +\\n(ENu +\\n(ENu +\\n(ENu +\\n(ENu
+..
+.\"
+.	\" RS - Reset.	Bring troff into a known state
+.de RS
+.ps \\n(PS
+.vs \\n(VSu
+.ll \\n(LLu
+.lt \\n(LTu
+.in \\n(INu
+.po \\n(POu
+.nr FS \\n(VSu/4u	\" footnote separation
+.nr F 0 1		\" for footnote numbering
+.ev 1
+.	\" where footnotes are processed
+.ps \\n(PS-2
+.vs (\\n(VSu-2p)u
+.ll \\n(LLu-\\n(INu
+.ev
+.ev 2
+.	\" where the table of contents is stored
+.ps \\n(PS
+.vs \\n(VSu
+.ev
+.TA
+..
+.\"
+.	\" string for footnote numebering. Note that the increment takes place here
+.	\" note that Fn is defined in texttroff to get the body font
+.ds * \v'-.3v'\\*(Fn\s-3\\n+F\s0\fP\v'.3v'
+.ig
+	Running headers & footers.
+	These will be called from the header & footer macro
+	halfway the current margins in the macros PT & BT
+	Note that we don't use the page counter (%) directly.
+	We stick the value in register PN.
+	This allows for changing the format of the page number with
+	the .af request without screwing up troff
+
+	We will enable the possibility to change on odd & even pages eventually
+..
+.\"
+.	\" PT - Page Trap & Bottom Trap macro
+.de PT
+.if \\n(Tc=2 .br
+.po +\\n(INu
+.pc %
+.ie \\n(Tc=3 .nr PN \\n%-\\n(Pc
+.el .nr PN \\n%
+.nr Pn \\n%
+.if \\n(Pn>1 .if e .tl '\\*(LT'\\*(CT'\\*(RT'
+.if \\n(Pn>1 .if o .tl '\\*(RT'\\*(CT'\\*(LT'
+.po
+..
+.	\" default footer string definitions 
+.po +\\n(INu
+.de BT
+.nr PF \\n(.f
+.nr PX \\n(.s
+.ft 1
+.ps \\n(PS
+.lt \\n(LTu
+.po +\\n(INu
+.if e .tl '\\*(LB'\\*(CB'\\*(RB'
+.if o .tl '\\*(RB'\\*(CB'\\*(LB'
+.ft \\n(PF
+.ps \\n(PX
+.po
+.if \\n(Tc=2 \{\
+.	nr Pc \\n%
+.	nr Tc 3
+.	af PN i
+.	TC
+.\}
+..
+.	\" default header string definitions
+.ds CT - \\n(PN -
+.\"
+.\"
+.	\" NP - header macro
+.ig
+	print the header halfway the margins
+	only print when not on the first page
+..
+.de NP
+.\".tm in NP page \\n% PO \\n(PO .o \\n(.o
+.nr PF \\n(.f
+.nr PX \\n(.s
+.ft 1
+.ps \\n(PS
+'sp |\\n(HMu/2u
+.if !\\n%=0 .PT
+.ps \\n(PX
+.ft \\n(PF
+'sp |\\n(HMu
+.nr Fc 0 1	\" init footnote count
+.nr Fp 0-\\n(HMu	\" current footer place
+.ch FO -\\n(HMu	\" reset footer trap
+.if \\n(dn .Fz	\" proces left over footnote
+.ns	\" no space mode
+..
+.\"
+.	\" FO - footer macro
+.de FO
+.nr dn 0	\" zero last diversion size
+.if \\n(Fc \{\
+.	ev 1		\" expand footnotes in ev1
+.\".if '\\n(.z'Fy' .tm in overlow .i \\n(.i
+.in \\n(INu		\" set indentation to the one for the page
+.	nf		\" retain vertical size
+.	FN		\" dump the footnotes
+.			\" remove them; Don't put a comment on the next line
+.			\" with .rm, some troffs go into an infinite loop
+.	rm FN
+.\".if '\\n(.z'Fy' .tm in overlow .i \\n(.i
+.	if \\n(.zFy .di	\"end overflow diversion
+.	nr Fc 0		\" disable fx
+.	in 0		\" clear indentation
+.ev
+.\}
+.		\" pop environment
+'bp
+..
+."
+.\"	Fx - process footnote overflow
+.\"
+.de Fx
+.if \\n(Fc \{\
+.	\" the foonote didn't fit so
+.di Fy	\" divert the overflow into Fy (we are still in env 1, so nofill mode)
+.	\" since we are in nofill mode and head indentation set,
+.in 0	\" set no indentation, so we don't indent twice
+.\}
+..
+.\"
+.\"	FS - Footnote Start
+.de FS
+.da FN	\" divert (or append) footnote
+.ev 1	\" in environment 1
+.if \\n+(Fc=1 .FM	\" if first include seperator
+.fi	\" process in fill mode
+.if !\\n(Fo .FP	\" Footnote paragraph if not processing overflow
+..
+.\"
+.	\" FP - footnote paragraph
+.de FP
+.sp \\n(FSu
+\v'-.3'\s-3\\nF\s0\v'.3'\|\c
+..
+.\"
+.\"	FE - Footnote End
+.de FE
+.br		\" flush the output buffer
+.nr Sv \\n(.v	\" save baselinespacing of this env
+.ev		\" pop env
+.di		\" end the diversion
+.nr Fp -\\n(dn	\" new footer position
+.if \\n(Fc=1 .nr Fp -(\\n(.v-\\n(Sv)	\" For Separator
+.ch FO \\n(Fpu	\" change the trap, Fp is negative
+.	\" See whether the stuff really fits.
+.	\"if not change trap and we overflow
+.if (\\n(nl+1v)>(\\n(.p+\\n(Fp) .ch FO \\n(nlu+1v	\" it didn't fit,
+.	\" so fire the FO macro on the next line
+..
+.\"
+.	\" FM - footnote separator one inch line
+.de FM
+\l'1i'
+.br
+..
+.\"
+.\"	Fz - process footnote overflow
+.de Fz
+.nr Fo 1
+.FS
+.nf	\" is already processed, so keep size
+.Fy	\" where Fx put it
+.nr Fo 0
+.FE
+..
+.\"
+.\"	HE - next thing will be a header
+.\" minimalistic widow control in HE macro.
+.\" We aks for a couple of lines with the .ne statement, will trigger the
+.\" bottom of page trap on the moment when there is no space 
+.de HE
+.ne 1.5i
+..
+.\"
+.\"	IC - in table of contents
+.\"	$1 type of header $3 number, $2 text
+.\"
+.de IC
+.nr Tc 1	\"flag that we have a contents
+.ev 2
+.if !'\\$3'NO' \{\
+.	nr Tx \w'\\$3\0'u
+.	if \\n(Tx>\\n(Ta .nr Ta \\n(Tx
+.\}
+.nr Tp \w'\0\\n(PN'u
+.da Tc
+\\!.xx "\\$1" "\\$2" \\$3 \\n(PN
+.br
+.di
+.ev
+..
+.\"
+.\"	An item in the table of contents
+.de xx
+.if \\$1=1 .sp .5
+.ie !'\\$3'NO' \\$3\t\\$2\a\t\\$4
+.el .ie \\n(Ta \&\t\\$2\a\t\\$4
+.el \&\\$2\a\t\\$4
+..
+.\"	EM
+.\" check for work at end of file
+.de EM
+.if \\n(Tc \{\
+\c
+.nr Tc 2
+.\}
+.\"tm EM called, Tc: \\n(Tc
+..
+.\" do the things we want at the end of the paper
+.de TC
+.\"tm TC called
+'bp
+.ft B
+.\".tm tabel of contents
+.ce
+.rs
+.sp
+.ti -\\n(INu
+\s+2Table of Contents\s0
+.sp 2
+.ft R
+.nf
+.ev 2
+.	\" where the table of contents is stored
+.nf
+.nr Tb \\n(LLu-\\n(Tpu-\\n(INu
+.nr c \w'1.1.1.1\0'u
+.ie \\n(Ta .ta \\n(Tau \\n(Tbu \\n(LLu-\\n(INuR
+.el .ta \\n(Tbu \\n(LLu-\\n(INuR
+.in \\n(INu
+.Tc
+.ev
+..
+.\"
+.\"	set end macro
+.em EM
+.\" in texttroff .IZ
+.\" in texttroff .RS
+.\"
+.\"
+.\"
+.\" Begin of the PSmacros, coutesy of fred hansen (I believe)
+.\"
+.nr zT 0
+.if  "\*(.T"postscript"  'nr zT 1
+.if  "\*(.T"psc"  'nr zT 1
+.de PB
+'ne \\$2p
+'nr zw \\n(.l-\\n(.k-1m-\\$1p
+'nr zH \\n(.k
+'nr zV \\n(.d
+'if  \\n(zT  \\{\\
+'ie  !\\n(zw  \\{\\
+'nr zx \\n(.l-\\$1p-10m
+'nr zV \\n(zV+1v
+.sp 0
+\\v'-.75v'\\ \\v'+.75v'\\c\\}
+'el \\{\\
+'nr zx \\n(zw-10m
+\\v'-.75v'\\ \\v'+.75v'\\c\\}
+.sp |\\n(zVu
+'if ((\\n(zx<=0)&(\\$2p>0.75v)) \\x'\\$2p-0.75v'\\c
+\\!%
+\\!%!
+\\!  PB
+'if \\n(.j=3 \\{\\
+\\!    /troffadjust { neg 2 idiv } def
+'ss\\}
+'if \\n(.j=5 \\{\\
+\\!    /troffadjust { neg } def
+'ss\\}
+'if \\n(.j<3 \\{\\
+\\!    /troffadjust { pop 0 } def
+'ss\\}\\}
+..
+.de PE
+'if \\n(zT \\{\\
+\\!  PE
+\\!.
+'ie \\n(zx \\{\\
+'if (\\$2p>0.75v) \\x'\\$2p-0.75v'\\c
+\\h'-\\n(.ku+\\n(zHu+\\$1p'\\c\\}
+'el  .br\\}
+'if !\\n(zT \\{\\
+'if  !\\n(zw  \\{\\
+ \\h'-\\n(.k'\\ \\h'-\\n(.w'\\c
+.sp -1\\}
+\\x'\\$2p-0.75v'\\v'-.75v'\\D'l \\$1p \
+0.0i'\\D'l 0.0i \\$2p'\\D'l -\\$1p 0.0i'\\D'l 0.0i \
+-\\$2p'\\v'+.75v'\\h'\\$1p'\\c\\}
+..
+.\"
+.\" End of PSmacros
+.\"
+.\"
+.\" ix macro for index production. 
+.\"
+.de ix
+.ie '\\n(.z'' .tm ix: \\$1 \\$2 \\$3 \\$4 \\$5 \\$6 \\$7 \\$8 \\$9	\\n%
+.el \\!.ix \\$1 \\$2 \\$3 \\$4 \\$5 \\$6 \\$7 \\$8 \\$9	\\n%
+..
+.\"
+.\" End of ix macro
+.\"
+.IZ
+.nr IN 36p
+.nr LT 432p
+.nr PO 54p
+.br
+.ad b
+'ft R
+.nr PS 12
+.ps \n(PS
+.nr VS 14p
+.vs \n(VSu
+.nr EN 8n
+.sp 0.5i
+.nr DP 0
+.ds Fn \fR
+.ds HF R
+.nr HS \n(.s
+.ds FF R
+.nr FS \n(.s
+.RS
+.nh
+.OC
+.ds Cl Release Notes
+.ll 6.75i
+.po .75i
+.nr Dr 1
+.nr DP 0
+.ds BU \s-2\(bu\s0
+.ds EM \(em
+.if\n(mo-0 .ds DT January
+.if\n(mo-1 .ds DT February
+.if\n(mo-2 .ds DT March
+.if\n(mo-3 .ds DT April
+.if\n(mo-4 .ds DT May
+.if\n(mo-5 .ds DT June
+.if\n(mo-6 .ds DT July
+.if\n(mo-7 .ds DT August
+.if\n(mo-8 .ds DT September
+.if\n(mo-9 .ds DT October
+.if\n(mo-10 .ds DT November
+.if\n(mo-11 .ds DT December
+.asDT " \n(dy, 19\n(yr
+.ds LT \*(Cl
+.ds CT NIH Class Library Revision 3.0
+.ds RT \*(Cl
+.ds LB Page \\n%
+.ds RB \*(DT
+.tl `\*(LT`\*(CT`\*(RT`
+.ps
+.ft P
+'sp 0.3i
+.OC
+.br
+.TA
+.HE
+.br
+.ad l
+'ft B
+.ps 14
+.OC
+.sv 1
+.vs 16
+INTRODUCTION
+.ad b
+'ft R
+.ps 12
+.OC
+.sp 1
+.vs 14
+These are the release notes for Revision 3.0 of the NIH Class Library, the version 
+of the library described by our book \fIData Abstraction and Object-Oriented Programming 
+in C++\fR by Keith E. Gorlen, Sanford M. Orlow, and Perry S. Plexico (ISBN 0471 92346 
+X), published by John Wiley and Sons.
+.OC
+.sp 1
+This release of the NIH Class Library contains the following classes:\fB
+.OC
+.sp 1
+NIHCL\fR---Library Static Member Variables and Functions
+.OC
+.br
+    \fBObject\fR---Root of the NIH Class Library Inheritance Tree
+.OC
+.br
+        \fBBitset\fR---Set of Small Integers (like Pascal's type SET)
+.OC
+.br
+        \fBClass\fR---Class Descriptor
+.OC
+.br
+        \fBCollection\fR---Abstract Class for Collections
+.OC
+.br
+            \fBArraychar\fR---Byte Array
+.OC
+.br
+            \fBArrayOb\fR---Array of Object Pointers
+.OC
+.br
+            \fBBag\fR---Unordered Collection of Objects
+.OC
+.br
+            \fBSeqCltn\fR---Abstract Class for Ordered, Indexed Collections
+.OC
+.br
+                \fBHeap\fR---Min-Max Heap of Object Pointers
+.OC
+.br
+                \fBLinkedList\fR---Singly-Linked List
+.OC
+.br
+                \fBOrderedCltn\fR---Ordered Collection of Object Pointers
+.OC
+.br
+                    \fBSortedCltn\fR---Sorted Collection
+.OC
+.br
+                        \fBKeySortCltn\fR---Keyed Sorted Collection
+.OC
+.br
+                \fBStack\fR---Stack of Object Pointers
+.OC
+.br
+            \fBSet\fR---Unordered Collection of Non-Duplicate Objects
+.OC
+.br
+                \fBDictionary\fR---Set of Associations
+.OC
+.br
+                    \fBIdentDict\fR---Dictionary Keyed by Object Address
+.OC
+.br
+                \fBIdentSet\fR---Set Keyed by Object Address
+.OC
+.br
+        \fBDate\fR---Gregorian Calendar Date
+.OC
+.br
+        \fBFDSet\fR---Set of File Descriptors for Use with \fCselect(2)\fR System Call
+.OC
+.br
+        \fBFloat\fR---Floating Point Number
+.OC
+.br
+        \fBFraction\fR---Rational Arithmetic
+.OC
+.br
+        \fBInteger\fR---Integer Number Object
+.OC
+.br
+        \fBIterator\fR---Collection Iterator
+.OC
+.br
+        \fBLink\fR---Abstract Class for LinkedList Links
+.OC
+.br
+            \fBLinkOb\fR---Link Containing Object Pointer
+.OC
+.br
+            \fBProcess\fR---Co-routine Process Object
+.OC
+.br
+                \fBHeapProc\fR---Process with Stack in Free Store
+.OC
+.br
+                \fBStackProc\fR---Process with Stack on \fCmain()\fR Stack
+.OC
+.br
+        \fBLookupKey\fR---Abstract Class for Dictionary Associations
+.OC
+.br
+            \fBAssoc\fR---Association of Object Pointers
+.OC
+.br
+            \fBAssocInt\fR---Association of Object Pointer with Integer
+.OC
+.br
+        \fBNil\fR---The Nil Object
+.OC
+.br
+        \fBPoint\fR---X-Y Coordinate Pair
+.OC
+.br
+        \fBRandom\fR---Random Number Generator
+.OC
+.br
+        \fBRange\fR---Range of Integers
+.OC
+.br
+        \fBRectangle\fR---Rectangle Object
+.OC
+.br
+        \fBScheduler\fR---Co-routine Process Scheduler
+.OC
+.br
+        \fBSemaphore\fR---Process Synchronization
+.OC
+.br
+        \fBSharedQueue\fR---Shared Queue of Objects
+.OC
+.br
+        \fBString\fR---Character String
+.OC
+.br
+            \fBRegex\fR---Regular Expression
+.OC
+.br
+        \fBTime\fR---Time of Day
+.OC
+.br
+        \fBVector\fR---Abstract Class for Vectors
+.OC
+.br
+            \fBBitVec\fR---Bit Vector
+.OC
+.br
+            \fBByteVec\fR---Byte Vector
+.OC
+.br
+            \fBShortVec\fR---Short Integer Vector
+.OC
+.br
+            \fBIntVec\fR---Integer Vector
+.OC
+.br
+            \fBLongVec\fR---Long Integer Vector
+.OC
+.br
+            \fBFloatVec\fR---Floating Point Vector
+.OC
+.br
+            \fBDoubleVec\fR---Double-Precision Floating Point Vector
+.OC
+.br
+    \fBOIOifd\fR---File Descriptor Object I/O \fCreadFrom()\fR Formatting
+.OC
+.br
+    \fBOIOin\fR---Abstract Class for Object I/O \fCreadFrom()\fR Formatting
+.OC
+.br
+        \fBOIOistream\fR---Abstract Class for Stream Object I/O \fCreadFrom()\fR Formatting
+.OC
+.br
+            \fBOIOnihin\fR---Stream Object I/O \fCreadFrom()\fR Formatting
+.OC
+.br
+    \fBOIOofd\fR---File Descriptor Object I/O \fCstoreOn()\fR Formatting
+.OC
+.br
+    \fBOIOout\fR---Abstract Class for Object I/O \fCstoreOn()\fR Formatting
+.OC
+.br
+        \fBOIOostream\fR---Abstract Class for Stream Object I/O \fCstoreOn()\fR Formatting
+.OC
+.br
+            \fBOIOnihout\fR---Stream Object I/O \fCstoreOn()\fR Formatting
+.OC
+.br
+    \fBReadFromTbl\fR---Tables used by Object I/O \fCreadFrom()\fR
+.OC
+.br
+    \fBStoreOnTbl\fR---Tables used by Object I/O \fCstoreOn()\fR
+.HE
+.br
+.ad l
+'ft B
+.ps 14
+.OC
+.sp 2
+.vs 16
+CHANGES BETWEEN OOPS V2R2 AND NIHCL R3.0
+.ad b
+'ft R
+.ps 12
+.OC
+.sp 1
+.vs 14
+This section highlights the most significant changes that have been made since the 
+previous release.  It is by no stretch of the imagination complete.
+.HE
+.br
+.ad l
+'ft B
+.OC
+.sp 1
+Library name changed from "OOPS" to "NIH Class Library" (NIHCL)
+.ad b
+'ft R
+.OC
+.sp 1
+Since there's too many things called "OOPS" these days, we've changed the name of 
+our library to the "NIH Class Library".  All file and C++ names containing "OOPS" have 
+been changed, often just by substituting "NIHCL" for "OOPS".
+.HE
+.br
+.ad l
+'ft B
+.OC
+.sp 1
+Class NIHCL
+.ad b
+'ft R
+.OC
+.sp 1
+With the introduction of static member functions and (useful) static member variables 
+in R2.0, it is now possible to eliminate most global names.  In R3.0, we've gathered 
+many previously global functions and variables and made them static members of a new 
+class, \fCNIHCL\fR, which is the base class of \fCObject\fR.  Here's a list of the public functions:
+'in 72p
+.br
+.ad l
+'ft C
+.ps 10
+.OC
+.sp 1
+.vs 12
+static class NIHCL {
+.OC
+.br
+// ...
+.OC
+.br
+public:             // static member functions
+.OC
+.br
+    static unsigned char charBitMask(int i);
+.OC
+.br
+    static unsigned short shortBitMask(int i);
+.OC
+.br
+    static unsigned int intBitMask(int i);
+.OC
+.br
+    static unsigned char bitCount(int i);
+.OC
+.br
+    static unsigned char bitReverse(int i);
+.OC
+.br
+    static void initialize();           // library initialization
+.OC
+.br
+    static bool initialized();          // library initialized?
+.OC
+.br
+    static void setError(int error, int sev ...);
+.OC
+.br
+} NIHCL_init;
+'in 36p
+.ad b
+'ft R
+.ps 12
+.OC
+.sp 1
+.vs 14
+Since all NIH Library classes inherit these members, their member functions can use 
+these names without needing to specify a scope qualifier, except to resolve ambiguities.  
+However, non-member functions and member functions of classes not derived from \fCNIHCL\fR 
+can access them with the \fCNIHCL\fR scope qualifier; for example:
+'in 72p
+.br
+.ad l
+'ft C
+.ps 10
+.OC
+.sp 1
+.vs 12
+NIHCL::setError(ERROR_CODE, DEFAULT);
+'in 36p
+.ad b
+'ft R
+.ps 12
+.HE
+.br
+.ad l
+'ft B
+.OC
+.sp 1
+.vs 14
+Optional support for multiple inheritance
+.ad b
+'ft R
+.OC
+.sp 1
+The NIH Class Library can be compiled to support Multiple Inheritance (MI) by defining 
+the preprocessor symbol \fCMI\fR.  \fIAll classes linked together in a program must all have 
+been compiled with the same \f(COMI\fI option setting\fR.  The major effect of this switch is 
+that all classes derived from \fCObject\fR specify it as a virtual base class.  Since C++ 
+does not permit a pointer to a virtual base class to be cast down to a pointer to a 
+derived class, the new \fCDECLARE_MEMBERS\fR macro defines an overloaded family of static 
+member functions named \fCcastDown()\fR that can perform this conversion. (If \fCMI\fR is not enabled, \fC
+castDown()\fR becomes an ordinary pointer cast.)
+.OC
+.sp 1
+The \fCcastDown()\fR functions all call the function \fC_castDown()\fR to perform the pointer 
+conversion.  If a class has only a single base class, it uses the \fCDEFINE_CLASS\fR and \fC
+DEFINE_ABSTRACT_CLASS\fR preprocessor macros as before, and these generate an  implementation 
+of \fC_castDown()\fR suitable for the single inheritance case.  If a class has multiple base 
+classes, it uses the new \fCDEFINE_CLASS_MI\fR and \fCDEFINE_ABSTRACT_CLASS_MI\fR macros, which 
+do \fInot\fR generate \fC_castDown()\fR---the class provider must supply a definition as described 
+in \fCTemplate_c\fR.
+.OC
+.sp 1
+All \fCreadFrom()\fR constructors must specify the \fCreadFrom()\fR constructor for the virtual 
+base class \fCObject\fR in their initialization lists when \fCMI\fR is enabled.  See \fCTemplate_h\fR 
+for details.
+.OC
+.sp 1
+If you use virtual base classes in conjunction with the NIH Class Library, you must 
+take care when implementing the \fCdeepCopy()\fR and \fCstoreOn()\fR operations that a virtual 
+base class's member variables are only deepened or stored once.  The library provides 
+the functions \fCdeepenVBase()\fR and \fCstoreVBaseOn()\fR to help with this.  Call \fCdeepenVBase()\fR 
+instead of \fCdeepenShallowCopy()\fR to deepen the member variables of a virtual base class, 
+and call \fCstoreVBaseOn()\fR instead of \fCstorer()\fR to store the member variables of a virtual 
+base class.
+.br
+.ad l
+'ft CB
+.OC
+.sp 1
+DECLARE_MEMBERS
+.HE
+'ft B
+\c
+ macro
+.ad b
+'ft R
+.OC
+.sp 1
+The new DECLARE_MEMBERS preprocessor macro generates the declarations for the class 
+descriptor and most of the member functions that all NIH Library classes must provide, 
+including:
+'in 72p
+.br
+.ad l
+'ft C
+.ps 10
+.OC
+.sp 1
+.vs 12
+private:
+.OC
+.br
+	static Class classDesc;		// class descriptor
+.OC
+.br
+public:\f(CO
+.OC
+.br
+	classname\fC* castDown(Object*);
+.OC
+.br
+	const \f(COclassname\fC* castDown(const Object*);
+.OC
+.br
+	\f(COclassname\fC& castDown(Object&);
+.OC
+.br
+	const \f(COclassname\fC& castDown(const Object&);
+.OC
+.br
+	static const Class* desc();		// return class descriptor
+.OC
+.br
+	static \f(COclassname\fC* readFrom(OIOin&);
+.OC
+.br
+	static \f(COclassname\fC* readFrom(OIOifd&);
+.OC
+.br
+	\f(COclassname\fC(OIOin&);			// readFrom() constructors
+.OC
+.br
+	\f(COclassname\fC(OIOout&);
+.OC
+.br
+	virtual const Class* isA() const;
+.OC
+.br
+	virtual Object* shallowCopy() const;
+.OC
+.br
+	virtual void* _castdown(const Class&) const;
+.OC
+.br
+protected:
+.OC
+.br
+   void deepenVBase();
+.OC
+.br
+	void storeVBaseOn(OIOofd&) const;	// store virtual base class
+.OC
+.br
+	void storeVBaseOn(OIOout&) const;
+.OC
+.br
+private:
+.OC
+.br
+	static Object* reader(OIOin& strm);
+.OC
+.br
+	static Object* reader(OIOifd& fd);
+'in 36p
+.ad b
+'ft R
+.ps 12
+.OC
+.sp 1
+.vs 14
+The DECLARE_MEMBERS macro takes a single argument, the name of the class being declared.
+.HE
+.br
+.ad l
+'ft B
+.OC
+.sp 1
+New implementation of Process classes
+.ad b
+'ft R
+.OC
+.sp 1
+In R3.0, class \fCProcess\fR has two derived classes, \fCStackProc\fR and \fCHeapProc\fR, which serve 
+as the base classes for client processes.  \fCStackProc\fR and \fCHeapProc\fR differ in where a 
+process's stack is located when the process is running: a \fCStackProc\fR has its stack located 
+on the real stack in the stack segment, while a \fCHeapProc\fR has its stack in the free 
+storage area in the data segment.  A context switch of a \fCStackProc\fR involves copying 
+the active part of the current process's stack into a save area, then copying the saved 
+stack of the new process onto the real stack.  A context switch of a \fCHeapProc\fR involves 
+simply resetting the processor's stack pointer and frame pointer registers to point 
+to the new stack, so a \fCStackProc\fR context switch is much slower than a \fCHeapProc\fR context 
+switch.  However, using \fCHeapProc\fRs tends to break debuggers, which usually can't cope 
+with the bizarre stack location, so programs using them are difficult to debug.  Also, 
+the stack area for a \fCHeapProc\fR must be specified when it is constructed, and must be 
+large enough to hold the largest stack that can occur anytime during execution.  In 
+contrast, the stack save area for a \fCStackProc\fR grows in size if necessary and must only 
+be large enough to hold the largest stack in use when the process is suspended.  Thus, 
+the tradeoff is debuggability and reduced memory requirement vs. speed.
+.OC
+.sp 1
+Fiddling with the stack area and machine registers is something you can't do directly 
+from C++, so processes are inherently non-portable.  The R3.0 implementation of the \fC
+Process\fR classes attempts to use the C library routines \fCsetjmp()\fR, \fClongjmp()\fR, and \fCalloca()\fR 
+to do context switching.  While this works on many machines, you may need to write 
+your own versions of these routines for machines on which it doesn't.  See the section 
+on \fIPORTING THE PROCESS CLASSES\fR for instructions.
+.HE
+.br
+.ad l
+'ft B
+.OC
+.sp 1
+External \f(CBclass_\f(BIclassname\fB identifiers eliminated
+.ad b
+'ft R
+.OC
+.sp 1
+The class descriptor for each class no longer has an external identifier of the form \fC
+class_\fIclassname\fR.  Instead, the class descriptor is a static member variable of each 
+class, and the inline static member function \fCdesc()\fR returns its address.
+.HE
+.br
+.ad l
+'ft B
+.OC
+.sp 1
+Changes to Object I/O
+.ad b
+'ft R
+.OC
+.sp 1
+Previous releases of OOPS have a fundamental problem in the way they handle object 
+I/O for classes with member variables that are class instances.  For example, consider 
+an OOPS class \fCX\fR with a member variable of class \fCM\fR, where \fCM\fR is also an OOPS class:
+'in 72p
+.br
+.ad l
+'ft C
+.ps 10
+.OC
+.sp 1
+.vs 12
+class X : public BASE {
+.OC
+.br
+    M m;    // a member class instance
+.OC
+.br
+    M* p;   // a member pointer to a class instance
+.OC
+.br
+    int i;  // a fundamental type
+.OC
+.br
+// ...
+.OC
+.br
+};
+'in 36p
+.ad b
+'ft R
+.ps 12
+.OC
+.sp 1
+.vs 14
+Previous releases implement \fCX::storer()\fR and\fC X::X(istream&,X&)\fR as follows:
+'in 72p
+.br
+.ad l
+'ft C
+.ps 10
+.OC
+.sp 1
+.vs 12
+void X::storer(ostream& strm)
+.OC
+.br
+{
+.OC
+.br
+    BASE::storer(strm);
+.OC
+.br
+    m.storeOn(strm);
+.OC
+.br
+    p->storeOn(strm);
+.OC
+.br
+    strm << i << " ";
+.OC
+.br
+}
+.OC
+.sp 1
+void X::X(istream&strm, X& where)
+.OC
+.br
+    : (strm,where)
+.OC
+.br
+{
+.OC
+.br
+    this = &where;
+.OC
+.br
+    readFrom(strm,"M",m);
+.OC
+.br
+    p = (M*)readFrom(strm,"M");
+.OC
+.br
+    strm >> i;
+.OC
+.br
+}
+.OC
+.sp 1
+void X::storer(FileDescTy& fd)
+.OC
+.br
+{
+.OC
+.br
+    BASE::storer(fd);
+.OC
+.br
+    m.storeOn(fd);
+.OC
+.br
+    p->storeOn(fd);
+.OC
+.br
+    storeBin(fd,i);
+.OC
+.br
+}
+.OC
+.sp 1
+void X::X(FileDescTy& fd, X& where)
+.OC
+.br
+    : (fd,where)
+.OC
+.br
+{
+.OC
+.br
+    this = &where;
+.OC
+.br
+    readFrom(fd,"M",m);
+.OC
+.br
+    p = (M*)readFrom(fd,"M");
+.OC
+.br
+    readBin(fd,i);
+.OC
+.br
+}
+'in 36p
+.ad b
+'ft R
+.ps 12
+.OC
+.sp 1
+.vs 14
+The problem is that this constructor first initializes \fCm\fR using the \fCM::M()\fR constructor, 
+then calls \fCreadFrom()\fR, which overwrites this initialized instance with an instance 
+constructed by reading \fCstrm\fR.  We didn't notice this bug earlier because, in practice, 
+the problem occurs only in classes \fCRectangle\fR and \fCSharedQueue\fR, and has no obvious consequences.  
+The worst that is likely to happen is that \fCM::M()\fR allocates some memory that never 
+gets reclaimed.
+.OC
+.sp 1
+Unfortunately, the fix requires some widespread changes.  But, it turns out that numerous 
+other improvements become possible.  The new format for \fCstorer()\fR functions and \fCreadFrom()\fR 
+constructors when not using MI is:
+'in 72p
+.br
+.ad l
+'ft C
+.ps 10
+.OC
+.sp 1
+.vs 12
+void X::storer(OIOout& strm)
+.OC
+.br
+{
+.OC
+.br
+    BASE::storer(strm);
+.OC
+.br
+    m.storeMemberOn(strm);
+.OC
+.br
+    p->storeOn(strm);
+.OC
+.br
+    strm << i;
+.OC
+.br
+}
+.OC
+.sp 1
+void X::X(OIOin& strm)
+.OC
+.br
+    : (strm), m(strm)
+.OC
+.br
+{
+.OC
+.br
+    p = M::readFrom(strm);
+.OC
+.br
+    strm >> i;
+.OC
+.br
+}
+.OC
+.sp 1
+void X::storer(OIOofd& fd)
+.OC
+.br
+{
+.OC
+.br
+    BASE::storer(fd);
+.OC
+.br
+    m.storeMemberOn(fd);
+.OC
+.br
+    p->storeOn(fd);
+.OC
+.br
+    fd << i;
+.OC
+.br
+}
+.OC
+.sp 1
+void X::X(OIOifd& fd)
+.OC
+.br
+    : (fd), m(fd)
+.OC
+.br
+{
+.OC
+.br
+    p = M::readFrom(fd);
+.OC
+.br
+    fd >> i;
+.OC
+.br
+}
+'in 36p
+.ad b
+'ft R
+.ps 12
+.OC
+.sp 1
+.vs 14
+The new format is simpler and consistent---\fCstorer()\fR functions always call \fCBASE::storer()\fR 
+and \fCX::X(OIOin&)\fR constructors always call \fCBASE::BASE(OIOin&)\fR.
+.HE
+.br
+.ad l
+'ft I
+.OC
+.sp 1
+Public \f(COreadFrom()\fI constructor
+.ad b
+'ft R
+.OC
+.sp 1
+Since other classes in general must have access to \fCX::X(OIOin&)\fR, it must be public 
+instead of protected, requiring a change to all header files.
+.HE
+.br
+.ad l
+'ft I
+.OC
+.sp 1
+Changes to \f(COreadFrom()
+.ad b
+'ft R
+.OC
+.sp 1
+As explained previously, calls to \fCreadFrom()\fR that specify the third argument overwrite 
+an initialized instance of a class.  Since this is generally a bad thing to do, the 
+third argument to \fCreadFrom()\fR has been eliminated; thus, \fCreadFrom()\fR will only return 
+a pointer to an object. This form of \fCreadFrom()\fR was used to initialize member class 
+instances.  These must now be initialized via the \fCreadFrom()\fR constructor in the initializer 
+list, as shown in the example.  When converting old programs, these calls to \fCreadFrom()\fR 
+will be flagged as errors because the three argument form of \fCreadFrom()\fR is no longer 
+defined.  \fINote that when you change the \f(COreadFrom()\fI constructor, you must also change 
+the corresponding \f(COstorer()\fI function to store the member using \f(COstoreMemberOn()\fI rather 
+than \f(COstoreOn()\fI.\fR 
+.OC
+.sp 1
+In previous releases, the second argument to \fCreadFrom()\fR was an optional name of the 
+class of object that was expected to be read.  If the object read was of a different 
+class, \fCreadFrom()\fR raised an error.  Beginning with this release, \fCreadFrom(OIOin&)\fR, 
+and \fCreadFrom(OIOifd&)\fR are static member functions of each class which will also accept 
+derived classes of the specified class, just as C++ allows a pointer to a derived class 
+to be used instead of a pointer to a base class.  The global functions \fCreadFrom(istream, 
+const char* classname)\fR and \fCreadFrom(int fd, const char* classname)\fR have been eliminated.
+.br
+.ad l
+'ft CO
+.OC
+.sp 1
+istream&
+.HE
+'ft I
+replaced by \f(COOIOin&
+'ft I
+.ad b
+'ft R
+.OC
+.sp 1
+The type of the first (and now only) argument to the constructors called by \fCreadFrom(istream&)\fR 
+has been changed from an \fCistream&\fR to an \fCOIOin&\fR.  This avoids naming conflicts with 
+other constructors.  Also, \fCOIOin\fR is an abstract base class, and all input operators 
+are virtual functions, so you can customize the Object I/O format by defining your 
+own derived classes.   \fCOIOistream\fR and \fCOIOnihin\fR implement a format similar to the old 
+OOPS format.
+.br
+.ad l
+'ft CO
+.OC
+.sp 1
+ostream&
+.HE
+'ft I
+replaced by \f(COOIOout&
+'ft I
+.ad b
+'ft R
+.OC
+.sp 1
+The type of the argument to the \fCstorer(ostream&)\fR function has been changed  to an \fC
+OIOout&\fR.  \fCOIOout\fR is an abstract base class, and all output operators are virtual functions, 
+so you can customize the Object I/O format by defining your own derived classes.   \fC
+OIOostream\fR and \fCOIOnihout\fR implement a format similar to the old OOPS format.
+.HE
+.br
+.ad l
+'ft I
+.OC
+.sp 1
+Automatic separators output by \f(COOIOostream::operator<<()
+'ft I
+.ad b
+'ft R
+.OC
+.sp 1
+It is no longer necessary to explicitly output a space after each number written in 
+a \fCstorer(OIOnihout&)\fR function.  Class \fCOIOostream\fR reimplements \fCoperator<<()\fR to supply 
+the space automatically.
+.br
+.ad l
+'ft CO
+.OC
+.sp 1
+FileDescTy&
+.HE
+'ft I
+replaced by \f(COOIOifd&/OIOofd&
+'ft I
+.ad b
+'ft R
+.OC
+.sp 1
+The type of the argument to the \fCstorer(FileDescTy&)\fR function has been changed  to 
+an \fCOIOofd&\fR. and the argument to the \fCreadFrom(FileDescTy&)\fR function has been changed 
+to an \fCOIOifd&\fR.  \fCOIOifd\fR and \fCOIOofd\fR are not abstract classes, and their I/O operators 
+are not virtual functions as in \fCOIOin\fR and \fCOIOout\fR, so using them does not incur the 
+overhead of a virtual function call for each member variable.
+.HE
+.br
+.ad l
+'ft I
+.OC
+.sp 1
+Change to \f(COreadFrom(OIOin&)
+'ft I
+.ad b
+'ft R
+.OC
+.sp 1
+Encountering EOF during \fCreadFrom(OIOin&)\fR is now always an error.  Previous releases 
+returned \fCnil\fR if the input stream was initially at the EOF.  \fCreadFrom(OIOin&)\fR now behaves 
+like \fCreadFrom(OIOifd&)\fR always has.
+.br
+.ad l
+'ft CO
+.OC
+.sp 1
+storeBin()
+.HE
+'ft I
+replaced by \f(COOIOofd::operator<<()\fI and \f(COOIOofd::put()
+'ft I
+.ad b
+'ft R
+.OC
+.sp 1
+The function \fCstoreBin(FileDescTy&, \f(COtype\fC)\fR has been replaced by \fCOIOofd::operator<<(\f(COtype\fC)\fR 
+and the function \fCstoreBin(FileDescTy&, \f(COtype\fC*, unsigned)\fR has been replaced by \fCOIOofd::put(\f(COtype\fC*, 
+unsigned)\fR.
+.br
+.ad l
+'ft CO
+.OC
+.sp 1
+readBin()
+.HE
+'ft I
+replaced by \f(COOIOifd::operator>>()\fI and \f(COOIOifd::get()
+'ft I
+.ad b
+'ft R
+.OC
+.sp 1
+The function \fCreadBin(FileDescTy&, \f(COtype\fC)\fR has been replaced by \fCOIOifd::operator>>(\f(COtype\fC)\fR 
+and the function \fCreadBin(FileDescTy&, \f(COtype\fC*, unsigned)\fR has been replaced by \fCOIOifd::get(\f(COtype\fC*, 
+unsigned)\fR.
+.br
+.ad l
+'ft CO
+.OC
+.sp 1
+read_Cstring()
+.HE
+'ft I
+replaced by \f(COOIOin::getCstring()
+'ft I
+.ad b
+'ft R
+.OC
+.sp 1
+The function \fCread_Cstring()\fR has been replaced by \fCOIOin::getCstring()\fR.
+.br
+.ad l
+'ft CO
+.OC
+.sp 1
+store_Cstring()
+.HE
+'ft I
+replaced by \f(COOIOout::putCstring()
+'ft I
+.ad b
+'ft R
+.OC
+.sp 1
+The function \fCstore_Cstring()\fR has been replaced by \fCOIOout::putCstring()\fR.
+.br
+.ad l
+'ft CO
+.OC
+.sp 1
+READ_OBJECT_AS_BINARY
+.HE
+'ft I
+eliminated
+.ad b
+'ft R
+.OC
+.sp 1
+The \fCREAD_OBJECT_AS_BINARY\fR macro has been eliminated.  Replace it with code to read 
+member variables individually using \fC>>\fR and \fCget()\fR.
+.br
+.ad l
+'ft CO
+.OC
+.sp 1
+STORE_OBJECT_AS_BINARY
+.HE
+'ft I
+eliminated
+.ad b
+'ft R
+.OC
+.sp 1
+The \fCSTORE_OBJECT_AS_BINARY\fR macro has been eliminated.  Replace it with code to store 
+member variables individually using \fC<<\fR and \fCput()\fR.
+.HE
+.br
+.ad l
+'ft B
+.OC
+.sp 1
+Changes to the \f(CBDEFINE_CLASS\fB macro
+.ad b
+'ft R
+.OC
+.sp 1
+The new version of the \fCDEFINE_CLASS\fR macro has hooks for supporting multiple inheritance.  
+Before calling the \fCDEFINE_CLASS\fR macro, you must define three preprocessor symbols: \fC
+BASE_CLASSES\fR, \fCMEMBER_CLASSES\fR, and \fCVIRTUAL_BASE_CLASSES\fR.  As an example, suppose you 
+are writing the implementation of a class with the following declaration:
+'in 72p
+.br
+.ad l
+'ft C
+.ps 10
+.OC
+.sp 1
+.vs 12
+class X: public A, public virtual B {
+.OC
+.br
+    C c;        // C is a class
+.OC
+.br
+    D d;        // D is a class
+.OC
+.br
+//...
+.OC
+.br
+};
+'in 36p
+.ad b
+'ft R
+.ps 12
+.OC
+.sp 1
+.vs 14
+Set the symbol \fCBASE_CLASSES\fR to a list of the addresses of the class descriptors for 
+the base classes of the class you are defining.  These must be in the same order as 
+they appear in the class declaration:
+'in 72p
+.br
+.ad l
+'ft C
+.ps 10
+.OC
+.sp 1
+.vs 12
+#define BASE_CLASSES A::desc(), B::desc()
+'in 36p
+.ad b
+'ft R
+.ps 12
+.OC
+.sp 1
+.vs 14
+Set the symbol \fCMEMBER_CLASSES\fR to a list of the addresses of the class descriptors 
+for any member variables of the class that are NIH Library classes.  These must be 
+in the same order as they appear in the class declaration:
+'in 72p
+.br
+.ad l
+'ft C
+.ps 10
+.OC
+.sp 1
+.vs 12
+#define MEMBER_CLASSES C::desc(), D::desc()
+'in 36p
+.ad b
+'ft R
+.ps 12
+.OC
+.sp 1
+.vs 14
+If a class has no class members, define \fCMEMBER_CLASSES\fR, but give it no value.
+.OC
+.sp 1
+Set the symbol \fCVIRTUAL_BASE_CLASSES\fR to a list of the addresses of the class descriptors 
+for the virtual base classes of the class you are defining.  These must be in the same 
+order as they appear in the class declaration:
+'in 72p
+.br
+.ad l
+'ft C
+.ps 10
+.OC
+.sp 1
+.vs 12
+#define VIRTUAL_BASE_CLASSES B::desc()
+'in 36p
+.ad b
+'ft R
+.ps 12
+.OC
+.sp 1
+.vs 14
+If a class has no virtual base classes, define \fCVIRTUAL_BASE_CLASSES\fR, but give it no 
+value.
+.OC
+.sp 1
+Now you are ready to call the \fCDEFINE_CLASS\fR macro:
+'in 72p
+.br
+.ad l
+'ft C
+.ps 10
+.OC
+.sp 1
+.vs 12
+DEFINE_CLASS(\f(COclassname\fC,\f(COversion\fC,\f(COidentification\fC,\f(COinitor1\fC,\f(COinitor2\fC)
+'in 36p
+.ad b
+'ft R
+.ps 12
+'ft I
+.OC
+.sp 1
+.vs 14
+Classname\fR is the name of the class you are defining.\fI
+.OC
+.sp 1
+Version\fR is the version number of the class you are defining.  It should be changed 
+whenever the format of the information written by the \fCstorer()\fR function changes such 
+that older versions of \fCreadFrom()\fR can no longer interpret it correctly.\fI
+.OC
+.sp 1
+Identification\fR is a character string that identifies the revision level of the implementation 
+of the class.  It is simply stored in the class descriptor where you can retrieve it 
+by calling the function \fCClass::ident()\fR.  The identification parameter is intended for 
+use with a revision control system such as RCS or SCCS.  NIH Library classes specify 
+it as the string "\fC$Header$\fR", which RCS replaces with the revision identification.\fI
+.OC
+.sp 1
+Initor1\fR and \fIinitor2\fR are pointers to functions you may supply to perform initialization 
+for the class, for example, initializing \fCstatic\fR data that the class uses.
+.HE
+.br
+.ad l
+'ft CB
+.OC
+.sp 1
+DEFINE_ABSTRACT_CLASS
+.ad b
+'ft R
+.OC
+.sp 1
+Abstract classes should use the new macro \fCDEFINE_ABSTRACT_CLASS\fR instead of \fCDEFINE_CLASS\fR.  \fC
+DEFINE_ABSTRACT_CLASS \fRhas the same arguments as \fCDEFINE_CLASS\fR; the only difference is 
+that the \fCreader()\fR functions it generates do not reference the class's object I/O constructors, 
+and \fCshallowCopy()\fR is defined as a \fCderivedClassResponsibility()\fR.
+.HE
+.br
+.ad l
+'ft B
+.OC
+.sp 1
+Change to \f(CBClass::className()
+'ft B
+.ad b
+'ft R
+.OC
+.sp 1
+The function \fCclassName()\fR returns the name of the class of the object to which it is 
+applied.  In previous releases \fCClass::className()\fR does not do this.  Instead, it returns 
+the name of the class described by the class object to which it is applied.  This release 
+eliminates this inconsistency: \fCclassName()\fR returns \fC"Class"\fR when applied to an instance 
+of class \fCClass\fR.  The new function \fCClass::name()\fR returns the name of the class described 
+by an instance of class \fCClass\fR.
+.HE
+.br
+.ad l
+'ft B
+.OC
+.sp 1
+New member functions of class \f(CBClass
+'ft B
+.ad b
+'ft R
+'ft C
+.OC
+.sp 1
+Class** baseClasses()\fR returns a zero-terminated array of pointers to the class descriptors 
+of the base classes of this class.\fC
+.OC
+.sp 1
+Class** memberClasses()\fR returns a zero-terminated array of pointers to the class descriptors 
+of the member classes of this class.\fC
+.OC
+.sp 1
+Class** virtualBaseClasses()\fR returns a zero-terminated array of pointers to the class 
+descriptors of the virtual base classes of this class.\fC
+.OC
+.sp 1
+unsigned long signature()\fR returns the signature of this class.  The signature of a 
+class is computed by hashing the signatures of this class's base and member classes 
+and the version number of this class.  It is currently used by \fCstoreOn()\fR/\fCreadFrom()\fR 
+to prevent obsolete versions of objects from being read.\fC
+.OC
+.sp 1
+const Class* Class::lookup(const char* name)\fR returns a pointer to the class descriptor 
+object for the class with the specified name.  \fCClass::lookup()\fR returns 0 if the name 
+is not found.
+.HE
+.br
+.ad l
+'ft B
+.OC
+.sp 1
+Changes to \f(CBcopy()\fB, \f(CBshallowCopy()\fB, and \f(CBdeepCopy()
+'ft B
+.ad b
+'ft R
+.OC
+.sp 1
+In previous releases, \fCshallowCopy()\fR made a bitwise copy of an object, and \fCdeepCopy()\fR 
+first made a shallow copy of an object, and then called the virtual function \fCdeepenShallowCopy()\fR 
+to convert the shallow copy to a deep copy.  Each class reimplemented \fCdeepenShallowCopy()\fR 
+to handle any pointer member variables contained in instances of its class.
+.OC
+.sp 1
+The problems with this approach are that (1) it is usually unsafe to make a shallow 
+copy of an object that contains pointers, and (2) with Release 2.0 of the AT&T C++ 
+Translator, objects may contain compiler-generated pointers which \fCdeepenShallowCopy()\fR 
+cannot handle easily and portably.
+.OC
+.sp 1
+The following changes have been made in an attempt to solve these problems:
+.OC
+.sp 1
+Each class now reimplements the virtual function \fCshallowCopy()\fR to call the initialization 
+constructor \fCX::X(const X&)\fR to make a shallow copy of an object.  The implementation 
+of \fCshallowCopy()\fR is the same for all classes and is generated automatically by the \fC
+DEFINE_CLASS\fR macro:
+'in 72p
+.br
+.ad l
+'ft C
+.ps 10
+.OC
+.sp 1
+.vs 12
+Object* \f(COclassname\fC::shallowCopy()
+.OC
+.br
+{
+.OC
+.br
+    return new \f(COclassname\fC(*this);
+.OC
+.br
+}
+'in 36p
+.ad b
+'ft R
+.ps 12
+'ft C
+.OC
+.sp 1
+.vs 14
+Object::deepCopy()\fR still calls the virtual function \fCdeepenShallowCopy()\fR to convert 
+a shallow copy, now made by the initialization constructor, to a deep copy.  Since 
+the shallow copy is no longer a simple bitwise copy, you may need to change \fCdeepenShallowCopy()\fR 
+for some classes.
+.OC
+.sp 1
+In previous releases, \fCcopy()\fR defaulted to \fCdeepCopy()\fR since it was unsafe for general 
+use.  Beginning with this release, \fCcopy()\fR defaults to \fCshallowCopy()\fR as it does in Smalltalk-80.  
+Also, \fCObject::deepCopy()\fR is no longer a virtual function.
+.HE
+.br
+.ad l
+'ft B
+.OC
+.sp 1
+New function \f(CBdumpOn()\fB and changes to \f(CBprintOn()
+'ft B
+.ad b
+'ft R
+.OC
+.sp 1
+To make the \fCprintOn()\fR function more useful in application programs, it has been changed 
+to print minimal formatting information, the idea being that this can frequently be 
+added by an application to suit its specific needs.  The virtual function \fCdumpOn()\fR 
+has been added to assist in debugging by printing more detailed information than \fCprintOn()\fR.  \fC
+Object::dumpOn()\fR prints the name of an object's class, a left square bracket (\fC"["\fR), 
+calls \fCprintOn()\fR, then prints a matching right square bracket and a newline (\fC"]\\n"\fR).  \fC
+Collection::dumpOn()\fR does the same, except that it applies \fCdumpOn()\fR to all objects 
+in the collection instead of calling \fCprintOn()\fR.  Other classes reimplement \fCdumpOn()\fR 
+to print more appropriate information.
+.OC
+.sp 1
+By default, \fCdumpOn()\fR sends its output to \fCcerr\fR.  A default argument has also been added 
+to \fCprintOn()\fR so that it writes to \fCcout\fR by default.
+.HE
+.br
+.ad l
+'ft B
+.OC
+.sp 1
+Changes to class \f(CBLink
+'ft B
+.ad b
+'ft R
+.HE
+.br
+.ad l
+'ft I
+.OC
+.sp 1
+Constructor \f(COLink(const Link&)\fI changed to \f(COLink(Link*)
+.ad b
+'ft R
+.OC
+.sp 1
+The constructor \fCLink(const Link&)\fR, which constructs a \fCLink\fR that points to the argument \fC
+Link\fR, has been replaced by the constructor \fCLink(Link*)\fR.  This change was necessary 
+so that \fCshallowCopy()\fR could call the constructor \fCLink(const Link&)\fR to make a bitwise 
+copy.  We suggest temporarily commenting out the declaration of this constructor in 
+the file \fCLink.h\fR and recompiling the programs that depend upon it so you can easily 
+detect and change the code using \fCLink(const Link&)\fR to use the new \fCLink(Link*)\fR constructor 
+instead.
+.OC
+.sp 1
+As a result of this change, \fCLink::shallowCopy()\fR is now enabled and will return a bitwise 
+copy of a \fCLink\fR.
+.HE
+.br
+.ad l
+'ft I
+.OC
+.sp 1
+New function \f(COisListEnd()
+.ad b
+'ft R
+.OC
+.sp 1
+Class \fCLink\fR has a new member function \fCbool isListEnd()\fR, which you must use to check 
+for the end of a \fCLinkedList\fR instead of checking for a pointer to \fCNil\fR.  Compile your 
+program with \fC-DMI\fR to find the places where you need to make this change.
+.HE
+.br
+.ad l
+'ft B
+.OC
+.sp 1
+Changes to class \f(CBIterator
+'ft B
+.ad b
+'ft R
+'ft C
+.OC
+.sp 1
+Iterator::shallowCopy()\fR now produces a shallow copy with a pointer to the same collection 
+bound to the original instead of to a shallow copy of the collection bound to the original, 
+as in prior releases.  \fCIterator::deepCopy()\fR works as before: it produces a deep copy 
+with a pointer to a deep copy of the collection bound to the original.
+.OC
+.sp 1
+The member variable \fCObject* state\fR has been added, which collection classes can use 
+to associate additional state information with an \fCIterator\fR.  For example, a collection 
+class implemented as a tree structure can use \fCstate\fR to point to a \fCStack\fR used to maintain 
+the state of a traversal of the tree.  The destructor for class \fCIterator\fR calls a new 
+virtual function, \fCdoFinish()\fR, which a class that uses \fCstate\fR can reimplement to delete 
+the state object when the \fCIterator\fR is destroyed.
+.OC
+.sp 1
+The \fCstoreOn()\fR format has changed as a result of these modifications.
+.OC
+.sp 1
+The function \fCObject* Iterator::operator()()\fR has been added to return a pointer to 
+the current object, or 0 if there is none.
+.HE
+.br
+.ad l
+'ft B
+.OC
+.sp 1
+Changes to class \f(CBDictionary
+'ft B
+.ad b
+'ft R
+.OC
+.sp 1
+The return type of \fCassocAt()\fR, \fCremoveAssoc()\fR, and \fCremoveKey()\fR has been changed from \fC
+LookupKey&\fR to \fCLookupKey*\fR for consistency with the return types of similar functions.  \fC
+Dictionary::assocAt()\fR returns 0 instead of \fCnil\fR if the key is not found.
+.br
+.ad l
+'ft CB
+.OC
+.sp 1
+const
+.HE
+'ft B
+arguments to member functions
+.ad b
+'ft R
+.OC
+.sp 1
+In previous versions , it was possible to convert, or "widen", a pointer to a \fCconst\fR 
+object into a pointer to a non-\fCconst\fR object by adding the \fCconst\fR object to a collection 
+class and then removing it:
+'in 72p
+.br
+.ad l
+'ft C
+.ps 10
+.OC
+.sp 1
+.vs 12
+Object* f(const Object& co)
+.OC
+.br
+{
+.OC
+.br
+    OrderedCltn c;
+.OC
+.br
+    c.add(co);
+.OC
+.br
+    return c.remove(co);
+.OC
+.br
+}
+'in 36p
+.ad b
+'ft R
+.ps 12
+.OC
+.sp 1
+.vs 14
+C++ R2.0 now issues error or warning messages when a \fCconst\fR pointer is converted into 
+a non-\fCconst\fR pointer.  To eliminate these problems, the const arguments to some functions 
+such as \fCadd()\fR have been changed to non-\fCconst\fR arguments.  These changes affect classes \fC
+Assoc\fR, \fCLinkOb\fR, and the collection classes.
+.OC
+.sp 1
+If you need to add a \fCconst\fR object to a collection class, you must use an explicit 
+cast:
+'in 72p
+.br
+.ad l
+'ft C
+.ps 10
+.OC
+.sp 1
+.vs 12
+c.add((Object&)co);
+'in 36p
+.ad b
+'ft R
+.ps 12
+.HE
+.br
+.ad l
+'ft B
+.OC
+.sp 1
+.vs 14
+Change to \f(CBBag::remove(const Object&)
+'ft B
+.ad b
+'ft R
+'ft C
+.OC
+.sp 1
+Bag::remove(const Object&)\fR now returns 0 until last occurrence removed instead of 
+the address of the argument to eliminate "widening" of the \fCconst\fR argument.
+.br
+.ad l
+'ft CB
+.OC
+.sp 1
+shouldNotImplement()
+.HE
+'ft B
+functions now \f(CBprivate
+'ft B
+.ad b
+'ft R
+.OC
+.sp 1
+Virtual member functions that a class reimplements to call \fCshouldNotImplement()\fR have 
+been made private so that the compiler can give an error message if a client program 
+attempts to apply the function to an instance of the class.
+.HE
+.br
+.ad l
+'ft B
+.OC
+.sp 1
+Change to class Stack
+.ad b
+'ft R
+.OC
+.sp 1
+When a \fCStack\fR is converted to another type of collection, the objects in the \fCStack\fR 
+are added to the collection from the top of the stack down.  Previous releases added 
+them bottom-up.
+.HE
+.br
+.ad l
+'ft B
+.OC
+.sp 1
+Changes to class Heap
+.ad b
+'ft R
+.OC
+.sp 1
+The new member function \fCHeap::removeId(const Object&)\fR allows you to remove the object 
+that is the \fIsame\fR (i.e. \fCisSame()\fR) as the argument object from a \fCHeap\fR.
+.OC
+.sp 1
+Iterating over a \fCHeap\fR now visits the objects in the heap in sorted order, from smallest 
+to largest.  Previous implementations visited the objects in heap order.  This affects 
+the order in which \fCprintOn()\fR lists the objects in a \fCHeap\fR, for example.
+.HE
+.br
+.ad l
+'ft B
+.OC
+.sp 1
+Changes to class LinkedList
+.ad b
+'ft R
+.OC
+.sp 1
+The new member function \fCLinkedList::removeId(const Object&)\fR allows you to remove the 
+object that is the \fIsame\fR (i.e. \fCisSame()\fR) as the argument object from a \fCLinkedList\fR.
+.HE
+.br
+.ad l
+'ft B
+.OC
+.sp 1
+Changes to class LookupKey
+.ad b
+'ft R
+.OC
+.sp 1
+The virtual function \fCObject* LookupKey::value() const\fR has been replaced by two virtual 
+functions
+'in 72p
+.br
+.ad l
+'ft C
+.ps 10
+.OC
+.sp 1
+.vs 12
+virtual Object* value();
+.OC
+.br
+virtual const Object* value() const;
+'in 36p
+.ad b
+'ft R
+.ps 12
+.OC
+.sp 1
+.vs 14
+to prevent obtaining a non-const pointer from a const \fCLookupKey\fR.
+.HE
+.br
+.ad l
+'ft B
+.OC
+.sp 1
+Changes to class Arraychar
+.ad b
+'ft R
+.OC
+.sp 1
+The constructor for class \fCArraychar\fR now initializes each element of the the array 
+to 0.
+.OC
+.sp 1
+The virtual function \fCremoveAll()\fR has been implemented, which resets each element of 
+the array to 0.
+.HE
+.br
+.ad l
+'ft B
+.OC
+.sp 1
+Changes to class Assoc
+.ad b
+'ft R
+.OC
+.sp 1
+The virtual function \fCObject* Assoc::value() const\fR has been replaced by two virtual 
+functions
+'in 72p
+.br
+.ad l
+'ft C
+.ps 10
+.OC
+.sp 1
+.vs 12
+virtual Object* value();
+.OC
+.br
+virtual const Object* value() const;
+'in 36p
+.ad b
+'ft R
+.ps 12
+.OC
+.sp 1
+.vs 14
+to prevent obtaining a non-const pointer from a const \fCAssoc\fR.
+.HE
+.br
+.ad l
+'ft B
+.OC
+.sp 1
+Changes to class AssocInt
+.ad b
+'ft R
+.OC
+.sp 1
+The virtual function \fCObject* AssocInt::value() const\fR has been replaced by two virtual 
+functions
+'in 72p
+.br
+.ad l
+'ft C
+.ps 10
+.OC
+.sp 1
+.vs 12
+virtual Object* value();
+.OC
+.br
+virtual const Object* value() const;
+'in 36p
+.ad b
+'ft R
+.ps 12
+.OC
+.sp 1
+.vs 14
+to prevent obtaining a non-const pointer from a const \fCAssocInt\fR.
+.HE
+.br
+.ad l
+'ft B
+.ps 14
+.OC
+.sp 2
+.vs 16
+CHANGES BETWEEN OOPS V2R1 AND OOPS V2R2
+.ad b
+'ft R
+.ps 12
+.HE
+.br
+.ad l
+'ft B
+.OC
+.sp 1
+.vs 14
+Class name changes
+.ad b
+'ft R
+.OC
+.sp 1
+The name of class \fCArrayobid\fR is now \fCArrayOb\fR, the name of class \fCLinkobid\fR is now \fCLinkOb\fR, 
+and the typedef \fCobid\fR has been removed.  Just change all occurrences of \fCArrayobid\fR to \fC
+ArrayOb\fR, \fCLinkobid\fR to \fCLinkOb\fR, and \fCobid\fR to \fCObject*\fR.
+.HE
+.br
+.ad l
+'ft B
+.OC
+.sp 1
+Type \f(CBbool\fB now \f(CBint
+'ft B
+.ad b
+'ft R
+.OC
+.sp 1
+Type \fCbool\fR has been changed from \fCchar\fR to \fCint\fR for compatibility with X V11.
+.HE
+.br
+.ad l
+'ft B
+.OC
+.sp 1
+New \f(CBString\fB class
+.ad b
+'ft R
+.OC
+.sp 1
+There is a new, more efficient implementation of class \fCString\fR.  The new \fCString\fR class 
+is compatible with the old \fCString\fR class except for the following:
+'in 72p
+.br
+.ad l
+'ft C
+.ps 10
+.OC
+.sp 1
+.vs 12
+String(char c, unsigned l =1);
+'in 36p
+.ad b
+'ft R
+.ps 12
+.OC
+.sp 1
+.vs 14
+is now:
+'in 72p
+.br
+.ad l
+'ft C
+.ps 10
+.OC
+.sp 1
+.vs 12
+String(char& c, unsigned l=1,
+.OC
+.br
+    unsigned extra=DEFAULT_STRING_EXTRA);
+'in 36p
+.ad b
+'ft R
+.ps 12
+.OC
+.sp 1
+.vs 14
+The argument\fC unsigned extra\fR has been added to most of the \fCString::String()\fR constructors 
+to allow the programmer to give a hint as to how much space to allocate in the string 
+for additional characters.  When properly used, this can reduce the number of calls 
+made to the memory allocator.
+.OC
+.sp 1
+Assignment to substrings has changed slightly.  The old \fCString\fR class handled an assignment 
+to a substring such as:
+'in 72p
+.br
+.ad l
+'ft C
+.ps 10
+.OC
+.sp 1
+.vs 12
+String s = "abcdef";
+.OC
+.br
+s(0,2) = "123";         // result is 12cdef
+'in 36p
+.ad b
+'ft R
+.ps 12
+.OC
+.sp 1
+.vs 14
+by truncating the source string to the length of the destination substring.  An assignment 
+such as:
+'in 72p
+.br
+.ad l
+'ft C
+.ps 10
+.OC
+.sp 1
+.vs 12
+s(0,2) = "1";           // result is 1\\0cdef
+'in 36p
+.ad b
+'ft R
+.ps 12
+.OC
+.sp 1
+.vs 14
+would cause a null byte to be inserted in the destination substring.
+.OC
+.sp 1
+The new \fCString\fR class replaces the target substring with the source string, adjusting 
+the length of the target string if necessary.  Thus
+'in 72p
+.br
+.ad l
+'ft C
+.ps 10
+.OC
+.sp 1
+.vs 12
+String s = "abcdef";
+.OC
+.br
+s(0,2) = "123";         // result is 123cdef
+'in 36p
+.ad b
+'ft R
+.ps 12
+.OC
+.sp 1
+.vs 14
+and:	
+'in 72p
+.br
+.ad l
+'ft C
+.ps 10
+.OC
+.sp 1
+.vs 12
+s(0,2) = "1";           // result is 1cdef
+'in 36p
+.ad b
+'ft R
+.ps 12
+.HE
+.br
+.ad l
+'ft B
+.OC
+.sp 1
+.vs 14
+Changes to Class \f(CBProcess
+'ft B
+.ad b
+'ft R
+.OC
+.sp 1
+An interface to \fCselect\fR(2) has been added:
+'in 72p
+.br
+.ad l
+'ft C
+.ps 10
+.OC
+.sp 1
+.vs 12
+void Process::select(FDSet& rdmask, FDSet& wrmask, FDSet& exmask);
+'in 36p
+.ad b
+'ft R
+.ps 12
+.HE
+.br
+.ad l
+'ft B
+.ps 14
+.OC
+.sp 2
+.vs 16
+PORTING THE PROCESS CLASSES
+.ad b
+'ft R
+.ps 12
+.OC
+.sp 1
+.vs 14
+This section describes the steps to follow if you want to be a pioneer and port the \fC
+Process\fR classes to a new machine/operating system.
+.OC
+.sp 1
+If your target system provides the C library routines \fCsetjmp()\fR, \fClongjmp()\fR, and \fCalloca()\fR, 
+and if the implementation of \fCsetjmp()\fR/\fClongjmp()\fR operates by saving/restoring all of 
+the machine's volatile registers (as they do on the Sun-3, Sun-4, and IBM RT/AOS), 
+then the port should be very easy; otherwise, you'll need to write versions of these 
+routines in assembly language that behave as expected.
+.OC
+.sp 1
+To find out how your \fCsetjmp()\fR/\fClongjmp()\fR works, either look at the source code for 
+these routines (if you're fortunate enough to have it) or use the debugger to disassemble 
+them.  A data structure of type \fCjmp_buf\fR, defined in \fCsetjmp.h\fR, is passed as an argument 
+to these routines.  If your \fCsetjmp()\fR just saves all the volatile registers in it to 
+be restored later by \fClongjmp()\fR, then you're probably in luck---all you need to figure 
+out are the offsets in the \fCjmp_buf\fR structure where the PC (Program Counter), SP (Stack 
+Pointer), and FP (Frame Pointer) registers are saved.
+.OC
+.sp 1
+Next, look at \fCnihclconfig.h\fR and locate the place where it defines the machine-specific 
+inline functions \fCSETJMP()\fR, \fCLONGJMP()\fR, \fC_SETJMP()\fR, \fC_LONGJMP()\fR, \fCENV_PC()\fR, \fCENV_SP()\fR, and \fC
+ENV_FP()\fR.  These define the interface to the \fCProcess\fR classes.  For example, here are 
+the definitions for SunOS 4.0 on the Sun-3:
+'in 72p
+.br
+.ad l
+'ft C
+.ps 10
+.OC
+.sp 1
+.vs 12
+#ifdef SUNOS4
+.OC
+.sp 1
+#ifdef mc68000
+.OC
+.br
+typedef jmp_buf JMP_BUF;
+.OC
+.br
+inline int SETJMP(JMP_BUF env)              { return setjmp(env); }
+.OC
+.br
+inline void LONGJMP(JMP_BUF env, int val)   { longjmp(env,val); }
+.OC
+.br
+inline int _SETJMP(JMP_BUF env)             { return _setjmp(env); }
+.OC
+.br
+inline void _LONGJMP(JMP_BUF env, int val)  { _longjmp(env,val); }
+.OC
+.br
+inline unsigned& ENV_PC(JMP_BUF env)        
+.OC
+.br
+                    { return (unsigned&)env[3]; }
+.OC
+.br
+inline unsigned& ENV_SP(JMP_BUF env)        
+.OC
+.br
+                    { return (unsigned&)env[2]; }
+.OC
+.br
+inline unsigned& ENV_FP(JMP_BUF env)        
+.OC
+.br
+                    { return (unsigned&)env[15]; }
+.OC
+.br
+#endif
+.OC
+.sp 1
+// ...
+.OC
+.br
+#endif
+'in 36p
+.ad b
+'ft R
+.ps 12
+.OC
+.sp 1
+.vs 14
+Add an \fC#if\fR ... \fC#endif\fR section for your machine and define the \fCENV_PC()\fR, \fCENV_SP()\fR, 
+and \fCENV_FP()\fR functions to return a reference to the appropriate word in the \fCJMP_BUF\fR 
+array.
+.OC
+.sp 1
+If your machine doesn't use both an SP and FP, then you'll also need to add some machine 
+dependent C++ code to \fCHeapProc.c\fR to relocate only the one actually used.  See the code 
+for the \fCibm032\fR in \fCHeapProc.c\fR as an example.
+.OC
+.sp 1
+If your system has both \fCsetjmp()\fR/\fClongjmp()\fR and \fC_setjmp()\fR/\fC_longjmp()\fR, define \fCSETJMP()\fR, \fC
+LONGJMP()\fR, \fC_SETJMP()\fR, and \fC_LONGJMP()\fR to call the corresponding routine.  If your system 
+doesn't have the "\fC_\fR" versions, check your documentation to see if your \fCsetjmp()\fR/\fClongjmp()\fR 
+saves and restores the signal mask; if so, define \fC_SETJMP()\fR and \fC_LONGJMP()\fR to call \fC
+setjmp()\fR and \fClongjmp()\fR, respectively.  See the code for \fCSUNOS3\fR as an example.
+.OC
+.sp 1
+If your \fCsetjmp()\fR and \fClongjmp()\fR do \fInot\fR save and restore the signal mask, you'll need 
+to provide versions that do.  Define \fCJMP_BUF\fR to be a struct that consists of a \fCjmp_buf\fR 
+plus whatever other members you need to save the signal mask.  Then define \fC_SETJMP()\fR 
+and \fC_LONGJMP()\fR to call \fCsetjmp()\fR and \fClongjmp()\fR using the \fCjmp_buf\fR part of a \fCJMP_BUF\fR, 
+and define \fCSETJMP()\fR and \fCLONGJMP()\fR to do the same, but in addition to save/restore the 
+signal mask using the other members of a \fCJMP_BUF\fR.  See the code for the \fCmc300\fR as an 
+example.
+.OC
+.sp 1
+If your \fCsetjmp()\fR/\fClongjmp()\fR do not work by saving/restoring all volatile registers 
+(as on the VAX), you'll need to write versions with different names that do, and call 
+these instead from the interface functions.
+.OC
+.sp 1
+If you succeed in porting the \fCProcess\fR classes to a new machine/operating system, we'd 
+appreciate a copy of the code for inclusion in future releases.
+.HE
+.br
+.ad l
+'ft B
+.ps 14
+.OC
+.sp 2
+.vs 16
+AT&T C++ TRANSLATOR RELEASE 2.00/2.1 BUGS
+.ad b
+'ft R
+.ps 12
+.OC
+.sp 1
+.vs 14
+Releases 2.00 and R2.1 of the AT&T C++ Translator have a few bugs that we had to insert 
+work-arounds for in the NIH Class Library.  These are conditionally compiled based 
+on the definition of preprocessor symbols beginning with \fCBUG_\fR.  If you are using the 
+NIH Class Library to test a Release 2.00 or 2.1 -compatible C++ compiler, we suggest 
+that you edit the master \fCMakefile\fR to define these symbols:
+'in 72p
+.br
+.ad l
+'ft C
+.ps 10
+.OC
+.sp 1
+.vs 12
+# Disable AT&T R2.0/R2.1 bug work-around code
+.OC
+.br
+#BUGDEFS =
+.OC
+.br
+BUGDEFS = -DBUG_bC2728 -DBUG_38 -DBUG_39 -DBUG_OPTYPECONST
+'in 36p
+.ad b
+'ft R
+.ps 12
+.HE
+.br
+.ad l
+'ft B
+.ps 14
+.OC
+.sp 2
+.vs 16
+YACC STACK OVERFLOWS
+.ad b
+'ft R
+.ps 12
+.OC
+.sp 1
+.vs 14
+The preprocessor symbol \fCBUG_TOOBIG\fR controls compilation of code we had to insert to 
+avoid "yacc stack overflow" errors in the SunOS 3.5 C compiler.  Release 2.0 produces 
+very complicated expressions for the inline copy constructors it generates for deeply-derived 
+classes.  Explicitly defining non-inline copy constructors solves the problem.  If 
+you are a C compiler vendor, please make your tables big enough to handle the C code 
+generated by the AT&T C++ Translator!
+.HE
+.br
+.ad l
+'ft B
+.ps 14
+.OC
+.sp 2
+.vs 16
+COMPILING UNDER AT&T C++ TRANSLATOR RELEASE 2.1
+.ad b
+'ft R
+.ps 12
+.OC
+.sp 1
+.vs 14
+R3.0 of the NIH Class Library has been tested with Release 2.1 of the AT&T C++ Translator 
+under SunOS 4.0.  The following subsections summarize the changes required when compiling 
+with R2.1.
+.HE
+.br
+.ad l
+'ft B
+.OC
+.sp 1
+Inconsistent declarations of alloca() in header files
+.ad b
+'ft R
+.OC
+.sp 1
+The header files supplied with R2.1 declare \fCalloca()\fR with a return type of \fCvoid*\fR in \fC
+alloca.h\fR and \fCchar*\fR in \fCmalloc.h\fR, so you get an error message from the compiler when 
+both of these files are included in the same compilation unit.  We solved this problem 
+by changing the return type of the declaration of \fCalloca()\fR in \fCmalloc.h\fR to \fCvoid*\fR.
+.HE
+.br
+.ad l
+'ft B
+.OC
+.sp 1
+Warning and error messages due to #pragmas in SunOS 4.0 header files
+.ad b
+'ft R
+.OC
+.sp 1
+The C compiler occasionally issues warning messages such as the following when compiling 
+the output of the AT&T C++ Translator (both R2.0 and R2.1) under SunOS 4.0:
+'in 72p
+'ll \n(.lu-(36p)
+.OC
+.sp 1
+"/usr/include/CC/sys/signal.h", line 38: warning: function name expected
+'in 36p
+'ll \n(.lu-(-36p)
+.OC
+.sp 1
+This is because C++ doesn't understand the \fC#pragma\fR directives it encounters in some 
+system header files,  so it just passes them through to the C compiler.  The warning 
+message results because C++ eliminates or moves the C function declarations that the \fC
+pragma\fR references.  Another problem is that the C++ header files use \fC#define\fR to temporarily 
+rename system functions when they include the vendor's C header files as a way to hide 
+the effects of the vendor's C declarations for these functions.  Unfortunately, this 
+garbles the function names in the \fC#pragma\fR directives also.
+.OC
+.sp 1
+Under R2.0, the \fC#pragma\fR problem just results in warning messages, but under R2.1, 
+the C compilation occasionally fails with an error message.  We manually made a new, 
+self-contained version of \fC/usr/include/CC/setjmp.h\fR with the following \fCpragma\fR at the 
+end:
+'in 72p
+.br
+.ad l
+'ft C
+.ps 10
+.OC
+.sp 1
+.vs 12
+/*
+.OC
+.br
+ * Routines that call setjmp have strange control flow graphs,
+.OC
+.br
+ * since a call to a routine that calls resume/longjmp will eventually
+.OC
+.br
+ * return at the setjmp site, not the original call site.  This
+.OC
+.br
+ * utterly wrecks control flow analysis.
+.OC
+.br
+ */
+.OC
+.br
+#pragma unknown_control_flow(sigsetjmp, setjmp, _setjmp)
+'in 36p
+.ad b
+'ft R
+.ps 12
+.OC
+.sp 1
+.vs 14
+This eliminates the error messages, but not the warning messages.  It would probably 
+be no worse to simply remove the \fC#pragma\fRs altogether, since they don't seem to be having 
+the intended effect, and that would eliminate the warning messages also.
+.HE
+.br
+.ad l
+'ft B
+.OC
+.sp 1
+C++ Translator +p option broken
+.ad b
+'ft R
+.OC
+.sp 1
+The +p option produces spurious errors under R2.1.  Edit the master \fCMakefile\fR to not 
+use the +p option when compiling with R2.1:
+'in 72p
+.br
+.ad l
+'ft C
+.ps 10
+.OC
+.sp 1
+.vs 12
+# C++ flags
+.OC
+.br
+# NOTE: Disable +p option when compiling with AT&T R2.1
+.OC
+.br
+#CCFLAGS = +p
+.OC
+.br
+CCFLAGS =
+'in 36p
+.ad b
+'ft R
+.ps 12
+.HE
+.br
+.ad l
+'ft B
+.OC
+.sp 1
+.vs 14
+Optional support for nested types
+.ad b
+'ft R
+.OC
+.sp 1
+You can optionally define the preprocessor symbol \fCNESTED_TYPES\fR to cause the NIH Class 
+Library to use nested types under R2.1.  Edit the master \fCMakefile\fR as follows:
+'in 72p
+.br
+.ad l
+'ft C
+.ps 10
+.OC
+.sp 1
+.vs 12
+# Compile with nested types (works with AT&T R2.1 and GNU C++)
+.OC
+.br
+#NESTED_TYPES =
+.OC
+.br
+NESTED_TYPES = -DNESTED_TYPES

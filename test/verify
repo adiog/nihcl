@@ -1,0 +1,42 @@
+#!/bin/sh
+# $Header: /afs/alw.nih.gov/unix/sun4_40c/usr/local/src/nihcl-3.0/share/test/RCS/verify,v 3.0 90/05/20 00:30:11 kgorlen Rel $
+echo array;	./array | diff -c - array.v
+echo arraychar;	./arraychar | diff -c - arraychar.v
+echo bag;	./bag | diff -c - bag.v
+echo bitset;	./bitset | diff -c - bitset.v
+echo bitboard;	./bitboard | diff -c - bitboard.v
+echo class;	./class | diff -c - class.v
+echo date;	./date <date.in | diff -c - date.v
+echo dep;	./dep | diff -c - dep.v
+echo dict;	./dict | diff -c - dict.v
+echo error;	./error 2>&1 | diff -c - error.v
+echo "*** Different address in [CLTNEMPTY] error message OK. ***"
+echo except;	./except 2>&1 | diff -c - except.v
+echo fdset;	./fdset | diff -c - fdset.v
+echo fraction;	./fraction | diff -c - fraction.v
+echo heap;	./heap | diff -c - heap.v
+echo identdict;	./identdict | diff -c - identdict.v
+echo identset;	./identset | diff -c - identset.v
+echo iterator;	./iterator | diff -c - iterator.v
+echo linkedlist;./linkedlist | diff -c - linkedlist.v
+echo keysortcltn; ./keysortcltn | diff -c - keysortcltn.v
+echo object;	./object | diff -c - object.v
+echo oio;	./oio oioa.obj oiob.obj | diff -c - oio.v
+echo Stored `grep '^:' oioa.obj | wc -l` classes, `grep '{$' oioa.obj | wc -l` objects | diff -c - oiochk.v
+echo oio -b;	./oio -b oioba.obj oiobb.obj | diff -c - oiob.v
+echo orderedcltn;./orderedcltn | diff -c - orderedcltn.v
+echo point;	./point | diff -c - point.v
+echo process;	./process | diff -c - process.v
+echo random;	./random | diff -c - random.v
+echo range;	./range | diff -c - range.v
+echo rectangle;	./rectangle | diff -c - rectangle.v
+echo regex;	./regex <regex.in | diff -c - regex.v
+echo seqcltn;	./seqcltn | diff -c - seqcltn.v
+echo sets;	./sets | diff -c - sets.v
+echo sortedcltn;./sortedcltn | diff -c - sortedcltn.v
+echo stack;	./stack | diff -c - stack.v
+echo "*** Expect [CLTNEMPTY] error message ***"
+echo stackproc;	./stackproc | diff -c - stackproc.v
+echo string;	./string | diff -c - string.v
+echo substring;	./substring | diff -c - substring.v
+echo tim;	./tim <tim.in | diff -c - tim.v

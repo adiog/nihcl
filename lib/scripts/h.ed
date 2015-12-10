@@ -1,0 +1,11 @@
+/^[ 	]*[A-Z][A-Za-z0-9_]*(fileDescTy/i
+public:			// constructors for object I/O
+.
+?protected:?d
+ka
+/^[ 	]*virtual[ 	]*void[ 	]*storer/i
+protected:		// storer() functions for object I/O
+.
+'a,.+2p
+w temp
+q

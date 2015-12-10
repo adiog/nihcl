@@ -1,0 +1,1 @@
+PROGS = array arraychar bag bitboard bitset class date dep dict error except fc fdset fraction heap iddictio identdict identset iterator keysortcltn linkedlist object oio orderedcltn point process random range rectangle regex seqcltn sets sortedcltn stack stackproc string substring tim

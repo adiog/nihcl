@@ -1,0 +1,8 @@
+#! /bin/csh
+rm -f CHANGES
+foreach f (*.c)
+	echo $f
+	echo "**********" $f "**********" >>CHANGES
+	sed -f $1 <$f >+$f
+	cat changes >>CHANGES
+end

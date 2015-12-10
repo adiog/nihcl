@@ -1,0 +1,1 @@
+CLASSES = AllLink.o AllVehicles.o AmphibVhcl.o ArrayOb.o ArrayPartial.o AutoDeriv.o BigInt.o Circle.o DrawBridgeQ.o ExString.o LandVhcl.o Line.o Matrix.o Partial.o Patient.o Picture.o QLink.o Shape.o StopLightQ.o Vehicle.o VehicleQ.o WaterVhcl.o

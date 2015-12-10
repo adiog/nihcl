@@ -1,0 +1,54 @@
+/* _main.c -- "munch" version with NIH Class Library initialization
+
+	THIS SOFTWARE FITS THE DESCRIPTION IN THE U.S. COPYRIGHT ACT OF A
+	"UNITED STATES GOVERNMENT WORK".  IT WAS WRITTEN AS A PART OF THE
+	AUTHOR'S OFFICIAL DUTIES AS A GOVERNMENT EMPLOYEE.  THIS MEANS IT
+	CANNOT BE COPYRIGHTED.  THIS SOFTWARE IS FREELY AVAILABLE TO THE
+	PUBLIC FOR USE WITHOUT A COPYRIGHT NOTICE, AND THERE ARE NO
+	RESTRICTIONS ON ITS USE, NOW OR SUBSEQUENTLY.
+
+Author:
+	Ted Persky
+	Bg. 12A, Rm. 2031
+	Computer Systems Laboratory
+	Division of Computer Research and Technology
+	National Institutes of Health
+	Bethesda, Maryland 20892
+	Phone: (301) 496-2963
+	uucp: uunet!nih-csl!ted
+	December, 1988
+
+Function:
+	_main is called at execution time before the programmer's
+	"main" program.  It runs through the _ctors array
+	of constructors and calls them all to initialize static and
+	external objects.  It finally calls the nihcl initialization
+	routine.
+
+Modification History:
+
+$Log:	_main.c_m,v $
+Revision 3.0  90/05/23  11:01:45  kgorlen
+Release for 1st edition.
+
+*/
+
+#include "Object.h"
+
+static char RCSID[] = "$Header: /afs/alw.nih.gov/unix/sun4_40c/usr/local/src/nihcl-3.0/share/lib/RCS/_main.c_m,v 3.0 90/05/23 11:01:45 kgorlen Rel $";
+
+typedef int (*PFV)();
+
+extern PFV _ctors[];
+
+#ifdef __cplusplus
+extern "C" { extern void _main(); };
+#endif
+
+extern void _main()
+{
+	for (int i=0; _ctors[i] != (PFV) 0; i++)
+		(*(_ctors[i]))();
+
+	NIHCL::initialize();
+}

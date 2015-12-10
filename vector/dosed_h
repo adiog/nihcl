@@ -1,0 +1,8 @@
+#! /bin/csh
+rm -f CHANGES_H
+foreach f ([A-Z]*.h)
+	echo $f
+	echo "**********" $f "**********" >>CHANGES_H
+	sed -f $1 <$f >+$f
+	cat changes >>CHANGES_H
+end
